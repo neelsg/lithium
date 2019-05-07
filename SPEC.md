@@ -44,7 +44,7 @@ the `b + c` is an expression.
 The following keywords are reserved:
 
     and chan const default defer else export
-    false for func if import in interface is
+    false for fn if import in interface is
     li local nil or return struct true type
     xor yield
 

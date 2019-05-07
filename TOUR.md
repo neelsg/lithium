@@ -112,7 +112,7 @@ Note that the type comes after the variable name.
     	fmt
     
     local swap fn(x string, y string) (string, string):
-        return y, x
+    	return y, x
     
     export main fn():
     	a string, b string = swap("hello", "world")

@@ -28,12 +28,12 @@ using older specs of the language and for older packages to be incorporated into
 The `import` statement allows for importing of other packages so that they can be used in the current file. In
 this case we are importing `fmt` and `math` from the standard library.
 
-#### export main fn():
+#### export main
 The `fn` keyword is used to define functions (which are blocks of code that can be executed. When a program
 is executed, the first thing that will run is the `main()` function
 
-#### fmt.Println
-The `fmt.Println` method is used to print a line out to the console. In this case, it will print the text "My
+#### fmt.printLn
+The `fmt.printLn` method is used to print a line out to the console. In this case, it will print the text "My
 favorite number is" and a random number from 0 to 10
 
 
@@ -114,7 +114,7 @@ Note that the type comes after the variable name.
         return y, x
     
     export main fn():
-    	a, b := swap("hello", "world")
+    	a string, b string = swap("hello", "world")
     	fmt.printLn(a, b)
 
  A function can return any number of results.

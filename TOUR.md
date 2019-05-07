@@ -9,7 +9,7 @@ programming language on Go
 
 ## 1. Start
 
-    li 0.0.1
+    Li 0.0.1
     
     import:
     	fmt
@@ -20,9 +20,10 @@ programming language on Go
 
 #### File format and doctype
 Lithium source code is stored in plain text files that have the `.li` file extension. All files that are located
-in the same folder are considered to be part of the same package. Each file needs to start with the chars `li `
-followed by the language version used in the file. This will allow newer compilers to compile files written
-using older specs of the language and for older packages to be incorporated into newer projects.
+in the same folder are considered to be part of the same package. Each file needs to start with the chars `Li `
+followed by the language version used in the file. Note that the "L" is uppercase and the "i" is lowercase. This
+will allow newer compilers to compile files written using older specs of the language and for older packages to
+be incorporated into newer projects.
 
 #### import
 The `import` statement allows for importing of other packages so that they can be used in the current file. In
@@ -39,7 +40,7 @@ favorite number is" and a random number from 0 to 10
 
 ## 2. Imports
 
-    li 0.0.1
+    Li 0.0.1
 
     import:
     	fmt
@@ -56,7 +57,7 @@ Here we import `fmt` and `math` from the standard library so that they can be us
 
 ## 3. Exports
 
-    li 0.0.1
+    Li 0.0.1
     
     local sqr2 fn(x int) int:
     	// This function is only available within the current package
@@ -73,7 +74,7 @@ the current package.
 
 ## 4. Importing custom packages
 
-    li 0.0.1
+    Li 0.0.1
     
     import:
     	fmt
@@ -88,7 +89,7 @@ the folder where the source code is located.
 
 ## 5. Functions
 
-    li 0.0.1
+    Li 0.0.1
     
     import:
     	fmt
@@ -105,7 +106,7 @@ Note that the type comes after the variable name.
 
 ### Multiple results
 
-    li 0.0.1
+    Li 0.0.1
 
     import:
     	fmt

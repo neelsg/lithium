@@ -43,8 +43,10 @@ the `b + c` is an expression.
 
 The following keywords are reserved:
 
-    and chan const defer else export false for func if import in interface is li
-    local nil or return struct true type xor yield
+    and chan const default defer else export
+    false for func if import in interface is
+    li local nil or return struct true type
+    xor yield
 
 The following character sequences are operators:
 

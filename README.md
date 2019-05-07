@@ -12,3 +12,7 @@ ambitious, so I'm not very hopeful that this will ever amount to anything.
 Language specifications can be found under [SPEC.md](SPEC.md)
 
 Example code can be found under [TOUR.md](TOUR.md)
+
+Documentation for the standard library can be found under [LIB.md](LIB.md)
+
+The roadmap for further development can be found under [ROADMAP.md](ROADMAP.md)

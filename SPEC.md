@@ -4,6 +4,9 @@
 
 *Last updated 2019-05-07*
 
+This spec was highly inspired by the [Go Programming Language Specification](https://golang.org/ref/spec)
+
+
 ## Doctype indicator
 
 The first line of a Lithium source file must start with the character sequence
@@ -45,7 +48,7 @@ The following keywords are reserved:
 
     and chan const default defer else export
     false for fn if import in interface is
-    li local nil or return struct true type
+    Li local nil or return struct true type
     xor yield
 
 The following character sequences are operators:
@@ -80,6 +83,49 @@ The following character sequences are operators:
 
 
 ## Literals and constants
+
+### Boolean literals
+
+The words `true` and `false` can be used as boolean literals
+
+
+### Integer literals
+
+Integer literals are a sequence of digits (0..9) that represent an integer
+constant. Integer literals can also be written in hexadecimal, octal or
+binary by using the prefix `0x`, `0o` or `0b` respectively.
+
+Examples of integer literals:
+
+    42
+    0xFADE123
+    0o600
+    0b101010
+
+### Floating-point literals:
+
+Floating-point literals are a sequence of digits, a decimal point, a
+fractional part and optionally and exponent part (prefixed by `e`).
+The decimal point can be omitted if the literal contains an exponent.
+
+Examples of floating-point literals:
+
+    0.
+    42.4242
+    1.e+0
+    42e+10
+    0.003e-10
+
+### Complex number literals:
+
+Complex numbers are represented as two floating-point literals separated
+by the char `i`. The number before the `i` is the real part and the
+number after is the imaginary part.
+
+Examples of complex number literals:
+
+    1i2
+    4.2e+1i4.2e-1
 
 
 ## Variables and types

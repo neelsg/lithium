@@ -1,9 +1,5 @@
 # Lithium Programming Language Specification
 
-**Version 0.0.1**
-
-*Last updated 2019-05-07*
-
 This spec was highly inspired by the [Go Programming Language Specification](https://golang.org/ref/spec)
 
 

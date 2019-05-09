@@ -160,7 +160,7 @@ type from all but the last parameter.
     
     export go bool
     
-    export main fn() {
+    export main fn():
         i int
         fmt.printLn(i, c, python, java, go)
 
@@ -218,3 +218,77 @@ following:
     float.Float32 float.Float64
     
     complex.Complex64 complex.Complex64
+
+
+## Default values
+
+    Li 0.0
+    
+    import fmt
+    
+    export main fn():
+        i int
+        f float
+        b bool
+        s string
+        fmt.printF("%v %v %v %q\n", i, f, b, s)
+
+Variables declared without an explicit initial value are given their default
+value.
+
+The default values for built in types are:
+
+    0 for numeric types
+    false for the boolean type
+    "" for strings.
+
+Custom types can have their own defined default values.
+
+
+## Type conversions
+
+    Li 0.0
+    
+    import:
+        fmt
+        math
+    
+    export main fn():
+        x, y int = 3, 4
+        f float = math.sqrt((x * x + y * y).Float)
+        z int.UInt = f.UInt
+        fmt.printLn(x, y, z)
+
+The built in types have properties to convert to different types. Custom defined
+types should also include similar functionality.
+
+Some numeric conversions:
+
+    i int = 42
+    f float.Float64 = i.Float64
+    u int.UInt = f.UInt
+
+Unlike in C, assignment in Lithium between items of different type requires an
+explicit conversion.
+
+
+## Constants
+
+    Li 0.0
+    
+    import fmt
+    
+    local Pi const = 3.14
+    
+    export main fn = fn():
+        World const = "Mars"
+        fmt.printLn("Hello", World)
+        fmt.printLn("Happy", Pi, "Day")
+        
+        Truth const = true
+        fmt.printLn("Humans rock?", Truth)
+
+Constants are declared like variables, but with the `const` keyword as type.
+Constants can be string, boolean, or numeric values. Constants cannot be
+declared with an expression that requires runtime evaluation such as calling a
+function.

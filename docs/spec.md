@@ -34,15 +34,15 @@ Examples:
     This statement ends at the end of this line
     
     This statement carries over to the next lines
-    	as the next lines
-    	have been indented
+        as the next lines
+        have been indented
 
 An expression is part of a statement that can be evaluated without taking the
 rest of the statement into account. For instance, in the statement `a = b + c`,
 the `b + c` is an expression.
 
 
-## Keywords and operators
+## Keywords
 
 The following keywords are reserved:
 
@@ -51,26 +51,34 @@ The following keywords are reserved:
     Li local nil or return struct true type
     xor yield
 
+## Operators
+
 The following character sequences are operators:
 
 - `x + y` Addition `x.add(y)`
 - `x - y` Subtraction `x.subtract(y)`
 - `x * y` Multiplication `x.multiply(y)`
 - `x / y` Division `x.divide(y)`
+- `x ** y` Exponent `x.power(y)`
 - `x % y` Modulus `x.modulo(y)`
-- `x ^ y` Exponent `x.exponent(y)`
-- `x & y` Binary And `x.binAnd(y)`
-- `x | y` Binary Or `x.binOr(y)`
-- `~x` Binary Ones Complement `x.binFlip()`
+- `x & y` Bitwise And `x.bitAnd(y)`
+- `x | y` Bitwise Or `x.bitOr(y)`
+- `x ^ y` Bitwise Xor `x.bitXor(y)`
+- `x << y` Left shift `x.shiftLeft(y)`
+- `x >> y` Right shift `x.shiftRight(y)`
+- `~x` Bitwise Ones Complement `x.bitFlip()`
 - `x = y` Assignment `x.set(y)`
 - `x += y` Add assign `x = x + y`
 - `x -= y` Subtract assign `x = x - y`
 - `x *= y` Multiply assign `x = x * y`
 - `x /= y` Divide assign `x = x / y`
+- `x **= y` Exponent assign `x = x ** y`
 - `x %= y` Modulo assign `x = x % y`
-- `x ^= y` Power assign `x = x ^ y`
-- `x &= y` Binary And assign `x = x & y`
-- `x |= y` Binary Or assign `x = x | y`
+- `x &= y` Bitwise And assign `x = x & y`
+- `x |= y` Bitwise Or assign `x = x | y`
+- `x ^= y` Bitwise Xor assign `x = x ^ y`
+- `x <<= y` Left shift assign `x = x << y`
+- `x >>= y` Right shift assign `x = x >> y`
 - `x == y` Is equal to `x.equalTo(y)`
 - `x < y` Is less than `x.lessThan(y)`
 - `x > y` Is greater than `x.greaterThan(y)`
@@ -82,7 +90,7 @@ The following character sequences are operators:
 - `x--` Decrement `x.decrement()`
 
 
-## Literals and constants
+## Literals
 
 ### Boolean literals
 
@@ -126,6 +134,8 @@ Examples of complex number literals:
 
     1i2
     4.2e+1i4.2e-1
+
+## Constants
 
 
 ## Variables and types

@@ -2,124 +2,219 @@
 
 ## Welcome
 
-This tour aims to cover the most important parts of the Lithium Programming Language. This tour borrows heavily
-on the [Go Programming Language tour](https://tour.golang.org) as I have based quite a significant part of this
-programming language on Go
+This tour aims to cover the most important parts of the Lithium Programming
+Language. This tour borrows heavily on the
+[Go Programming Language tour](https://tour.golang.org) as I have based quite a
+significant part of this programming language on Go.
 
 
-## 1. Start
+## Start
 
-    Li 0.0.1
+    Li 0.0
     
     import:
-    	fmt
-    	math
+        fmt
+        math
     
     export main fn():
-    	fmt.printLn("My favorite number is", math.rand.int(10))
+        fmt.printLn("My favorite number is", math.rand.int(10))
 
-#### File format and doctype
-Lithium source code is stored in plain text files that have the `.li` file extension. All files that are located
-in the same folder are considered to be part of the same package. Each file needs to start with the chars `Li `
-followed by the language version used in the file. Note that the "L" is uppercase and the "i" is lowercase. This
-will allow newer compilers to compile files written using older specs of the language and for older packages to
-be incorporated into newer projects.
-
-#### import
-The `import` statement allows for importing of other packages so that they can be used in the current file. In
-this case we are importing `fmt` and `math` from the standard library.
-
-#### export main
-The `fn` keyword is used to define functions (which are blocks of code that can be executed. When a program
-is executed, the first thing that will run is the `main()` function
-
-#### fmt.printLn
-The `fmt.printLn` method is used to print a line out to the console. In this case, it will print the text "My
-favorite number is" and a random number from 0 to 10
+There is quite a bit happening here. This code will print the text
+"My favorite number is" and a random number from 0 to 10.
 
 
-## 2. Imports
+## File format and doctype
 
     Li 0.0.1
 
+Lithium source code is stored in plain text files that have the `.li` file
+extension. All files that are located in the same folder are considered to be
+part of the same package. Each file needs to start with the chars `Li ` followed
+by the language version used in the file. Note that the "L" is uppercase and the
+"i" is lowercase. This will allow newer compilers to compile files written using
+older specs of the language and for older packages to be incorporated into newer
+projects.
+
+The version can be written in full such as `0.0.1` or shortened such as `0`. If
+any part of the version is omitted, the compiler will assume the most recent
+sub-version should be used.
+
+
+## Importing from other packages
+
+    Li 0.0
+
     import:
-    	fmt
-    	math
+        fmt
+        math
 
     export main fn():
-    	fmt.printf("Now you have %g problems.\n", math.sqrt(7))
+        fmt.printf("Now you have %g problems.\n", math.sqrt(7))
 
-Here we import `fmt` and `math` from the standard library so that they can be used in this file. We could also write:
+Here we import `fmt` and `math` from the standard library so that they can be
+used in this file. We could also write:
 
     import fmt
     import math
 
 
-## 3. Exports
+## The main function
 
-    Li 0.0.1
+    export main fn():
+
+The `fn` keyword is used to define functions (which are blocks of code that can
+be executed. When a program is executed, the first thing that will run is the
+"main" function.
+
+
+## Exporting components
+
+    Li 0.0
     
     local sqr2 fn(x int) int:
-    	// This function is only available within the current package
-    	return x * x
+        // This function is only available within the current package
+        return x * x
     
     export sqr fn(x int) int:
-    	// This function can be used by other packages
-    	return sqr2(x)
+        // This function can be used by other packages
+        return sqr2(x)
 
-In Lithium, anything marked as `export ` will be made available for use by other packages. Anything that starts with
-`local ` can only be used in the current package, but note that this also includes any other files that are part of
-the current package.
+In Lithium, anything marked as `export ` will be made available for use by other
+packages. Anything that starts with `local ` can only be used in the current
+package, but note that this also includes any other files that are part of the
+current package.
 
 
-## 4. Importing custom packages
+## Importing custom packages
 
-    Li 0.0.1
+    Li 0.0
     
     import:
-    	fmt
-    	myMath "./myMathFolder"
+        fmt
+        myMath "./myMathFolder"
     
     export main fn():
-    	fmt.print(myMath.sqr(3))
+        fmt.print(myMath.sqr(3))
 
-You can import your own packages just as easily as packages from the standard library by providing the file path to
-the folder where the source code is located.
+You can import your own packages just as easily as packages from the standard
+library by providing the file path to the folder where the source code is
+located.
 
 
-## 5. Functions
+## Functions
 
-    Li 0.0.1
+    Li 0.0
     
     import:
-    	fmt
+        fmt
     
     local add fn(x int, y int) int:
-    	return x + y
+        return x + y
     
     export main fn():
-    	fmt.printLn(add(42, 13))
+        fmt.printLn(add(42, 13))
 
-A function can take zero or more arguments.
-In this example, `add` takes two arguments of type `int`.
-Note that the type comes after the variable name.
+A function can take zero or more arguments. In this example, `add` takes two
+arguments of type `int`. Note that the type comes after the variable name.
 
-### Multiple results
 
-    Li 0.0.1
+## Multiple results
 
+    Li 0.0
+    
+    import fmt
+    
+    local:
+        split fn(sum int) (int, int):
+            x, y int = sum * 4 / 9, sum - x
+            return x, y
+    
+    export:
+        main fn(): fmt.printLn(split(17))
+
+A function can return any number of results.
+
+    Li 0.0
+    
     import:
-    	fmt
+        fmt
     
-    local swap fn(x string, y string) (string, string):
-    	return y, x
+    local swap fn(x, y string) (string, string): return y, x
     
     export main fn():
-    	a string, b string = swap("hello", "world")
-    	fmt.printLn(a, b)
+        a, b string = swap("hello", "world")
+        fmt.printLn(a, b)
 
- A function can return any number of results.
- The swap function returns two `strings`.
- 
- 
- 
+When two or more parameters are of the same type, you can omit the
+type from all but the last parameter.
+
+
+## Variables
+
+    Li 0.0
+    
+    import fmt
+    
+    local:
+        c, python, java bool
+    
+    export go bool
+    
+    export main fn() {
+        i int
+        fmt.printLn(i, c, python, java, go)
+
+Variables are declared by specifying the name of the variable followed by the
+type. Variables can be declared at the package as well as function level. If a
+variable is declared at the package level using the `export` keyword, it will
+be available for use by other packages as well.
+
+
+## Initializers
+
+    Li 0.0
+    
+    import fmt, math
+    
+    local i, j int, p float = 1, 2, math.pi
+    
+    export main fn():
+        c, python bool, java, go string = true, false, "no!", "yes!"
+        fmt.printLn(i, j, p, c, python, java, go)
+
+A variable declaration can include initializers. If an initializer is omitted,
+the variable will be assigned the default value of the type.
+
+
+## Basic types
+
+    Li 0.0
+    
+    import fmt, math
+    
+    local:
+        ToBe bool = false
+        MaxInt int.UInt64 = 2 ^ 64 - 1
+        z complex.Complex128 = math.complex.sqrt(-5 + 0i12)
+    
+    export main fn():
+        fmt.printF("Type: %T Value: %v\n", ToBe, ToBe)
+        fmt.printF("Type: %T Value: %v\n", MaxInt, MaxInt)
+        fmt.printF("Type: %T Value: %v\n", z, z)
+
+Lithium basic types are:
+
+    bool complex float int string
+
+Each of these types are defined in a standard library package that is imported
+implicitly, so you do not need to list them in an import statement.
+
+These packages also provide more fine-grained type definitions such as the
+following:
+
+    int.Int8 int.Int16 int.Int32 int.Int64
+    int.UInt int.UInt8 int.UInt16 int.UInt32 int.UInt64
+    
+    float.Float32 float.Float64
+    
+    complex.Complex64 complex.Complex64

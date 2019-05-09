@@ -194,7 +194,7 @@ the variable will be assigned the default value of the type.
     
     local:
         ToBe bool = false
-        MaxInt int.UInt64 = 2 ^ 64 - 1
+        MaxInt int.UInt64 = 2 ** 64 - 1
         z complex.Complex128 = math.complex.sqrt(-5 + 0i12)
     
     export main fn():

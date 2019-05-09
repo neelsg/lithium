@@ -19,7 +19,7 @@ This example was translated from [www.arduino.cc](https://www.arduino.cc/en/Tuto
     import:
         serial
         analog
-        delay
+        timer
     
     // the setup routine runs once when you press reset:
     export setup fn():
@@ -33,4 +33,4 @@ This example was translated from [www.arduino.cc](https://www.arduino.cc/en/Tuto
         
         // print out the value you read:
         serial.printLn(sensorValue)
-        delay(1) // delay in between reads for stability
+        timer.delay(1) // delay in between reads for stability

@@ -42,10 +42,9 @@ the `b + c` is an expression.
 
 The following keywords are reserved:
 
-    and chan const default defer else export
-    false for fn if import in interface is
-    Li local nil or property return struct
-    true type xor yield
+    and chan class const default defer else export
+    false for fn if import in inherit interface is
+    Li local nil or property return true xor yield
 
 ## Operators
 

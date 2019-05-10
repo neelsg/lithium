@@ -44,15 +44,15 @@ The following keywords are reserved:
 
     and chan const default defer else export
     false for fn if import in interface is
-    Li local nil or return struct true type
-    xor yield
+    Li local nil or property return struct
+    true type xor yield
 
 ## Operators
 
 The following character sequences are operators:
 
-- `x + y` Addition `x.add(y)`
-- `x - y` Subtraction `x.subtract(y)`
+- `x + y` Addition `x.plus(y)`
+- `x - y` Subtraction `x.minus(y)`
 - `x * y` Multiplication `x.multiply(y)`
 - `x / y` Division `x.divide(y)`
 - `x ** y` Exponent `x.power(y)`

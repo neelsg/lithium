@@ -35,9 +35,9 @@ by the language version used in the file. Note that the "L" is uppercase and the
 older specs of the language and for older packages to be incorporated into newer
 projects.
 
-The version can be written in full such as `0.0.1` or shortened such as `0`. If
-any part of the version is omitted, the compiler will assume the most recent
-sub-version should be used.
+The version can be written in full such as `0.0.1` or shortened such as `0.0` or
+`0`. If any part of the version is omitted, the compiler will assume the most
+recent sub-version should be used.
 
 
 ## Importing from other packages
@@ -147,6 +147,24 @@ A function can return any number of results.
 
 When two or more parameters are of the same type, you can omit the
 type from all but the last parameter.
+
+
+## Named parameters
+
+    Li 0
+    
+    import:
+        fmt
+    
+    local swap fn(x = "hello", y string) (string, string): return y, x
+    
+    export main fn():
+        a, b string = swap(y = "world")
+        fmt.printLn(a, b)
+
+When calling a function, the parameters may be named. A function definition can
+specify the default value of any parameters. If these parameters are omitted,
+they will be set to the default.
 
 
 ## Variables
@@ -455,4 +473,204 @@ call is not executed until the surrounding function returns.
 
 Deferred function calls are pushed onto a stack. When a function returns, its
 deferred calls are executed in last-in-first-out order.
+
+
+## Classes
+
+    Li 0
+    
+    import fmt
+    
+    local Vertex class:
+        X int
+        Y int
+    
+    export main fn():
+        fmt.printLn(Vertex(1, 2))
+
+Lithium allows simple object-oriented programming. A class is a collection of
+properties and methods.
+
+
+## Class properties
+
+    Li 0
+    
+    import fmt
+    
+    local Vertex class:
+        X int
+        Y int
+    
+    export main fn():
+        v Vertex = Vertex(1, 2)
+        v.X = 4
+        fmt.printLn(v.X)
+
+Class properties are accessed using a dot.
+
+
+## Shorthand for initializing classes
+
+    local Vertex class:
+        X int
+        Y int
+
+Given the above class, the following statements are equivalent:
+
+    v Vertex = Vertex(1, 2)
+    v Vertex(1, 2)
+    v Vertex(X = 1, Y = 2)
+
+
+## Methods
+
+    Li 0
+    
+    import
+        fmt
+        math
+    
+    local Vertex class:
+        X float
+        Y float
+        Dist (V) fn() float:
+            return math.sqrt(V.X ** 2 + V.Y ** 2)
+    
+    export main fn():
+        v Vertex(1, 2)
+        fmt.printLn(v.Dist())
+
+Methods are functions defined within a class. Note the `(V)` before `fn()`, this
+is the name with which the object can be accessed within the function itself.
+
+
+## Default values and the initializer function
+
+    Li 0
+    
+    import
+        fmt
+        math
+    
+    local Vertex class:
+        X float = 1
+        Y float = 1
+        (V) fn(X, Y float) Vertex:
+            V.X, V.Y = X, Y
+            return V
+        Dist (V) fn() float:
+            return math.sqrt(V.X ** 2 + V.Y ** 2)
+    
+    export main fn():
+        v Vertex(1, 2)
+        fmt.printLn(v.Dist())
+
+Just like normal variables, properties in a class can also be set to an initial
+value which will then be the default for any objects of that class.
+
+You can create an unnamed function in a class which returns the an object of
+the class type. This function then becomes the initializer and will be used when
+creating an object of that class such as with `v Vertex(1, 2)`.
+
+
+## Private values
+
+    Li 0
+    
+    import
+        fmt
+        math
+    
+    local Vertex class:
+        
+        local: // X and Y can now only be accessed by methods within the object
+            X float = 1
+            Y float = 1
+        
+        (V) fn(X, Y float) Vertex:
+            V.X, V.Y = X, Y
+            return V
+        
+        Dist (V) fn() float:
+            return math.sqrt(V.X ** 2 + V.Y ** 2)
+    
+    export main fn():
+        v Vertex(1, 2)
+        fmt.printLn(v.Dist())
+
+You can use the `local` keyword to make properties or even methods only
+available to the methods in the object itself. If you try to use `v.X` in the
+main function in this case, you will get a compile error.
+
+
+## Dynamic properties
+
+    Li 0
+    
+    import
+        fmt
+        math
+    
+    local Vertex class:
+        
+        local XValue float
+        X property:
+            get (V) fn() float:
+                return V.XValue
+            set (V) fn(X float):
+                if X >= 0:
+                    V.XValue = X
+                else:
+                    V.XValue = X * -1
+        
+        local YValue float
+        Y property:
+            get (V) fn() float:
+                return V.YValue
+            set (V) fn(Y float):
+                if Y >= 0:
+                    V.YValue = Y
+                else:
+                    V.YValue = Y * -1
+        
+        (V) fn(X, Y float) Vertex:
+            V.X, V.Y = X, Y
+            return V
+        
+        Dist (V) fn() float:
+            return math.sqrt(V.X ** 2 + V.Y ** 2)
+    
+    export main fn():
+        v Vertex(1, 2)
+        fmt.printLn(v.Dist())
+
+Properties can have a `get` and `set` method which allows for more control over
+what happens when you retrieve or assign a value to that property.
+
+If the `get` method is omitted, you will get a compile error if you try to
+retrieve the property. If the `set` method is omitted, you will get a compile
+error if you try to assign a value to the property.
+
+A `get` and `set` method can also be assigned at the top of the class which will
+allow you to assign or retrieve a custom value by directly using the object name
+
+
+## Inheritance
+
+    Li 0
+    
+    import fmt
+    
+    export main fn():
+        myInt class extends int:
+            double (I) fn() myInt:
+                return I * 2
+        
+        i myInt = 3
+        fmt.printLn(i.double().double()) // This will print 12
+
+The `extends` keyword allows you to create new classes by extending existing
+ones. It is possible to inherit from more than one class by listing all the
+classes after the `extends` keyword.
 

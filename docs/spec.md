@@ -1,6 +1,7 @@
 # Lithium Programming Language Specification
 
-This spec was highly inspired by the [Go Programming Language Specification](https://golang.org/ref/spec)
+This spec was inspired by the
+[Go Programming Language Specification](https://golang.org/ref/spec)
 
 
 ## Doctype indicator
@@ -42,9 +43,9 @@ the `b + c` is an expression.
 
 The following keywords are reserved:
 
-    and chan class const default defer else export
-    extends false for fn if import in interface is
-    Li local nil or property return true xor yield
+    chan const defer else export extends false for fn if import in interface
+    nil private property return true type
+
 
 ## Operators
 
@@ -62,7 +63,7 @@ The following character sequences are operators:
 - `x << y` Left shift `x.shiftLeft(y)`
 - `x >> y` Right shift `x.shiftRight(y)`
 - `~x` Bitwise Ones Complement `x.bitFlip()`
-- `x = y` Assignment `x.set(y)`
+- `x = y` Assignment
 - `x += y` Add assign `x = x + y`
 - `x -= y` Subtract assign `x = x - y`
 - `x *= y` Multiply assign `x = x * y`
@@ -74,15 +75,18 @@ The following character sequences are operators:
 - `x ^= y` Bitwise Xor assign `x = x ^ y`
 - `x <<= y` Left shift assign `x = x << y`
 - `x >>= y` Right shift assign `x = x >> y`
-- `x == y` Is equal to `x.equalTo(y)`
-- `x < y` Is less than `x.lessThan(y)`
-- `x > y` Is greater than `x.greaterThan(y)`
-- `x <> y` Is not equal to `x.notEqualTo(y)`
-- `x != y` Is not equal to `x.notEqualTo(y)`
-- `x <= y` Is less than or equal to `x.lessThanOrEqual(y)`
-- `x >= y` Is greater than or equal to `x.greaterThanOrEqual(y)`
-- `x++` Increment `x.increment()`
-- `x--` Decrement `x.decrement()`
+- `!x` Boolean not
+- `x || x` Boolean or
+- `x && x` Boolean and
+- `x == y` Is equal to `x.equals(y)`
+- `x < y` Is less than `x.less(y)`
+- `x > y` Is greater than `x.greater(y)`
+- `x <> y` Is not equal to `!x.equals(y)`
+- `x != y` Is not equal to `!x.equals(y)`
+- `x <= y` Is less than or equal to `x.less(y) || x.equals(y)`
+- `x >= y` Is greater than or equal to `x.greater(y) || x.equals(y)`
+- `x++` Increment by one `x = x + 1`
+- `x--` Decrement by one `x = x - 1`
 
 
 ## Literals
@@ -130,6 +134,7 @@ Examples of complex number literals:
     1i2
     4.2e+1i4.2e-1
 
+
 ## Constants
 
 
@@ -151,8 +156,35 @@ Examples of complex number literals:
 ## Methods
 
 
-## Packages and files
+## Files
+
+All the files under a single folder is considered part of the same package.
+Files must have the extension ".li".
+
+The underscore ("_") is used in file names to indicate various special affixes
+used by Lithium and should only be used for this purpose. Some of these affixes
+are:
+
+- "_test": This file is used for unit testing
+- "_linux": This file only applies when compiling to the GNU/Linux OS
+- "_riscv": This file only applies when compiling to the RISC-V architecture
+
+File affixes can be combined such as "Filename_riscv_linux_test.li".
 
 
 ## Scope
 
+The following rules apply to determine the scope in which a variable is
+available
+
+1. Variables declared at the top of a file must be either preceded by `private`
+    or `export`. 
+1. Variables preceded by `export` is available by any other package that imports
+    the current package.
+1. Top level variables preceded by `private` is available anywhere in the
+    current package including any other files within this package
+1. Variables declared within a function is only available within that function.
+1. Variables declared within an indented block is only available within that
+    block.
+1. Variables declared within the initial statement of a `for` or `if` is only
+    available within that statement, but including any `else` statements.

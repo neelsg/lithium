@@ -34,7 +34,7 @@ This example was translated from [www.arduino.cc](https://www.arduino.cc/en/Tuto
         digital
         timer
     
-    local:
+    private:
         // constants won't change. They're used here to set pin numbers:
         buttonPin const = 2                // the number of the pushbutton pin
         ledPin const = 13                  // the number of the LED pin

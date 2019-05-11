@@ -475,7 +475,7 @@ Deferred function calls are pushed onto a stack. When a function returns, its
 deferred calls are executed in last-in-first-out order.
 
 
-## Custom types
+## Defining new types
 
     Li 0
     
@@ -534,15 +534,19 @@ Given the above type, the following statements are equivalent:
     private Vertex type:
         X float
         Y float
-        Dist (V) fn() float:
-            return math.sqrt(V.X ** 2 + V.Y ** 2)
+        Dist fn(self type) float:
+            return math.sqrt(self.X ** 2 + self.Y ** 2)
     
     export main fn():
         v Vertex(1, 2)
         fmt.printLn(v.Dist())
 
-Methods are functions defined within a type. Note the `(V)` before `fn()`, this
-is the name with which the object can be accessed within the function itself.
+Methods are functions defined within a type.
+
+Note the first parameter refers to the object which the method is associated
+with. When calling the method, this parameter is omitted. Within a type, the
+`type` keyword refers to the current type, so `self type` is the same as
+`self Vertex`.
 
 
 ## Default values and the initializer function
@@ -556,11 +560,11 @@ is the name with which the object can be accessed within the function itself.
     private Vertex type:
         X float = 1
         Y float = 1
-        (V) fn(X, Y float) Vertex:
-            V.X, V.Y = X, Y
-            return V
-        Dist (V) fn() float:
-            return math.sqrt(V.X ** 2 + V.Y ** 2)
+        fn(self type, X, Y float) type:
+            self.X, self.Y = X, Y
+            return self
+        Dist fn(self type) float:
+            return math.sqrt(self.X ** 2 + self.Y ** 2)
     
     export main fn():
         v Vertex(1, 2)
@@ -588,12 +592,12 @@ creating an object of that type such as with `v Vertex(1, 2)`.
             X float = 1
             Y float = 1
         
-        (V) fn(X, Y float) Vertex:
-            V.X, V.Y = X, Y
-            return V
+        fn(self type, X, Y float) type:
+            self.X, self.Y = X, Y
+            return self
         
-        Dist (V) fn() float:
-            return math.sqrt(V.X ** 2 + V.Y ** 2)
+        Dist fn(self type) float:
+            return math.sqrt(self.X ** 2 + self.Y ** 2)
     
     export main fn():
         v Vertex(1, 2)
@@ -613,33 +617,32 @@ main function in this case, you will get a compile error.
         math
     
     private Vertex type:
+        fn(self type, X, Y float) type:
+            self.X, self.Y = X, Y
+            return self
         
         private XValue float
         X property:
-            get (V) fn() float:
-                return V.XValue
-            set (V) fn(X float):
+            get fn(self type) float:
+                return self.XValue
+            set fn(self type, X float):
                 if X >= 0:
-                    V.XValue = X
+                    self.XValue = X
                 else:
-                    V.XValue = X * -1
+                    self.XValue = X * -1
         
         private YValue float
         Y property:
-            get (V) fn() float:
-                return V.YValue
-            set (V) fn(Y float):
+            get fn(self type) float:
+                return self.YValue
+            set fn(self type, Y float):
                 if Y >= 0:
-                    V.YValue = Y
+                    self.YValue = Y
                 else:
-                    V.YValue = Y * -1
+                    self.YValue = Y * -1
         
-        (V) fn(X, Y float) Vertex:
-            V.X, V.Y = X, Y
-            return V
-        
-        Dist (V) fn() float:
-            return math.sqrt(V.X ** 2 + V.Y ** 2)
+        Dist fn(self type) float:
+            return math.sqrt(self.X ** 2 + self.Y ** 2)
     
     export main fn():
         v Vertex(1, 2)
@@ -666,8 +669,8 @@ level will create a new object rather that just changing its value.
     
     export main fn():
         myInt type extends int:
-            double (I) fn() myInt:
-                return I * 2
+            double fn(self type) type:
+                return self * 2
         
         i myInt = 3
         fmt.printLn(i.double().double()) // This will print 12
@@ -675,4 +678,131 @@ level will create a new object rather that just changing its value.
 The `extends` keyword allows you to create new types by extending existing ones.
 It is possible to inherit from more than one type by listing all the types after
 the `extends` keyword.
+
+
+## Interfaces
+
+    Li 0
+    
+    import fmt
+    
+    private HasX interface:
+        X float
+    
+    private Vertex type:
+        X, Y float
+    
+    private printX fn(h HasX):
+        fmt.print(h.X)
+    
+    export main fn():
+        v Vertex(3, 4)
+        printX(v) // This will print 3
+
+Interfaces specify which properties and methods a type must have to satisfy it.
+You can use an interface as a parameter in a function and ensure that any object
+that is passed to that function must satisfy that interface. If you try to pass
+an object that does not satisfy the interface or try to use the parameter in the
+function in a way that is not allowed by the interface, you will get a compile
+error.
+
+Note that a type does not need to specify that it implements the interface, all
+it needs to do is to actually conform to it. This allows for an enormous amount
+of flexibility in using interfaces.
+
+
+## Parametric polymorphism
+
+    Li 0
+    
+    import fmt
+    
+    private Plusable interface:
+        plus fn(type, type) type
+    
+    private double fn[P Plusable](num P) P:
+        return num + num
+    
+    export main fn():
+        myInt int = 3
+        myInt = double(myInt)
+        fmt.printLn(myInt) // This will print 6
+        
+        myFloat float = 3.1
+        myFloat = double(myFloat)
+        fmt.printLn(myFloat) // This will print 6.2
+
+This is often called generics in other languages. What is happening here is that
+we can pass any type of variable to `double()` as long as it implements the
+`Plusable` interface.
+
+The advantage over just using interfaces is that we can
+make sure that the variables retain their original type, so in the first
+case, `double()` actually returns an `int` and in the second, `double()`
+actually returns a `float`. If we used only interfaces, the return value would
+only allow properties and methods of the interface, so we would not be able to
+print it as `Plusable` does not specify a `String` property.
+
+
+## Lists
+
+    Li 0
+    
+    import fmt
+    
+    export main fn():
+        a (int)string
+        a(0) = "Hello"
+        a(1) = "World"
+        fmt.printLn(a(0), a(1))
+        fmt.printLn(a)
+        
+        primes (int)int(2, 3, 5, 7, 11, 13)
+        fmt.printLn(primes)
+
+The type `(K)V` is a list with keys of type `K` and values of type `T`.
+
+The statement `a [int]string` declares a variable `a` as a list of strings.
+
+
+## Slices
+
+    Li 0
+    
+    import fmt
+    
+    export main fn():
+        abcd (int)string("a", "b", "c", "d")
+        bc (int)string = abcd(1, 3)
+        fmt.printLn(bc)
+
+A slice is formed by specifying two indices, a low and high bound, separated by
+a comma: `a(low , high)`.
+
+This selects a half-open range which includes the first element, but excludes
+the last one.
+
+
+## Slice defaults
+
+    Li 0
+    
+    import fmt
+    
+    export main fn():
+        s (int)int(2, 3, 5, 7, 11, 13)
+        
+        s (int)int = s(1, 4)
+        fmt.printLn(s)
+        
+        s = s(, 2)
+        fmt.printLn(s)
+        
+        s = s(1, )
+        fmt.Println(s)
+
+When slicing, you may omit the high or low bounds to use their defaults instead.
+
+The default is zero for the low bound and the length of the list for the high
+bound.
 

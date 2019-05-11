@@ -725,11 +725,11 @@ of flexibility in using interfaces.
     
     export main fn():
         myInt int = 3
-        myInt = double(myInt)
+        myInt = double[int](myInt)
         fmt.printLn(myInt) // This will print 6
         
         myFloat float = 3.1
-        myFloat = double(myFloat)
+        myFloat = double[float](myFloat)
         fmt.printLn(myFloat) // This will print 6.2
 
 This is often called generics in other languages. What is happening here is that
@@ -744,6 +744,24 @@ only allow properties and methods of the interface, so we would not be able to
 print it as `Plusable` does not specify a `String` property.
 
 
+## Parametric polymorphism for types
+
+    Li 0
+    
+    imports fmt
+    
+    private Vertex type[N fmt.Stringer]:
+        X N
+        Y N
+    
+    export main fn():
+        v Vertex(1,2)
+        fmt.printLn(v.X)
+
+Parametric polymorphism can also be used with type definitions to create more
+generic types. In the above example, `X` and `Y` would be of type `int`.
+
+
 ## Lists
 
     Li 0
@@ -751,16 +769,16 @@ print it as `Plusable` does not specify a `String` property.
     import fmt
     
     export main fn():
-        a (int)string
+        a [int]string
         a(0) = "Hello"
         a(1) = "World"
         fmt.printLn(a(0), a(1))
         fmt.printLn(a)
         
-        primes (int)int(2, 3, 5, 7, 11, 13)
+        primes [int]int(2, 3, 5, 7, 11, 13)
         fmt.printLn(primes)
 
-The type `(K)V` is a list with keys of type `K` and values of type `T`.
+The type `[K]V` is a list with keys of type `K` and values of type `T`.
 
 The statement `a [int]string` declares a variable `a` as a list of strings.
 
@@ -772,8 +790,8 @@ The statement `a [int]string` declares a variable `a` as a list of strings.
     import fmt
     
     export main fn():
-        abcd (int)string("a", "b", "c", "d")
-        bc (int)string = abcd(1, 3)
+        abcd [int]string("a", "b", "c", "d")
+        bc [int]string = abcd(1, 3)
         fmt.printLn(bc)
 
 A slice is formed by specifying two indices, a low and high bound, separated by
@@ -790,9 +808,9 @@ the last one.
     import fmt
     
     export main fn():
-        s (int)int(2, 3, 5, 7, 11, 13)
+        s [int]int(2, 3, 5, 7, 11, 13)
         
-        s (int)int = s(1, 4)
+        s = s(1, 4)
         fmt.printLn(s)
         
         s = s(, 2)

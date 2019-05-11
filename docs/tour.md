@@ -808,19 +808,241 @@ the last one.
     import fmt
     
     export main fn():
-        s [int]int(2, 3, 5, 7, 11, 13)
+        p [int]int(2, 3, 5, 7, 11, 13)
         
-        s = s(1, 4)
-        fmt.printLn(s)
+        p = p(1, 4)
+        fmt.printLn(p)
         
-        s = s(, 2)
-        fmt.printLn(s)
+        p = p(, 2)
+        fmt.printLn(p)
         
-        s = s(1, )
-        fmt.Println(s)
+        p = p(1, )
+        fmt.printLn(p)
 
 When slicing, you may omit the high or low bounds to use their defaults instead.
 
 The default is zero for the low bound and the length of the list for the high
 bound.
+
+
+## List length
+
+    Li 0
+    
+    import fmt
+    
+    export main fn():
+        p [int]int(2, 3, 5, 7, 11, 13)
+        fmt.print(p.length)
+
+Lists have a length property that shows how many items are currently in the
+list.
+
+
+## Lists of lists
+
+    Li 0
+    
+    import fmt
+    
+    export main fn():
+        // Create a tic-tac-toe board.
+        board [int][int]string(
+            [int]string("_", "_", "_"),
+            [int]string("_", "_", "_"),
+            [int]string("_", "_", "_"),
+        )
+        
+        // The players take turns.
+        board(0)(0) = "X"
+        board(2)(2) = "O"
+        board(1)(2) = "X"
+        board(1)(0) = "O"
+        board(0)(2) = "X"
+        
+        for i int = 0; i < board.length; i++:
+            fmt.printF("%s\n", strings.Join(board(i), " "))
+
+Lists can contain any type, including other lists.
+
+
+## Appending to a list
+
+    Li 0
+    
+    import fmt
+    
+    export main fn():
+        l [int]int
+        fmt.printLn(l)
+        
+        l = l.push(0)
+        fmt.printLn(l)
+        
+        l = l.push(1)
+        fmt.printLn(l)
+        
+        // We can add more than one element at a time.
+        l = l.push(2, 3, 4)
+        fmt.printLn(l)
+
+Lithium provides a built-in `push` method to append items to a list.
+
+
+## Iterating over a list
+
+    Li 0
+    
+    import fmt
+    
+    private pow [int]int(1, 2, 4, 8, 16, 32, 64, 128)
+    
+    export main fn():
+        for i int, v int in pow.range:
+            fmt.printF("2**%d = %d\n", i, v)
+
+The built-in `range` property provides an iterator than can be used to loop over
+the items in a list.
+
+
+## Range continued
+
+    Li 0
+    
+    import fmt
+    
+    export main fn():
+        pow [int]int(1, 1, 1, 1, 1, 1, 1, 1)
+        
+        for i int in pow.range:
+            pow(i) = 1 << i.UInt
+        
+        for _, value int in pow.range:
+            fmt.printF("%d\n", value)
+
+You can skip the key or value by assigning to `_`.
+
+    for key, _ in list.range
+    for _, value in list.range
+
+If you only want the key, you can omit the second variable.
+
+    for key in list.range
+
+
+## Maps shorthand
+
+    Li 0
+    
+    import fmt
+    
+    private Vertex type:
+        lat, long float
+    
+    private m [string]Vertex(
+        "Bell Labs" = (40.68433, -74.39967),
+        "Google" = (37.42202, -122.08408),
+    )
+    
+    export main fn():
+        fmt.printLn(m)
+
+If the top-level type is just a type name, you can omit it from the elements of
+the literal.
+
+
+## Mutating lists
+
+    Li 0
+    
+    import fmt
+    
+    export main fn():
+        m [string]int
+        
+        m("Answer") = 42
+        fmt.printLn("The value:", m("Answer"))
+        
+        m["Answer"] = 48
+        fmt.printLn("The value:", m("Answer"))
+        
+        m.delete("Answer")
+        fmt.printLn("The value:", m("Answer"))
+        
+        v int, ok bool = m("Answer")
+        fmt.printLn("The value:", v, "Present?", ok)
+
+Insert or update an element in list `m`:
+
+    m(key) = elem
+
+Retrieve an element:
+
+    elem = m(key)
+
+Delete an element:
+
+    m.delete(key)
+
+Test that a key is present with a two-value assignment:
+
+    elem, ok = m(key)
+
+If key is in `m`, `ok` is `true`. If not, `ok` is `false`.
+
+If key is not in the list, then `elem` is the zero value for the list's element
+type.
+
+
+## Function values
+
+    Li 0
+    
+    import:
+        fmt
+        math
+    
+    private compute fn(func fn(float, float) float) float:
+        return func(3, 4)
+    
+    export main fn():
+        hypot fn(x, y float) float:
+            return math.sqrt(x*x + y*y)
+        
+        fmt.printLn(hypot(5, 12))
+        
+        fmt.printLn(compute(hypot))
+        fmt.printLn(compute(math.pow))
+
+Functions are values too. They can be passed around just like other values.
+
+Function values may be used as function arguments and return values.
+
+
+## Function closures
+
+    Li 0
+    
+    import fmt
+    
+    private adder fn() fn(int) int:
+        sum int = 0
+        return fn(x int) int:
+            sum += x
+            return sum
+    
+    export main fn():
+        pos int, neg int = adder(), adder()
+        for i int; i < 10; i++:
+            fmt.printLn(
+                pos(i),
+                neg(-2*i),
+            )
+
+Lithium functions may be closures. A closure is a function value that references
+variables from outside its body. The function may access and assign to the
+referenced variables. In this sense the function is "bound" to the variables.
+
+For example, the `adder` function returns a closure. Each closure is bound to
+its own `sum` variable.
 

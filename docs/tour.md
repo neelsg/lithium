@@ -71,7 +71,7 @@ be executed. When a program is executed, the first thing that will run is the
 
     Li 0
     
-    local sqr2 fn(x int) int:
+    private sqr2 fn(x int) int:
         // This function is only available within the current package
         return x * x
     
@@ -79,8 +79,8 @@ be executed. When a program is executed, the first thing that will run is the
         // This function can be used by other packages
         return sqr2(x)
 
-In Lithium, anything marked as `export ` will be made available for use by other
-packages. Anything that starts with `local ` can only be used in the current
+In Lithium, anything marked as `export` will be made available for use by other
+packages. Anything that starts with `private` can only be used in the current
 package, but note that this also includes any other files that are part of the
 current package.
 
@@ -108,7 +108,7 @@ located.
     import:
         fmt
     
-    local add fn(x int, y int) int:
+    private add fn(x int, y int) int:
         return x + y
     
     export main fn():
@@ -124,7 +124,7 @@ arguments of type `int`. Note that the type comes after the variable name.
     
     import fmt
     
-    local:
+    private:
         split fn(sum int) (int, int):
             x, y int = sum * 4 / 9, sum - x
             return x, y
@@ -139,7 +139,7 @@ A function can return any number of results.
     import:
         fmt
     
-    local swap fn(x, y string) (string, string): return y, x
+    private swap fn(x, y string) (string, string): return y, x
     
     export main fn():
         a, b string = swap("hello", "world")
@@ -156,7 +156,7 @@ type from all but the last parameter.
     import:
         fmt
     
-    local swap fn(x = "hello", y string) (string, string): return y, x
+    private swap fn(x = "hello", y string) (string, string): return y, x
     
     export main fn():
         a, b string = swap(y = "world")
@@ -173,7 +173,7 @@ they will be set to the default.
     
     import fmt
     
-    local:
+    private:
         c, python, java bool
     
     export go bool
@@ -194,7 +194,7 @@ be available for use by other packages as well.
     
     import fmt, math
     
-    local i, j int, p float = 1, 2, math.pi
+    private i, j int, p float = 1, 2, math.pi
     
     export main fn():
         c, python bool, java, go string = true, false, "no!", "yes!"
@@ -210,7 +210,7 @@ the variable will be assigned the default value of the type.
     
     import fmt, math
     
-    local:
+    private:
         ToBe bool = false
         MaxInt int.UInt64 = 2 ** 64 - 1
         z complex.Complex128 = math.complex.sqrt(-5 + 0i12)
@@ -296,7 +296,7 @@ explicit conversion.
     
     import fmt
     
-    local PI const = 3.14
+    private PI const = 3.14
     
     export main fn = fn():
         WORLD const = "Mars"
@@ -383,7 +383,7 @@ If you omit the loop condition it loops forever.
         fmt
         math
     
-    local sqrt fn(x float) string:
+    private sqrt fn(x float) string:
         if x < 0:
             return sqrt(-x).String + "i"
         return fmt.sPrint(math.sqrt(x))
@@ -401,7 +401,7 @@ Lithium's `if` statements are like its `for` loops
     import:
         fmt
     
-    local pow fn(x, n, lim float) float:
+    private pow fn(x, n, lim float) float:
         if v float = x ** n; v < lim:
             return v
         return lim
@@ -425,7 +425,7 @@ until the end of the `if`.
         fmt
         math
     
-    local pow fn(x, n, lim float) float:
+    private pow fn(x, n, lim float) float:
         if x**= n; x < lim:
             return x
         else:
@@ -475,30 +475,30 @@ Deferred function calls are pushed onto a stack. When a function returns, its
 deferred calls are executed in last-in-first-out order.
 
 
-## Classes
+## Custom types
 
     Li 0
     
     import fmt
     
-    local Vertex class:
+    private Vertex type:
         X int
         Y int
     
     export main fn():
         fmt.printLn(Vertex(1, 2))
 
-Lithium allows simple object-oriented programming. A class is a collection of
-properties and methods.
+Lithium allows simple object-oriented programming. A type is a collection of
+properties and methods and is often called a class in other languages.
 
 
-## Class properties
+## Type properties
 
     Li 0
     
     import fmt
     
-    local Vertex class:
+    private Vertex type:
         X int
         Y int
     
@@ -507,16 +507,16 @@ properties and methods.
         v.X = 4
         fmt.printLn(v.X)
 
-Class properties are accessed using a dot.
+Type properties are accessed using a dot.
 
 
-## Shorthand for initializing classes
+## Shorthand for initializing types
 
-    local Vertex class:
+    private Vertex type:
         X int
         Y int
 
-Given the above class, the following statements are equivalent:
+Given the above type, the following statements are equivalent:
 
     v Vertex = Vertex(1, 2)
     v Vertex(1, 2)
@@ -531,7 +531,7 @@ Given the above class, the following statements are equivalent:
         fmt
         math
     
-    local Vertex class:
+    private Vertex type:
         X float
         Y float
         Dist (V) fn() float:
@@ -541,7 +541,7 @@ Given the above class, the following statements are equivalent:
         v Vertex(1, 2)
         fmt.printLn(v.Dist())
 
-Methods are functions defined within a class. Note the `(V)` before `fn()`, this
+Methods are functions defined within a type. Note the `(V)` before `fn()`, this
 is the name with which the object can be accessed within the function itself.
 
 
@@ -553,7 +553,7 @@ is the name with which the object can be accessed within the function itself.
         fmt
         math
     
-    local Vertex class:
+    private Vertex type:
         X float = 1
         Y float = 1
         (V) fn(X, Y float) Vertex:
@@ -566,12 +566,12 @@ is the name with which the object can be accessed within the function itself.
         v Vertex(1, 2)
         fmt.printLn(v.Dist())
 
-Just like normal variables, properties in a class can also be set to an initial
-value which will then be the default for any objects of that class.
+Just like normal variables, properties in a type can also be set to an initial
+value which will then be the default for any objects of that type.
 
-You can create an unnamed function in a class which returns the an object of
-the class type. This function then becomes the initializer and will be used when
-creating an object of that class such as with `v Vertex(1, 2)`.
+You can create an unnamed function in a type which returns the an object of
+the type. This function then becomes the initializer and will be used when
+creating an object of that type such as with `v Vertex(1, 2)`.
 
 
 ## Private values
@@ -582,9 +582,9 @@ creating an object of that class such as with `v Vertex(1, 2)`.
         fmt
         math
     
-    local Vertex class:
+    private Vertex type:
         
-        local: // X and Y can now only be accessed by methods within the object
+        private: // X and Y can now only be used by methods within the object
             X float = 1
             Y float = 1
         
@@ -599,7 +599,7 @@ creating an object of that class such as with `v Vertex(1, 2)`.
         v Vertex(1, 2)
         fmt.printLn(v.Dist())
 
-You can use the `local` keyword to make properties or even methods only
+You can use the `private` keyword to make properties or even methods only
 available to the methods in the object itself. If you try to use `v.X` in the
 main function in this case, you will get a compile error.
 
@@ -612,9 +612,9 @@ main function in this case, you will get a compile error.
         fmt
         math
     
-    local Vertex class:
+    private Vertex type:
         
-        local XValue float
+        private XValue float
         X property:
             get (V) fn() float:
                 return V.XValue
@@ -624,7 +624,7 @@ main function in this case, you will get a compile error.
                 else:
                     V.XValue = X * -1
         
-        local YValue float
+        private YValue float
         Y property:
             get (V) fn() float:
                 return V.YValue
@@ -652,8 +652,10 @@ If the `get` method is omitted, you will get a compile error if you try to
 retrieve the property. If the `set` method is omitted, you will get a compile
 error if you try to assign a value to the property.
 
-A `get` and `set` method can also be assigned at the top of the class which will
-allow you to assign or retrieve a custom value by directly using the object name
+A `get` method can also be created at the top of the type which will allow you
+to retrieve a custom value by directly using the object name. Note that a
+similar `set` method will not work the same way as assigning a new value at top
+level will create a new object rather that just changing its value.
 
 
 ## Inheritance
@@ -663,14 +665,14 @@ allow you to assign or retrieve a custom value by directly using the object name
     import fmt
     
     export main fn():
-        myInt class extends int:
+        myInt type extends int:
             double (I) fn() myInt:
                 return I * 2
         
         i myInt = 3
         fmt.printLn(i.double().double()) // This will print 12
 
-The `extends` keyword allows you to create new classes by extending existing
-ones. It is possible to inherit from more than one class by listing all the
-classes after the `extends` keyword.
+The `extends` keyword allows you to create new types by extending existing ones.
+It is possible to inherit from more than one type by listing all the types after
+the `extends` keyword.
 

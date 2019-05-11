@@ -475,6 +475,59 @@ Deferred function calls are pushed onto a stack. When a function returns, its
 deferred calls are executed in last-in-first-out order.
 
 
+## Function values
+
+    Li 0
+    
+    import:
+        fmt
+        math
+    
+    private compute fn(func fn(float, float) float) float:
+        return func(3, 4)
+    
+    export main fn():
+        hypot fn(x, y float) float:
+            return math.sqrt(x*x + y*y)
+        
+        fmt.printLn(hypot(5, 12))
+        
+        fmt.printLn(compute(hypot))
+        fmt.printLn(compute(math.pow))
+
+Functions are values too. They can be passed around just like other values.
+
+Function values may be used as function arguments and return values.
+
+
+## Function closures
+
+    Li 0
+    
+    import fmt
+    
+    private adder fn() fn(int) int:
+        sum int = 0
+        return fn(x int) int:
+            sum += x
+            return sum
+    
+    export main fn():
+        pos int, neg int = adder(), adder()
+        for i int; i < 10; i++:
+            fmt.printLn(
+                pos(i),
+                neg(-2 * i),
+            )
+
+Lithium functions may be closures. A closure is a function value that references
+variables from outside its body. The function may access and assign to the
+referenced variables. In this sense the function is "bound" to the variables.
+
+For example, the `adder` function returns a closure. Each closure is bound to
+its own `sum` variable.
+
+
 ## Defining new types
 
     Li 0
@@ -711,6 +764,77 @@ it needs to do is to actually conform to it. This allows for an enormous amount
 of flexibility in using interfaces.
 
 
+## Stringers
+
+    Li 0
+    
+    import fmt
+    
+    private Person type:
+        name string
+        age int
+        String property:
+            get fn(self type) string:
+                return fmt.sprintF("%v (%v years)", self.name, self.age)
+    
+    export main fn():
+        a Person("Arthur Dent", 42)
+        z Person("Zaphod Beeblebrox", 9001)
+        fmt.printLn(a, z)
+
+One of the most ubiquitous interfaces is `Stringer` defined by the `fmt`
+package.
+
+    export Stringer interface:
+        String string
+
+A `Stringer` is a type that can describe itself as a string. The `fmt` package
+(and many others) look for this interface to print values.
+
+
+## Errors
+
+    Li 0
+    
+    import:
+        fmt
+        time
+    
+    private MyError type:
+        When time.Time
+        What string
+        Error property:
+            get fn(self type) string:
+                return fmt.sprintF("at %v, %s", self.When, self.What)
+    
+    private run fn() error:
+        return MyError(time.Now(), "it didn't work")
+    
+    export main fn():
+        if err error = run(); err != nil:
+            fmt.printLn(err)
+
+Lithium programs express error state with `error` values.
+
+The `error` type is a built-in interface similar to `fmt.Stringer`:
+
+    export error interface:
+        Error string
+        Ok bool
+
+(As with `fmt.Stringer`, the `fmt` package looks for the `error` interface when
+printing values.)
+
+Functions often return an `error` value, and calling code should handle errors
+by testing whether the `error.Ok` is false.
+
+    i int, err error = strconv.aToI("42")
+    if !err.Ok:
+        fmt.printF("couldn't convert number: %v\n", err)
+        return
+    fmt.printLn("Converted integer:", i)
+
+
 ## Parametric polymorphism
 
     Li 0
@@ -912,10 +1036,7 @@ the items in a list.
     import fmt
     
     export main fn():
-        pow [int]int(1, 1, 1, 1, 1, 1, 1, 1)
-        
-        for i int in pow.range:
-            pow(i) = 1 << i.UInt
+        pow [int]int(1, 2, 4, 8, 16, 32, 64, 128)
         
         for _, value int in pow.range:
             fmt.printF("%d\n", value)
@@ -992,57 +1113,4 @@ If key is in `m`, `ok` is `true`. If not, `ok` is `false`.
 
 If key is not in the list, then `elem` is the zero value for the list's element
 type.
-
-
-## Function values
-
-    Li 0
-    
-    import:
-        fmt
-        math
-    
-    private compute fn(func fn(float, float) float) float:
-        return func(3, 4)
-    
-    export main fn():
-        hypot fn(x, y float) float:
-            return math.sqrt(x*x + y*y)
-        
-        fmt.printLn(hypot(5, 12))
-        
-        fmt.printLn(compute(hypot))
-        fmt.printLn(compute(math.pow))
-
-Functions are values too. They can be passed around just like other values.
-
-Function values may be used as function arguments and return values.
-
-
-## Function closures
-
-    Li 0
-    
-    import fmt
-    
-    private adder fn() fn(int) int:
-        sum int = 0
-        return fn(x int) int:
-            sum += x
-            return sum
-    
-    export main fn():
-        pos int, neg int = adder(), adder()
-        for i int; i < 10; i++:
-            fmt.printLn(
-                pos(i),
-                neg(-2*i),
-            )
-
-Lithium functions may be closures. A closure is a function value that references
-variables from outside its body. The function may access and assign to the
-referenced variables. In this sense the function is "bound" to the variables.
-
-For example, the `adder` function returns a closure. Each closure is bound to
-its own `sum` variable.
 

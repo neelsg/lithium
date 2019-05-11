@@ -8,8 +8,8 @@ Fizz if divisible by 3, Buzz if divisible by 5
         fmt
         num
     
-    local fizzBuzz fn(n int) string:
-        if n % 3 == 0 and n % 5 == 0:
+    private fizzBuzz fn(n int) string:
+        if n % 3 == 0 && n % 5 == 0:
             return "FizzBuzz"
         else if n % 3 == 0:
             return "Fizz"

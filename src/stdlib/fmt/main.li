@@ -6,10 +6,10 @@ The `%` character is used in formatting string templates as a placeholder for
 any additional variables used.
 */
 
-imports:
+import:
 	io
 
-exports:
+export:
 	stringer interface:
 		string string
 	

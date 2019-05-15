@@ -49,7 +49,7 @@ recent sub-version should be used.
         math
 
     export main fn():
-        fmt.printf("Now you have %g problems.\n", math.sqrt(7))
+        fmt.printF("Now you have % problems.\n", math.sqrt(7))
 
 Here we import `fmt` and `math` from the standard library so that they can be
 used in this file. We could also write:
@@ -211,18 +211,18 @@ the variable will be assigned the default value of the type.
     import fmt, math
     
     private:
-        ToBe bool = false
-        MaxInt int.UInt64 = 2 ** 64 - 1
-        z complex.Complex128 = math.complex.sqrt(-5 + 0i12)
+        toBe bool = false
+        maxInt int.u64 = 2 ** 64 - 1
+        z complex.c128 = math.complex.sqrt(-5 + 12i)
     
     export main fn():
-        fmt.printF("Type: %T Value: %v\n", ToBe, ToBe)
-        fmt.printF("Type: %T Value: %v\n", MaxInt, MaxInt)
-        fmt.printF("Type: %T Value: %v\n", z, z)
+        fmt.printF("Value: %\n", toBe)
+        fmt.printF("Value: %\n", maxInt)
+        fmt.printF("Value: %\n", z)
 
 Lithium basic types are:
 
-    bool complex float int string
+    bool byte complex float int string
 
 Each of these types are defined in a standard library package that is imported
 implicitly, so you do not need to list them in an import statement.
@@ -230,12 +230,12 @@ implicitly, so you do not need to list them in an import statement.
 These packages also provide more fine-grained type definitions such as the
 following:
 
-    int.Int8 int.Int16 int.Int32 int.Int64
-    int.UInt int.UInt8 int.UInt16 int.UInt32 int.UInt64
+    int.i8 int.i16 int.i32 int.i64
+    int.u int.u8 int.u16 int.u32 int.u64
     
-    float.Float32 float.Float64
+    float.f32 float.f64
     
-    complex.Complex64 complex.Complex64
+    complex.c64 complex.c128
 
 
 ## Default values
@@ -249,7 +249,7 @@ following:
         f float
         b bool
         s string
-        fmt.printF("%v %v %v %q\n", i, f, b, s)
+        fmt.printF("% , % , % , %\n", i, f, b, s)
 
 Variables declared without an explicit initial value are given their default
 value.
@@ -273,8 +273,8 @@ Custom types can have their own defined default values.
     
     export main fn():
         x, y int = 3, 4
-        f float = math.sqrt((x * x + y * y).Float)
-        z int.UInt = f.UInt
+        f float = math.sqrt((x * x + y * y).float)
+        z int.u = f.intU
         fmt.printLn(x, y, z)
 
 The built in types have properties to convert to different types. Custom defined
@@ -283,8 +283,8 @@ types should also include similar functionality.
 Some numeric conversions:
 
     i int = 42
-    f float.Float64 = i.Float64
-    u int.UInt = f.UInt
+    f float.f64 = i.float64
+    u int.u = f.intU
 
 Unlike in C, assignment in Lithium between items of different type requires an
 explicit conversion.
@@ -385,8 +385,8 @@ If you omit the loop condition it loops forever.
     
     private sqrt fn(x float) string:
         if x < 0:
-            return sqrt(-x).String + "i"
-        return fmt.sPrint(math.sqrt(x))
+            return sqrt(-x).string + "i"
+        return math.sqrt(x).string
     
     export main fn():
         fmt.printLn(sqrt(2), sqrt(-4))
@@ -429,7 +429,7 @@ until the end of the `if`.
         if x**= n; x < lim:
             return x
         else:
-            fmt.printF("%g >= %g\n", x, lim)
+            fmt.printF("% >= %\n", x, lim)
         return lim
     
     export main fn():
@@ -437,42 +437,6 @@ until the end of the `if`.
 
 Variables declared inside an `if` init statement are also available inside any
 of the else blocks.
-
-
-## Defer
-
-    Li 0
-    
-    import fmt
-    
-    export main fn():
-        defer fmt.printLn("world")
-        
-        fmt.printLn("hello")
-
-A `defer` statement defers the execution of a function until the surrounding
-function returns.
-
-The `defer` statement's arguments are evaluated immediately, but the function
-call is not executed until the surrounding function returns.
-
-
-## Stacking defers
-
-    Li 0
-    
-    import fmt
-    
-    export main fn():
-        fmt.printLn("counting")
-        
-        for i int = 0; i < 10; i++:
-            defer fmt.printLn(i)
-        
-        fmt.printLn("done")
-
-Deferred function calls are pushed onto a stack. When a function returns, its
-deferred calls are executed in last-in-first-out order.
 
 
 ## Function values
@@ -498,6 +462,44 @@ deferred calls are executed in last-in-first-out order.
 Functions are values too. They can be passed around just like other values.
 
 Function values may be used as function arguments and return values.
+
+
+## Defer
+
+    Li 0
+    
+    import fmt
+    
+    export main fn():
+        defer(fmt.printLn, "world!")
+        
+        fmt.print("Hello ")
+
+The `defer` function is a special built-in function that defers the execution of
+a function until the surrounding function returns. The first parameter is the
+function to be called and any further parameters are the parameters that will be
+passed to this function on execution.
+
+The `defer` statement's arguments are evaluated immediately, but the function
+call is not executed until the surrounding function returns.
+
+
+## Stacking defers
+
+    Li 0
+    
+    import fmt
+    
+    export main fn():
+        fmt.printLn("counting")
+        
+        for i int = 0; i < 10; i++:
+            defer(fmt.printLn, i)
+        
+        fmt.printLn("done")
+
+Deferred function calls are pushed onto a stack. When a function returns, its
+deferred calls are executed in last-in-first-out order.
 
 
 ## Function closures
@@ -534,12 +536,12 @@ its own `sum` variable.
     
     import fmt
     
-    private Vertex type:
-        X int
-        Y int
+    private vertex type:
+        x int
+        y int
     
     export main fn():
-        fmt.printLn(Vertex(1, 2))
+        fmt.printLn(vertex(1, 2))
 
 Lithium allows simple object-oriented programming. A type is a collection of
 properties and methods and is often called a class in other languages.
@@ -551,29 +553,29 @@ properties and methods and is often called a class in other languages.
     
     import fmt
     
-    private Vertex type:
-        X int
-        Y int
+    private vertex type:
+        x int
+        y int
     
     export main fn():
-        v Vertex = Vertex(1, 2)
-        v.X = 4
-        fmt.printLn(v.X)
+        v vertex = vertex(1, 2)
+        v.x = 4
+        fmt.printLn(v.x)
 
 Type properties are accessed using a dot.
 
 
 ## Shorthand for initializing types
 
-    private Vertex type:
-        X int
-        Y int
+    private vertex type:
+        x int
+        y int
 
 Given the above type, the following statements are equivalent:
 
-    v Vertex = Vertex(1, 2)
-    v Vertex(1, 2)
-    v Vertex(X = 1, Y = 2)
+    v vertex = vertex(1, 2)
+    v vertex(1, 2)
+    v vertex(x = 1, y = 2)
 
 
 ## Methods
@@ -584,22 +586,20 @@ Given the above type, the following statements are equivalent:
         fmt
         math
     
-    private Vertex type:
-        X float
-        Y float
-        Dist fn(self type) float:
-            return math.sqrt(self.X ** 2 + self.Y ** 2)
+    private vertex type:
+        x float
+        y float
+        dist fn(self vertex) float:
+            return math.sqrt(self.x ** 2 + self.y ** 2)
     
     export main fn():
-        v Vertex(1, 2)
-        fmt.printLn(v.Dist())
+        v vertex(1, 2)
+        fmt.printLn(v.dist())
 
 Methods are functions defined within a type.
 
 Note the first parameter refers to the object which the method is associated
-with. When calling the method, this parameter is omitted. Within a type, the
-`type` keyword refers to the current type, so `self type` is the same as
-`self Vertex`.
+with. When calling the method, this parameter is omitted.
 
 
 ## Default values and the initializer function
@@ -610,25 +610,26 @@ with. When calling the method, this parameter is omitted. Within a type, the
         fmt
         math
     
-    private Vertex type:
-        X float = 1
-        Y float = 1
-        fn(self type, X, Y float) type:
-            self.X, self.Y = X, Y
+    private vertex type:
+        x float = 1
+        y float = 1
+        init fn(x, y float) vertex:
+            self vertex
+            self.x, self.y = x, y
             return self
-        Dist fn(self type) float:
-            return math.sqrt(self.X ** 2 + self.Y ** 2)
+        dist fn(self vertex) float:
+            return math.sqrt(self.x ** 2 + self.y ** 2)
     
     export main fn():
-        v Vertex(1, 2)
-        fmt.printLn(v.Dist())
+        v vertex(1, 2)
+        fmt.printLn(v.dist())
 
 Just like normal variables, properties in a type can also be set to an initial
 value which will then be the default for any objects of that type.
 
-You can create an unnamed function in a type which returns the an object of
-the type. This function then becomes the initializer and will be used when
-creating an object of that type such as with `v Vertex(1, 2)`.
+You can create a function with the label `init` in a type which returns an
+object of that type. This function then becomes the initializer and will be used
+when creating an object of that type such as with `v vertex(1, 2)`.
 
 
 ## Private values
@@ -639,25 +640,26 @@ creating an object of that type such as with `v Vertex(1, 2)`.
         fmt
         math
     
-    private Vertex type:
+    private vertex type:
         
         private: // X and Y can now only be used by methods within the object
-            X float = 1
-            Y float = 1
+            x float = 1
+            y float = 1
         
-        fn(self type, X, Y float) type:
-            self.X, self.Y = X, Y
+        init fn(x, y float) vertex:
+            self vertex
+            self.x, self.y = x, y
             return self
         
-        Dist fn(self type) float:
-            return math.sqrt(self.X ** 2 + self.Y ** 2)
+        dist fn(self vertex) float:
+            return math.sqrt(self.x ** 2 + self.y ** 2)
     
     export main fn():
-        v Vertex(1, 2)
-        fmt.printLn(v.Dist())
+        v vertex(1, 2)
+        fmt.printLn(v.dist())
 
 You can use the `private` keyword to make properties or even methods only
-available to the methods in the object itself. If you try to use `v.X` in the
+available to the methods in the object itself. If you try to use `v.x` in the
 main function in this case, you will get a compile error.
 
 
@@ -669,37 +671,38 @@ main function in this case, you will get a compile error.
         fmt
         math
     
-    private Vertex type:
-        fn(self type, X, Y float) type:
-            self.X, self.Y = X, Y
+    private vertex type:
+        init fn(x, y float) vertex:
+            self vertex
+            self.x, self.y = x, y
             return self
         
-        private XValue float
-        X property:
-            get fn(self type) float:
-                return self.XValue
-            set fn(self type, X float):
-                if X >= 0:
-                    self.XValue = X
+        private xValue float
+        x property:
+            get fn(self vertex) float:
+                return self.xValue
+            set fn(self vertex, x float):
+                if x >= 0:
+                    self.xValue = x
                 else:
-                    self.XValue = X * -1
+                    self.xValue = x * -1
         
-        private YValue float
-        Y property:
-            get fn(self type) float:
-                return self.YValue
-            set fn(self type, Y float):
-                if Y >= 0:
-                    self.YValue = Y
+        private yValue float
+        y property:
+            get fn(self vertex) float:
+                return self.yValue
+            set fn(self vertex, y float):
+                if y >= 0:
+                    self.yValue = y
                 else:
-                    self.YValue = Y * -1
+                    self.yValue = y * -1
         
-        Dist fn(self type) float:
-            return math.sqrt(self.X ** 2 + self.Y ** 2)
+        dist fn(self vertex) float:
+            return math.sqrt(self.x ** 2 + self.y ** 2)
     
     export main fn():
-        v Vertex(1, 2)
-        fmt.printLn(v.Dist())
+        v vertex(1, 2)
+        fmt.printLn(v.dist())
 
 Properties can have a `get` and `set` method which allows for more control over
 what happens when you retrieve or assign a value to that property.
@@ -722,7 +725,7 @@ level will create a new object rather that just changing its value.
     
     export main fn():
         myInt type extends int:
-            double fn(self type) type:
+            double fn(self myInt) myInt:
                 return self * 2
         
         i myInt = 3
@@ -739,17 +742,17 @@ the `extends` keyword.
     
     import fmt
     
-    private HasX interface:
-        X float
+    private hasX interface:
+        x float
     
-    private Vertex type:
-        X, Y float
+    private vertex type:
+        x, y float
     
-    private printX fn(h HasX):
-        fmt.print(h.X)
+    private printX fn(h hasX):
+        fmt.print(h.x)
     
     export main fn():
-        v Vertex(3, 4)
+        v vertex(3, 4)
         printX(v) // This will print 3
 
 Interfaces specify which properties and methods a type must have to satisfy it.
@@ -770,25 +773,25 @@ of flexibility in using interfaces.
     
     import fmt
     
-    private Person type:
+    private person type:
         name string
         age int
-        String property:
-            get fn(self type) string:
-                return fmt.sprintF("%v (%v years)", self.name, self.age)
+        string property:
+            get fn(self person) string:
+                return fmt.sPrintF("% (% years)", self.name, self.age)
     
     export main fn():
-        a Person("Arthur Dent", 42)
-        z Person("Zaphod Beeblebrox", 9001)
+        a person("Arthur Dent", 42)
+        z person("Zaphod Beeblebrox", 9001)
         fmt.printLn(a, z)
 
-One of the most ubiquitous interfaces is `Stringer` defined by the `fmt`
+One of the most ubiquitous interfaces is `stringer` defined by the `fmt`
 package.
 
-    export Stringer interface:
-        String string
+    export stringer interface:
+        string string
 
-A `Stringer` is a type that can describe itself as a string. The `fmt` package
+A `stringer` is a type that can describe itself as a string. The `fmt` package
 (and many others) look for this interface to print values.
 
 
@@ -800,37 +803,41 @@ A `Stringer` is a type that can describe itself as a string. The `fmt` package
         fmt
         time
     
-    private MyError type:
-        When time.Time
-        What string
-        Error property:
-            get fn(self type) string:
-                return fmt.sprintF("at %v, %s", self.When, self.What)
+    private myError type:
+        when time.Time
+        what string
+        ok bool = false
+        type string = "MyError"
+        string property:
+            get fn(self myError) string:
+                return fmt.sPrintF("at %, %", self.when, self.what)
     
     private run fn() error:
-        return MyError(time.Now(), "it didn't work")
+        return myError(time.now(), "it didn't work")
     
     export main fn():
-        if err error = run(); err != nil:
+        if err error = run(); !err.ok:
             fmt.printLn(err)
 
 Lithium programs express error state with `error` values.
 
-The `error` type is a built-in interface similar to `fmt.Stringer`:
+The `error` type is a built-in interface similar to `fmt.stringer`:
 
-    export error interface:
-        Error string
-        Ok bool
+    export default interface:
+        string string
+        ok bool
+        type string
 
-(As with `fmt.Stringer`, the `fmt` package looks for the `error` interface when
-printing values.)
+The name `default` as used for this interface is special in that it indicates
+that this is the default item in this package, so instead of typing
+`error.default`, you can simply use `error`.
 
 Functions often return an `error` value, and calling code should handle errors
-by testing whether the `error.Ok` is false.
+by testing whether the `error.ok` is false.
 
     i int, err error = strconv.aToI("42")
-    if !err.Ok:
-        fmt.printF("couldn't convert number: %v\n", err)
+    if !err.ok:
+        fmt.printF("couldn't convert number: %\n", err)
         return
     fmt.printLn("Converted integer:", i)
 
@@ -841,10 +848,10 @@ by testing whether the `error.Ok` is false.
     
     import fmt
     
-    private Plusable interface:
-        plus fn(type, type) type
+    private plusable interface[n]:
+        plus fn(n, n) n
     
-    private double fn[P Plusable](num P) P:
+    private double fn[p plusable[p]](num p) p:
         return num + num
     
     export main fn():
@@ -858,14 +865,14 @@ by testing whether the `error.Ok` is false.
 
 This is often called generics in other languages. What is happening here is that
 we can pass any type of variable to `double()` as long as it implements the
-`Plusable` interface.
+`plusable` interface.
 
-The advantage over just using interfaces is that we can
-make sure that the variables retain their original type, so in the first
-case, `double()` actually returns an `int` and in the second, `double()`
-actually returns a `float`. If we used only interfaces, the return value would
-only allow properties and methods of the interface, so we would not be able to
-print it as `Plusable` does not specify a `String` property.
+The advantage over just using interfaces is that we can make sure that the
+variables retain their original type, so in the first case, `double()` actually
+returns an `int` and in the second, `double()` actually returns a `float`. If we
+used only interfaces, the return value would only allow properties and methods
+of the interface, so we would not be able to print it as `plusable` does not
+specify a `string` property.
 
 
 ## Parametric polymorphism for types
@@ -874,65 +881,66 @@ print it as `Plusable` does not specify a `String` property.
     
     imports fmt
     
-    private Vertex type[N fmt.Stringer]:
-        X N
-        Y N
+    private vertex type[n fmt.stringer]:
+        x n
+        y n
     
     export main fn():
-        v Vertex(1,2)
-        fmt.printLn(v.X)
+        v vertex[int](1, 2)
+        fmt.printLn(v.x)
 
 Parametric polymorphism can also be used with type definitions to create more
-generic types. In the above example, `X` and `Y` would be of type `int`.
+generic types. In the above example, `x` and `y` are of type `int`.
 
 
-## Lists
+## Arrays
 
     Li 0
     
     import fmt
     
     export main fn():
-        a [int]string
+        a array[string]
         a(0) = "Hello"
         a(1) = "World"
         fmt.printLn(a(0), a(1))
         fmt.printLn(a)
         
-        primes [int]int(2, 3, 5, 7, 11, 13)
+        primes array[int](2, 3, 5, 7, 11, 13)
         fmt.printLn(primes)
 
-The type `[K]V` is a list with keys of type `K` and values of type `T`.
+`array[t]` is a built-in type that stores an array of variables of type `t`.
 
-The statement `a [int]string` declares a variable `a` as a list of strings.
+The statement `a array[string]` declares a new array `a` of strings. The keys in
+an array are always of type `int`.
 
 
-## Slices
+## Array slices
 
     Li 0
     
     import fmt
     
     export main fn():
-        abcd [int]string("a", "b", "c", "d")
-        bc [int]string = abcd(1, 3)
+        abcd array[string]("a", "b", "c", "d")
+        bc array[string] = abcd(1, 3)
         fmt.printLn(bc)
 
-A slice is formed by specifying two indices, a low and high bound, separated by
-a comma: `a(low , high)`.
+A slice is formed by specifying two indexes, a low and high bound, separated by
+a comma: `array(low, high int)`.
 
 This selects a half-open range which includes the first element, but excludes
 the last one.
 
 
-## Slice defaults
+## Array slice defaults
 
     Li 0
     
     import fmt
     
     export main fn():
-        p [int]int(2, 3, 5, 7, 11, 13)
+        p array[int](2, 3, 5, 7, 11, 13)
         
         p = p(1, 4)
         fmt.printLn(p)
@@ -945,25 +953,25 @@ the last one.
 
 When slicing, you may omit the high or low bounds to use their defaults instead.
 
-The default is zero for the low bound and the length of the list for the high
+The default is zero for the low bound and the length of the array for the high
 bound.
 
 
-## List length
+## Array length
 
     Li 0
     
     import fmt
     
     export main fn():
-        p [int]int(2, 3, 5, 7, 11, 13)
+        p array[int](2, 3, 5, 7, 11, 13)
         fmt.print(p.length)
 
-Lists have a length property that shows how many items are currently in the
-list.
+Array have a length property that shows how many items are currently in the
+array.
 
 
-## Lists of lists
+## Arrays of arrays
 
     Li 0
     
@@ -971,10 +979,10 @@ list.
     
     export main fn():
         // Create a tic-tac-toe board.
-        board [int][int]string(
-            [int]string("_", "_", "_"),
-            [int]string("_", "_", "_"),
-            [int]string("_", "_", "_"),
+        board array[array[string]](
+            array[string]("_", "_", "_"),
+            array[string]("_", "_", "_"),
+            array[string]("_", "_", "_"),
         )
         
         // The players take turns.
@@ -987,130 +995,153 @@ list.
         for i int = 0; i < board.length; i++:
             fmt.printF("%s\n", strings.Join(board(i), " "))
 
-Lists can contain any type, including other lists.
+Arrays can contain any type, including other arrays.
 
 
-## Appending to a list
+## Appending to an array
 
     Li 0
     
     import fmt
     
     export main fn():
-        l [int]int
+        l array[int]
         fmt.printLn(l)
         
-        l = l.push(0)
+        l = l.push(3)
         fmt.printLn(l)
         
-        l = l.push(1)
+        l = l.push(4)
         fmt.printLn(l)
         
         // We can add more than one element at a time.
-        l = l.push(2, 3, 4)
+        l = l.push(5, 6, 7)
         fmt.printLn(l)
 
-Lithium provides a built-in `push` method to append items to a list.
+Lithium provides a built-in `push` method to append items to an array.
 
 
-## Iterating over a list
-
-    Li 0
-    
-    import fmt
-    
-    private pow [int]int(1, 2, 4, 8, 16, 32, 64, 128)
-    
-    export main fn():
-        for i int, v int in pow.range:
-            fmt.printF("2**%d = %d\n", i, v)
-
-The built-in `range` property provides an iterator than can be used to loop over
-the items in a list.
-
-
-## Range continued
+## Iterating over an array
 
     Li 0
     
     import fmt
     
+    private pow array[int](1, 2, 4, 8, 16, 32, 64, 128)
+    
     export main fn():
-        pow [int]int(1, 2, 4, 8, 16, 32, 64, 128)
+        for i, v int in pow:
+            fmt.printF("2 ** % = %\n", i, v)
+
+The built-in `array` type is iterable, which means that it can be used in a for
+loop with the `in` keyword.
+
+
+## Iterating continued
+
+    Li 0
+    
+    import fmt
+    
+    export main fn():
+        pow array[int](1, 2, 4, 8, 16, 32, 64, 128)
         
-        for _, value int in pow.range:
-            fmt.printF("%d\n", value)
+        for _, value int in pow:
+            fmt.printF("%\n", value)
 
 You can skip the key or value by assigning to `_`.
 
-    for key, _ in list.range
-    for _, value in list.range
+    for key, _ in array
+    for _, value in array
 
 If you only want the key, you can omit the second variable.
 
-    for key in list.range
+    for key in array
 
 
-## Maps shorthand
+## Maps
 
     Li 0
     
     import fmt
     
-    private Vertex type:
+    export main fn():
+        m map[int, string]
+        m(0) = "Hello"
+        m(1) = "World"
+        fmt.printLn(m(0), m(1))
+        fmt.printLn(m)
+        
+        primes map[int, int](2, 3, 5, 7, 11, 13)
+        fmt.printLn(primes)
+
+`map[k, v]` is a built-in type that stores a map with keys of type `k` that
+maps to values of type `v`.
+
+The statement `m map[int, string]` declares a variable `m` as a map of strings.
+
+
+## Map initializer with custom keys
+
+    Li 0
+    
+    import fmt
+    
+    private vertex type:
         lat, long float
     
-    private m [string]Vertex(
-        "Bell Labs" = (40.68433, -74.39967),
-        "Google" = (37.42202, -122.08408),
+    private m [string, vertex](
+        "Bell Labs" = vertex(40.68433, -74.39967),
+        "Google" = vertex(37.42202, -122.08408),
     )
     
     export main fn():
         fmt.printLn(m)
 
-If the top-level type is just a type name, you can omit it from the elements of
-the literal.
+If the keys are not specified in the initialization of a map, keys are
+automatically created starting at zero. You can specify the keys just like you
+would specify the names of parameter in a function call.
 
 
-## Mutating lists
+## Mutating maps
 
     Li 0
     
     import fmt
     
     export main fn():
-        m [string]int
+        m map[string,int]
         
         m("Answer") = 42
-        fmt.printLn("The value:", m("Answer"))
+        fmt.printLn("The value: ", m("Answer"))
         
         m["Answer"] = 48
-        fmt.printLn("The value:", m("Answer"))
+        fmt.printLn("The value: ", m("Answer"))
         
         m.delete("Answer")
-        fmt.printLn("The value:", m("Answer"))
+        fmt.printLn("The value: ", m("Answer"))
         
         v int, ok bool = m("Answer")
-        fmt.printLn("The value:", v, "Present?", ok)
+        fmt.printLn("The value: ", v, "Present? ", ok)
 
-Insert or update an element in list `m`:
+Insert or update an element in map `m`:
 
-    m(key) = elem
+    map(key) = value
 
 Retrieve an element:
 
-    elem = m(key)
+    var = map(key)
 
 Delete an element:
 
-    m.delete(key)
+    map.delete(key)
 
 Test that a key is present with a two-value assignment:
 
-    elem, ok = m(key)
+    var, ok = map(key)
 
-If key is in `m`, `ok` is `true`. If not, `ok` is `false`.
+If `key` is in the map, `ok` is `true`. If not, `ok` is `false`.
 
-If key is not in the list, then `elem` is the zero value for the list's element
+If `key` is not in the map, then `var` is the zero value for the map's value
 type.
 

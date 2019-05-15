@@ -1,0 +1,41 @@
+Li 0
+/*
+fmt implements simple formatted I/O
+
+The `%` character is used in formatting string templates as a placeholder for
+any additional variables used.
+*/
+
+imports:
+	io
+
+exports:
+	stringer interface:
+		string string
+	
+	fPrint fn(w io.writer, ...a array[stringer]) (int, error):
+		//TODO
+	
+	fPrintF fn(w io.writer, format string, ...a array[stringer]) (int, error):
+		//TODO
+	
+	fPrintLn fn(w io.writer, ...a array[stringer]) (int, error):
+		//TODO
+	
+	print fn(...a array[stringer]) (int, error):
+		//TODO
+	
+	printF fn(format string, ...a array[stringer]) (int, error):
+		//TODO
+	
+	printLn fn(...a array[stringer]) (int, error):
+		//TODO
+	
+	sPrint fn(...a array[stringer]) string:
+		//TODO
+	
+	sPrintF fn(format string, ...a array[stringer]) string:
+		//TODO
+	
+	sPrintLn fn(...a array[stringer]) string:
+		//TODO

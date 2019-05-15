@@ -43,8 +43,9 @@ the `b + c` is an expression.
 
 The following keywords are reserved:
 
-    chan const defer else export extends false for fn if import in interface
-    nil private property return true type
+    array bool byte chan complex const defer else embed export extends false
+    float for fn if import int in interface iota map nil private property return
+    string true type
 
 
 ## Operators
@@ -62,8 +63,11 @@ The following character sequences are operators:
 - `x ^ y` Bitwise Xor `x.bitXor(y)`
 - `x << y` Left shift `x.shiftLeft(y)`
 - `x >> y` Right shift `x.shiftRight(y)`
-- `~x` Bitwise Ones Complement `x.bitFlip()`
-- `x = y` Assignment
+- `~x` Bitwise ones complement `x.bitFlip()`
+- `x = y` Assignment. Points `x` to the same value as `y`
+- `x.a = y` Set a property `x.a.set(y)`
+- `x(a) = y` Set an internal value `x.set(a, y)`
+- `x(a)(b) = y` Set a nested internal value `x(a).set(b, y)`
 - `x += y` Add assign `x = x + y`
 - `x -= y` Subtract assign `x = x - y`
 - `x *= y` Multiply assign `x = x * y`
@@ -126,16 +130,80 @@ Examples of floating-point literals:
 ### Complex number literals:
 
 Complex numbers are represented as two floating-point literals separated
-by the char `i`. The number before the `i` is the real part and the
-number after is the imaginary part.
+by a `+` where the second floating-point literal ends with the char `i`. The
+first floating-point literal is the real part and the second is the imaginary
+part.
 
 Examples of complex number literals:
 
-    1i2
-    4.2e+1i4.2e-1
+    1 + 2i
+    4.2e+1 + 4.2e-1i
+
+### String literals:
+
+Strings are a sequence of characters that can be formatted in a few different
+ways:
+
+- Characters encapsulated by single `'` or double `"` quotes.
+- A docstring block indicated by the statement `embed string:`
+
+Strings encapsulated in quotation marks cannot flow over a single line.
+
+With strings encapsulated in quotation marks, the following escape sequences can
+be used to escape special chars. The following escape sequences are available:
+
+- `\\` This represents a single backslash.
+- `\"` This represents a double quote (Only applies if the literal is
+    encapsulated in double quotes).
+- `\'` This represents a single quote (Only applies if the literal is
+    encapsulated in single quotes).
+- `\n` A newline character.
+- `\r` A carriage-return character.
+- `\l` A linefeed character.
+
+Examples of string literals:
+
+    "This is a string\n"
+    'This is also a string'
+    'Strings are concatenated with a +, so this' + " is a single string literal"
+    
+    embed string:
+        Use this if you need to create a string that contains lots of raw text
+        such as for templates etc.
+        
+        The entire thing is one string literal up to the point where this is
+        de-dented. All the line-breaks are preserved in the string literal, but
+        the initials tabs / spaces used for indentation is stripped away. Any
+        escape characters such as \\ or \n have no meaning within a string
+        literal. Indicators for comments such as // and /* are also just treated
+        as part of the raw text rather than as actual comments in the code.
 
 
 ## Constants
+
+A constant is defined by the name of the constant followed by the keyword
+`const`, the operator `=` and then an assigned value. The assigned value can be
+any literal of any type or even a simplistic formula using literals.
+
+Examples of constants:
+
+    PI const = 3.14
+    HELLO const = "Hello world!"
+    DAY const = 24 * 60 * 60 * 1000
+
+
+## Iota
+
+The `iota` keyword can be used anywhere in the source code to signify that a new
+integer number constant should be used starting with 0. Each time `iota` is used
+in a single package, a new integer is used, but this may overlap with integers
+created with `iota` in imported packages.
+
+Example:
+
+    RED const = iota // This will set the RED const to 0
+    GREEN, BLUE const = iota, iota // This will set GREEN to 1 and BLUE to 2
+    myVal int = iota // The myVal variable will initially be set to 3
 
 
 ## Variables and types

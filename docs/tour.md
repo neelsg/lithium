@@ -16,7 +16,7 @@ significant part of this programming language on Go.
         fmt
         math
     
-    export main fn():
+    main fn():
         fmt.printLn("My favorite number is", math.rand.int(10))
 
 There is quite a bit happening here. This code will print the text
@@ -48,7 +48,7 @@ recent sub-version should be used.
         fmt
         math
 
-    export main fn():
+    main fn():
         fmt.printF("Now you have % problems.\n", math.sqrt(7))
 
 Here we import `fmt` and `math` from the standard library so that they can be
@@ -60,7 +60,7 @@ used in this file. We could also write:
 
 ## The main function
 
-    export main fn():
+    main fn():
 
 The `fn` keyword is used to define functions (which are blocks of code that can
 be executed. When a program is executed, the first thing that will run is the
@@ -75,14 +75,14 @@ be executed. When a program is executed, the first thing that will run is the
         // This function is only available within the current package
         return x * x
     
-    export sqr fn(x int) int:
+    sqr fn(x int) int:
         // This function can be used by other packages
         return sqr2(x)
 
-In Lithium, anything marked as `export` will be made available for use by other
-packages. Anything that starts with `private` can only be used in the current
+In Lithium, anything that starts with `private` can only be used in the current
 package, but note that this also includes any other files that are part of the
-current package.
+current package. Anything without the `private` keyword is made available to any
+other packages that import this one.
 
 
 ## Importing custom packages
@@ -93,7 +93,7 @@ current package.
         fmt
         myMath "./myMathFolder"
     
-    export main fn():
+    main fn():
         fmt.print(myMath.sqr(3))
 
 You can import your own packages just as easily as packages from the standard
@@ -111,7 +111,7 @@ located.
     private add fn(x int, y int) int:
         return x + y
     
-    export main fn():
+    main fn():
         fmt.printLn(add(42, 13))
 
 A function can take zero or more arguments. In this example, `add` takes two
@@ -129,8 +129,7 @@ arguments of type `int`. Note that the type comes after the variable name.
             x, y int = sum * 4 / 9, sum - x
             return x, y
     
-    export:
-        main fn(): fmt.printLn(split(17))
+    main fn(): fmt.printLn(split(17))
 
 A function can return any number of results.
 
@@ -141,7 +140,7 @@ A function can return any number of results.
     
     private swap fn(x, y string) (string, string): return y, x
     
-    export main fn():
+    main fn():
         a, b string = swap("hello", "world")
         fmt.printLn(a, b)
 
@@ -158,7 +157,7 @@ type from all but the last parameter.
     
     private swap fn(x = "hello", y string) (string, string): return y, x
     
-    export main fn():
+    main fn():
         a, b string = swap(y = "world")
         fmt.printLn(a, b)
 
@@ -176,16 +175,14 @@ they will be set to the default.
     private:
         c, python, java bool
     
-    export go bool
+    go bool
     
-    export main fn():
+    main fn():
         i int
         fmt.printLn(i, c, python, java, go)
 
 Variables are declared by specifying the name of the variable followed by the
-type. Variables can be declared at the package as well as function level. If a
-variable is declared at the package level using the `export` keyword, it will
-be available for use by other packages as well.
+type.
 
 
 ## Initializers
@@ -196,7 +193,7 @@ be available for use by other packages as well.
     
     private i, j int, p float = 1, 2, math.pi
     
-    export main fn():
+    main fn():
         c, python bool, java, go string = true, false, "no!", "yes!"
         fmt.printLn(i, j, p, c, python, java, go)
 
@@ -215,7 +212,7 @@ the variable will be assigned the default value of the type.
         maxInt int.u64 = 2 ** 64 - 1
         z complex.c128 = math.complex.sqrt(-5 + 12i)
     
-    export main fn():
+    main fn():
         fmt.printF("Value: %\n", toBe)
         fmt.printF("Value: %\n", maxInt)
         fmt.printF("Value: %\n", z)
@@ -244,7 +241,7 @@ following:
     
     import fmt
     
-    export main fn():
+    main fn():
         i int
         f float
         b bool
@@ -271,7 +268,7 @@ Custom types can have their own defined default values.
         fmt
         math
     
-    export main fn():
+    main fn():
         x, y int = 3, 4
         f float = math.sqrt((x * x + y * y).float)
         z int.u = f.intU
@@ -298,7 +295,7 @@ explicit conversion.
     
     private PI const = 3.14
     
-    export main fn = fn():
+    main fn = fn():
         WORLD const = "Mars"
         fmt.printLn("Hello", WORLD)
         fmt.printLn("Happy", PI, "Day")
@@ -318,7 +315,7 @@ function.
     
     import fmt
     
-    export main fn():
+    main fn():
         sum int = 0
         for i int = 0; i < 10; i++:
             sum += i
@@ -344,7 +341,7 @@ The loop will stop iterating once the boolean condition evaluates to `false`.
     
     import fmt
     
-    export main fn():
+    main fn():
         sum int = 1
         for ; sum < 1000; :
             sum += sum
@@ -357,7 +354,7 @@ semicolons:
     
     import fmt
     
-    export main fn():
+    main fn():
         sum int = 1
         for sum < 1000:
             sum += sum
@@ -368,7 +365,7 @@ semicolons:
 
     Li 0
     
-    export main fn():
+    main fn():
         for:
             // Whatever code goes here will run in an infinite loop
 
@@ -388,7 +385,7 @@ If you omit the loop condition it loops forever.
             return sqrt(-x).string + "i"
         return math.sqrt(x).string
     
-    export main fn():
+    main fn():
         fmt.printLn(sqrt(2), sqrt(-4))
 
 Lithium's `if` statements are like its `for` loops
@@ -406,7 +403,7 @@ Lithium's `if` statements are like its `for` loops
             return v
         return lim
     
-    export main fn():
+    main fn():
         fmt.printLn(
             pow(3, 2, 10),
             pow(3, 3, 20),
@@ -432,7 +429,7 @@ until the end of the `if`.
             fmt.printF("% >= %\n", x, lim)
         return lim
     
-    export main fn():
+    main fn():
         fmt.printLn(pow(3, 2, 10), pow(3, 3, 20), )
 
 Variables declared inside an `if` init statement are also available inside any
@@ -450,7 +447,7 @@ of the else blocks.
     private compute fn(func fn(float, float) float) float:
         return func(3, 4)
     
-    export main fn():
+    main fn():
         hypot fn(x, y float) float:
             return math.sqrt(x*x + y*y)
         
@@ -470,7 +467,7 @@ Function values may be used as function arguments and return values.
     
     import fmt
     
-    export main fn():
+    main fn():
         defer(fmt.printLn, "world!")
         
         fmt.print("Hello ")
@@ -490,7 +487,7 @@ call is not executed until the surrounding function returns.
     
     import fmt
     
-    export main fn():
+    main fn():
         fmt.printLn("counting")
         
         for i int = 0; i < 10; i++:
@@ -514,7 +511,7 @@ deferred calls are executed in last-in-first-out order.
             sum += x
             return sum
     
-    export main fn():
+    main fn():
         pos int, neg int = adder(), adder()
         for i int; i < 10; i++:
             fmt.printLn(
@@ -540,7 +537,7 @@ its own `sum` variable.
         x int
         y int
     
-    export main fn():
+    main fn():
         fmt.printLn(vertex(1, 2))
 
 Lithium allows simple object-oriented programming. A type is a collection of
@@ -557,7 +554,7 @@ properties and methods and is often called a class in other languages.
         x int
         y int
     
-    export main fn():
+    main fn():
         v vertex = vertex(1, 2)
         v.x = 4
         fmt.printLn(v.x)
@@ -592,7 +589,7 @@ Given the above type, the following statements are equivalent:
         dist fn(self vertex) float:
             return math.sqrt(self.x ** 2 + self.y ** 2)
     
-    export main fn():
+    main fn():
         v vertex(1, 2)
         fmt.printLn(v.dist())
 
@@ -620,7 +617,7 @@ with. When calling the method, this parameter is omitted.
         dist fn(self vertex) float:
             return math.sqrt(self.x ** 2 + self.y ** 2)
     
-    export main fn():
+    main fn():
         v vertex(1, 2)
         fmt.printLn(v.dist())
 
@@ -654,7 +651,7 @@ when creating an object of that type such as with `v vertex(1, 2)`.
         dist fn(self vertex) float:
             return math.sqrt(self.x ** 2 + self.y ** 2)
     
-    export main fn():
+    main fn():
         v vertex(1, 2)
         fmt.printLn(v.dist())
 
@@ -700,7 +697,7 @@ main function in this case, you will get a compile error.
         dist fn(self vertex) float:
             return math.sqrt(self.x ** 2 + self.y ** 2)
     
-    export main fn():
+    main fn():
         v vertex(1, 2)
         fmt.printLn(v.dist())
 
@@ -723,7 +720,7 @@ level will create a new object rather that just changing its value.
     
     import fmt
     
-    export main fn():
+    main fn():
         myInt type extends int:
             double fn(self myInt) myInt:
                 return self * 2
@@ -751,7 +748,7 @@ the `extends` keyword.
     private printX fn(h hasX):
         fmt.print(h.x)
     
-    export main fn():
+    main fn():
         v vertex(3, 4)
         printX(v) // This will print 3
 
@@ -780,7 +777,7 @@ of flexibility in using interfaces.
             get fn(self person) string:
                 return fmt.sPrintF("% (% years)", self.name, self.age)
     
-    export main fn():
+    main fn():
         a person("Arthur Dent", 42)
         z person("Zaphod Beeblebrox", 9001)
         fmt.printLn(a, z)
@@ -788,7 +785,7 @@ of flexibility in using interfaces.
 One of the most ubiquitous interfaces is `stringer` defined by the `fmt`
 package.
 
-    export stringer interface:
+    stringer interface:
         string string
 
 A `stringer` is a type that can describe itself as a string. The `fmt` package
@@ -815,7 +812,7 @@ A `stringer` is a type that can describe itself as a string. The `fmt` package
     private run fn() error:
         return myError(time.now(), "it didn't work")
     
-    export main fn():
+    main fn():
         if err error = run(); !err.ok:
             fmt.printLn(err)
 
@@ -823,7 +820,7 @@ Lithium programs express error state with `error` values.
 
 The `error` type is a built-in interface similar to `fmt.stringer`:
 
-    export default interface:
+    default interface:
         string string
         ok bool
         type string
@@ -854,7 +851,7 @@ by testing whether the `error.ok` is false.
     private double fn[p plusable[p]](num p) p:
         return num + num
     
-    export main fn():
+    main fn():
         myInt int = 3
         myInt = double[int](myInt)
         fmt.printLn(myInt) // This will print 6
@@ -885,7 +882,7 @@ specify a `string` property.
         x n
         y n
     
-    export main fn():
+    main fn():
         v vertex[int](1, 2)
         fmt.printLn(v.x)
 
@@ -899,7 +896,7 @@ generic types. In the above example, `x` and `y` are of type `int`.
     
     import fmt
     
-    export main fn():
+    main fn():
         a array[string]
         a(0) = "Hello"
         a(1) = "World"
@@ -921,7 +918,7 @@ an array are always of type `int`.
     
     import fmt
     
-    export main fn():
+    main fn():
         abcd array[string]("a", "b", "c", "d")
         bc array[string] = abcd(1, 3)
         fmt.printLn(bc)
@@ -939,7 +936,7 @@ the last one.
     
     import fmt
     
-    export main fn():
+    main fn():
         p array[int](2, 3, 5, 7, 11, 13)
         
         p = p(1, 4)
@@ -963,7 +960,7 @@ bound.
     
     import fmt
     
-    export main fn():
+    main fn():
         p array[int](2, 3, 5, 7, 11, 13)
         fmt.print(p.length)
 
@@ -977,7 +974,7 @@ array.
     
     import fmt
     
-    export main fn():
+    main fn():
         // Create a tic-tac-toe board.
         board array[array[string]](
             array[string]("_", "_", "_"),
@@ -1004,7 +1001,7 @@ Arrays can contain any type, including other arrays.
     
     import fmt
     
-    export main fn():
+    main fn():
         l array[int]
         fmt.printLn(l)
         
@@ -1029,7 +1026,7 @@ Lithium provides a built-in `push` method to append items to an array.
     
     private pow array[int](1, 2, 4, 8, 16, 32, 64, 128)
     
-    export main fn():
+    main fn():
         for i, v int in pow:
             fmt.printF("2 ** % = %\n", i, v)
 
@@ -1043,7 +1040,7 @@ loop with the `in` keyword.
     
     import fmt
     
-    export main fn():
+    main fn():
         pow array[int](1, 2, 4, 8, 16, 32, 64, 128)
         
         for _, value int in pow:
@@ -1065,7 +1062,7 @@ If you only want the key, you can omit the second variable.
     
     import fmt
     
-    export main fn():
+    main fn():
         m map[int, string]
         m(0) = "Hello"
         m(1) = "World"
@@ -1095,7 +1092,7 @@ The statement `m map[int, string]` declares a variable `m` as a map of strings.
         "Google" = vertex(37.42202, -122.08408),
     )
     
-    export main fn():
+    main fn():
         fmt.printLn(m)
 
 If the keys are not specified in the initialization of a map, keys are
@@ -1109,7 +1106,7 @@ would specify the names of parameter in a function call.
     
     import fmt
     
-    export main fn():
+    main fn():
         m map[string,int]
         
         m("Answer") = 42

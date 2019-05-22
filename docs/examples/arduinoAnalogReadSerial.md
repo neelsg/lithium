@@ -22,14 +22,14 @@ This example was translated from [www.arduino.cc](https://www.arduino.cc/en/Tuto
         timer
     
     // the setup routine runs once when you press reset:
-    export setup fn():
+    setup fn():
         // initialize serial communication at 9600 bits per second:
         serial.begin(9600)
     
     // the loop routine runs over and over again forever:
-    export loop fn():
+    loop fn():
         // read the input on analog pin 0:
-        sensorValue int = analog.read(analog.A0)
+        sensorValue int = analog.read(A0)
         
         // print out the value you read:
         serial.printLn(sensorValue)

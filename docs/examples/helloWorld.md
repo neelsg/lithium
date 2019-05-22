@@ -6,4 +6,4 @@ Every programming language needs a "Hello, World!" example
     
     import fmt
     
-    export main fn(): fmt.print("Hello, World!")
+    main fn(): fmt.print("Hello, World!")

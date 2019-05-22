@@ -8,7 +8,7 @@ Fizz if divisible by 3, Buzz if divisible by 5
         fmt
         num
     
-    private fizzBuzz fn(n int) string:
+    fizzBuzz fn(n int) string:
         if n % 3 == 0 && n % 5 == 0:
             return "FizzBuzz"
         else if n % 3 == 0:
@@ -18,6 +18,6 @@ Fizz if divisible by 3, Buzz if divisible by 5
         else:
             return n.String
     
-    export main fn():
+    main fn():
         for n int in num.range(30):
             fmt.printLn(fizzBuzz(n))

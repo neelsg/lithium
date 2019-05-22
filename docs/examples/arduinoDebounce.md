@@ -34,29 +34,28 @@ This example was translated from [www.arduino.cc](https://www.arduino.cc/en/Tuto
         digital
         timer
     
-    private:
-        // constants won't change. They're used here to set pin numbers:
-        buttonPin const = 2                // the number of the pushbutton pin
-        ledPin const = 13                  // the number of the LED pin
-        
-        // Variables will change:
-        ledState int = pin.HIGH            // the current state of the output pin
-        buttonState int                    // the current reading from the input pin
-        lastButtonState int = pin.LOW      // the previous reading from the input pin
-        
-        // the following variables are unsigned longs because the time, measured in
-        // milliseconds, will quickly become a bigger number than can be stored in an int.
-        lastDebounceTime int.UInt64 = 0    // the last time the output pin was toggled
-        debounceDelay int.UInt64 = 50      // the debounce time; increase if the output flickers
+    // constants won't change. They're used here to set pin numbers:
+    buttonPin const = 2                // the number of the pushbutton pin
+    ledPin const = 13                  // the number of the LED pin
     
-    export setup fn():
+    // Variables will change:
+    ledState int = pin.HIGH            // the current state of the output pin
+    buttonState int                    // the current reading from the input pin
+    lastButtonState int = pin.LOW      // the previous reading from the input pin
+    
+    // the following variables are unsigned longs because the time, measured in
+    // milliseconds, will quickly become a bigger number than can be stored in an int.
+    lastDebounceTime int.u64 = 0       // the last time the output pin was toggled
+    debounceDelay int.u64 = 50         // the debounce time; increase if the output flickers
+    
+    setup fn():
         pin.mode(buttonPin, pin.INPUT)
         pin.mode(ledPin, pin.OUTPUT)
         
         // set initial LED state
         digital.write(ledPin, ledState)
     
-    export loop fn():
+    loop fn():
         // read the state of the switch into a local variable:
         reading int = digital.read(buttonPin)
         

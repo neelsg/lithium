@@ -9,7 +9,7 @@ Fizz if divisible by 3, Buzz if divisible by 5
     
     LAST const = 30
     
-    fizzBuzz fn(n int) string:
+    fizzBuzz fn(n int) string.stringer:
         if n % 3 == 0 && n % 5 == 0:
             return "FizzBuzz"
         else if n % 3 == 0:
@@ -17,7 +17,7 @@ Fizz if divisible by 3, Buzz if divisible by 5
         else if n % 5 == 0:
             return "Buzz"
         else:
-            return n.String
+            return n
     
     main fn():
         for i int = 1; i <= LAST; i++:

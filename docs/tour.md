@@ -13,11 +13,10 @@ significant part of this programming language on Go.
     Li 0
     
     import:
-        fmt
-        math
+        console
     
     main fn():
-        fmt.printLn("My favorite number is", math.rand.int(10))
+        console.log("My favorite number is", int.rand(10))
 
 There is quite a bit happening here. This code will print the text
 "My favorite number is" and a random number from 0 to 10.
@@ -45,16 +44,16 @@ recent sub-version should be used.
     Li 0.0
 
     import:
-        fmt
+        console
         math
 
     main fn():
-        fmt.printF("Now you have % problems.\n", math.sqrt(7))
+        console.log("Now you have % problems.".in(math.sqrt(7.0)))
 
-Here we import `fmt` and `math` from the standard library so that they can be
-used in this file. We could also write:
+Here we import `console` and `math` from the standard library so that they can
+be used in this file. We could also write:
 
-    import fmt
+    import console
     import math
 
 
@@ -90,11 +89,11 @@ other packages that import this one.
     Li 0
     
     import:
-        fmt
+        console
         myMath "./myMathFolder"
     
     main fn():
-        fmt.print(myMath.sqr(3))
+        console.log(myMath.sqr(3.0))
 
 You can import your own packages just as easily as packages from the standard
 library by providing the file path to the folder where the source code is
@@ -106,13 +105,13 @@ located.
     Li 0
     
     import:
-        fmt
+        console
     
     private add fn(x int, y int) int:
         return x + y
     
     main fn():
-        fmt.printLn(add(42, 13))
+        console.log(add(42, 13))
 
 A function can take zero or more arguments. In this example, `add` takes two
 arguments of type `int`. Note that the type comes after the variable name.
@@ -122,27 +121,27 @@ arguments of type `int`. Note that the type comes after the variable name.
 
     Li 0
     
-    import fmt
+    import console
     
     private:
         split fn(sum int) (int, int):
             x, y int = sum * 4 / 9, sum - x
             return x, y
     
-    main fn(): fmt.printLn(split(17))
+    main fn(): console.log(split(17))
 
 A function can return any number of results.
 
     Li 0
     
     import:
-        fmt
+        console
     
     private swap fn(x, y string) (string, string): return y, x
     
     main fn():
         a, b string = swap("hello", "world")
-        fmt.printLn(a, b)
+        console.log(a, b)
 
 When two or more parameters are of the same type, you can omit the
 type from all but the last parameter.
@@ -153,13 +152,13 @@ type from all but the last parameter.
     Li 0
     
     import:
-        fmt
+        console
     
     private swap fn(x = "hello", y string) (string, string): return y, x
     
     main fn():
         a, b string = swap(y = "world")
-        fmt.printLn(a, b)
+        console.log(a, b)
 
 When calling a function, the parameters may be named. A function definition can
 specify the default value of any parameters. If these parameters are omitted,
@@ -170,7 +169,7 @@ they will be set to the default.
 
     Li 0
     
-    import fmt
+    import console
     
     private:
         c, python, java bool
@@ -179,7 +178,7 @@ they will be set to the default.
     
     main fn():
         i int
-        fmt.printLn(i, c, python, java, go)
+        console.log(i, c, python, java, go)
 
 Variables are declared by specifying the name of the variable followed by the
 type.
@@ -189,13 +188,13 @@ type.
 
     Li 0
     
-    import fmt, math
+    import console, math
     
     private i, j int, p float = 1, 2, math.pi
     
     main fn():
         c, python bool, java, go string = true, false, "no!", "yes!"
-        fmt.printLn(i, j, p, c, python, java, go)
+        console.log(i, j, p, c, python, java, go)
 
 A variable declaration can include initializers. If an initializer is omitted,
 the variable will be assigned the default value of the type.
@@ -205,17 +204,17 @@ the variable will be assigned the default value of the type.
 
     Li 0
     
-    import fmt, math
+    import console, math
     
     private:
         toBe bool = false
         maxInt int.u64 = 2 ** 64 - 1
-        z complex.c128 = math.complex.sqrt(-5 + 12i)
+        z complex.p128 = math.sqrt[complex.p128](-5. + 12i)
     
     main fn():
-        fmt.printF("Value: %\n", toBe)
-        fmt.printF("Value: %\n", maxInt)
-        fmt.printF("Value: %\n", z)
+        console.log("Value: %".in(toBe))
+        console.log("Value: %".in(maxInt))
+        console.log("Value: %".in(z))
 
 Lithium basic types are:
 
@@ -227,26 +226,26 @@ implicitly, so you do not need to list them in an import statement.
 These packages also provide more fine-grained type definitions such as the
 following:
 
-    int.i8 int.i16 int.i32 int.i64
+    int.s8 int.s16 int.s32 int.s64
     int.u int.u8 int.u16 int.u32 int.u64
     
-    float.f32 float.f64
+    float.p32 float.p64
     
-    complex.c64 complex.c128
+    complex.p64 complex.p128
 
 
 ## Default values
 
     Li 0
     
-    import fmt
+    import console
     
     main fn():
         i int
         f float
         b bool
         s string
-        fmt.printF("% , % , % , %\n", i, f, b, s)
+        console.log("% , % , % , %".in(i, f, b, s))
 
 Variables declared without an explicit initial value are given their default
 value.
@@ -265,14 +264,14 @@ Custom types can have their own defined default values.
     Li 0
     
     import:
-        fmt
+        console
         math
     
     main fn():
         x, y int = 3, 4
         f float = math.sqrt((x * x + y * y).float)
         z int.u = f.intU
-        fmt.printLn(x, y, z)
+        console.log(x, y, z)
 
 The built in types have properties to convert to different types. Custom defined
 types should also include similar functionality.
@@ -280,7 +279,7 @@ types should also include similar functionality.
 Some numeric conversions:
 
     i int = 42
-    f float.f64 = i.float64
+    f float.p64 = i.float64
     u int.u = f.intU
 
 Unlike in C, assignment in Lithium between items of different type requires an
@@ -291,17 +290,17 @@ explicit conversion.
 
     Li 0
     
-    import fmt
+    import console
     
     private PI const = 3.14
     
     main fn = fn():
         WORLD const = "Mars"
-        fmt.printLn("Hello", WORLD)
-        fmt.printLn("Happy", PI, "Day")
+        console.log("Hello", WORLD)
+        console.log("Happy", PI, "Day")
         
         TRUTH const = true
-        fmt.printLn("Humans rock?", TRUTH)
+        console.log("Humans rock?", TRUTH)
 
 Constants are declared like variables, but with the `const` keyword as type.
 Constants can be string, boolean, or numeric values. Constants cannot be
@@ -313,13 +312,13 @@ function.
 
     Li 0
     
-    import fmt
+    import console
     
     main fn():
         sum int = 0
         for i int = 0; i < 10; i++:
             sum += i
-        fmt.printLn(sum)
+        console.log(sum)
 
 Lithium has only one looping construct, the `for` loop.
 
@@ -339,26 +338,26 @@ The loop will stop iterating once the boolean condition evaluates to `false`.
 
     Li 0
     
-    import fmt
+    import console
     
     main fn():
         sum int = 1
         for ; sum < 1000; :
             sum += sum
-        fmt.printLn(sum)
+        console.log(sum)
 
 The init and post statements are optional. At that point you can drop the
 semicolons:
 
     Li 0
     
-    import fmt
+    import console
     
     main fn():
         sum int = 1
         for sum < 1000:
             sum += sum
-        fmt.printLn(sum)
+        console.log(sum)
 
 
 ## Forever
@@ -377,7 +376,7 @@ If you omit the loop condition it loops forever.
     Li 0
     
     import:
-        fmt
+        console
         math
     
     private sqrt fn(x float) string:
@@ -386,7 +385,7 @@ If you omit the loop condition it loops forever.
         return math.sqrt(x).string
     
     main fn():
-        fmt.printLn(sqrt(2), sqrt(-4))
+        console.log(sqrt(2.), sqrt(-4.))
 
 Lithium's `if` statements are like its `for` loops
 
@@ -396,7 +395,7 @@ Lithium's `if` statements are like its `for` loops
     Li 0
     
     import:
-        fmt
+        console
     
     private pow fn(x, n, lim float) float:
         if v float = x ** n; v < lim:
@@ -404,7 +403,7 @@ Lithium's `if` statements are like its `for` loops
         return lim
     
     main fn():
-        fmt.printLn(
+        console.log(
             pow(3, 2, 10),
             pow(3, 3, 20),
             )
@@ -419,18 +418,18 @@ until the end of the `if`.
     Li 0
     
     import:
-        fmt
+        console
         math
     
     private pow fn(x, n, lim float) float:
         if x**= n; x < lim:
             return x
         else:
-            fmt.printF("% >= %\n", x, lim)
+            console.log("% >= %".in(x, lim))
         return lim
     
     main fn():
-        fmt.printLn(pow(3, 2, 10), pow(3, 3, 20), )
+        console.log(pow(3., 2., 10.), pow(3., 3., 20.), )
 
 Variables declared inside an `if` init statement are also available inside any
 of the else blocks.
@@ -441,7 +440,7 @@ of the else blocks.
     Li 0
     
     import:
-        fmt
+        console
         math
     
     private compute fn(func fn(float, float) float) float:
@@ -450,11 +449,13 @@ of the else blocks.
     main fn():
         hypot fn(x, y float) float:
             return math.sqrt(x*x + y*y)
+        ave fn(x, y float) float:
+            return (x + y) / 2
         
-        fmt.printLn(hypot(5, 12))
+        console.log(hypot(5., 12.))
         
-        fmt.printLn(compute(hypot))
-        fmt.printLn(compute(math.pow))
+        console.log(compute(hypot))
+        console.log(compute(ave))
 
 Functions are values too. They can be passed around just like other values.
 
@@ -465,12 +466,12 @@ Function values may be used as function arguments and return values.
 
     Li 0
     
-    import fmt
+    import console
     
     main fn():
-        defer(fmt.printLn, "world!")
+        defer(console.log, "world!")
         
-        fmt.print("Hello ")
+        console.log("Hello")
 
 The `defer` function is a special built-in function that defers the execution of
 a function until the surrounding function returns. The first parameter is the
@@ -485,15 +486,15 @@ call is not executed until the surrounding function returns.
 
     Li 0
     
-    import fmt
+    import console
     
     main fn():
-        fmt.printLn("counting")
+        console.log("counting")
         
         for i int = 0; i < 10; i++:
-            defer(fmt.printLn, i)
+            defer(console.log, i)
         
-        fmt.printLn("done")
+        console.log("done")
 
 Deferred function calls are pushed onto a stack. When a function returns, its
 deferred calls are executed in last-in-first-out order.
@@ -503,7 +504,7 @@ deferred calls are executed in last-in-first-out order.
 
     Li 0
     
-    import fmt
+    import console
     
     private adder fn() fn(int) int:
         sum int = 0
@@ -514,7 +515,7 @@ deferred calls are executed in last-in-first-out order.
     main fn():
         pos int, neg int = adder(), adder()
         for i int; i < 10; i++:
-            fmt.printLn(
+            console.log(
                 pos(i),
                 neg(-2 * i),
             )
@@ -531,14 +532,14 @@ its own `sum` variable.
 
     Li 0
     
-    import fmt
+    import console
     
     private vertex type:
         x int
         y int
     
     main fn():
-        fmt.printLn(vertex(1, 2))
+        console.log(vertex(1, 2))
 
 Lithium allows simple object-oriented programming. A type is a collection of
 properties and methods and is often called a class in other languages.
@@ -548,7 +549,7 @@ properties and methods and is often called a class in other languages.
 
     Li 0
     
-    import fmt
+    import console
     
     private vertex type:
         x int
@@ -557,7 +558,7 @@ properties and methods and is often called a class in other languages.
     main fn():
         v vertex = vertex(1, 2)
         v.x = 4
-        fmt.printLn(v.x)
+        console.log(v.x)
 
 Type properties are accessed using a dot.
 
@@ -580,7 +581,7 @@ Given the above type, the following statements are equivalent:
     Li 0
     
     import
-        fmt
+        console
         math
     
     private vertex type:
@@ -591,7 +592,7 @@ Given the above type, the following statements are equivalent:
     
     main fn():
         v vertex(1, 2)
-        fmt.printLn(v.dist())
+        console.log(v.dist())
 
 Methods are functions defined within a type.
 
@@ -604,7 +605,7 @@ with. When calling the method, this parameter is omitted.
     Li 0
     
     import
-        fmt
+        console
         math
     
     private vertex type:
@@ -619,7 +620,7 @@ with. When calling the method, this parameter is omitted.
     
     main fn():
         v vertex(1, 2)
-        fmt.printLn(v.dist())
+        console.log(v.dist())
 
 Just like normal variables, properties in a type can also be set to an initial
 value which will then be the default for any objects of that type.
@@ -634,7 +635,7 @@ when creating an object of that type such as with `v vertex(1, 2)`.
     Li 0
     
     import
-        fmt
+        console
         math
     
     private vertex type:
@@ -653,7 +654,7 @@ when creating an object of that type such as with `v vertex(1, 2)`.
     
     main fn():
         v vertex(1, 2)
-        fmt.printLn(v.dist())
+        console.log(v.dist())
 
 You can use the `private` keyword to make properties or even methods only
 available to the methods in the object itself. If you try to use `v.x` in the
@@ -665,60 +666,58 @@ main function in this case, you will get a compile error.
     Li 0
     
     import
-        fmt
+        console
         math
     
     private vertex type:
         init fn(x, y float) vertex:
             self vertex
-            self.x, self.y = x, y
+            self.x, self.y = x, y // This will call the respective set functions
             return self
         
-        private xValue float
-        x property:
-            get fn(self vertex) float:
-                return self.xValue
-            set fn(self vertex, x float):
-                if x >= 0:
-                    self.xValue = x
-                else:
-                    self.xValue = x * -1
+        private x float
+        get x fn(self vertex) float:
+            return self.x
+        set x fn(self vertex, x float):
+            if x >= 0:
+                self.x = x
+            else:
+                self.x = x * -1
         
-        private yValue float
-        y property:
-            get fn(self vertex) float:
-                return self.yValue
-            set fn(self vertex, y float):
-                if y >= 0:
-                    self.yValue = y
-                else:
-                    self.yValue = y * -1
+        private y float
+        get y fn(self vertex) float:
+            return self.y
+        set y fn(self vertex, y float):
+            if y >= 0:
+                self.y = y
+            else:
+                self.y = y * -1
         
         dist fn(self vertex) float:
             return math.sqrt(self.x ** 2 + self.y ** 2)
     
     main fn():
         v vertex(1, 2)
-        fmt.printLn(v.dist())
+        console.log(v.dist())
 
 Properties can have a `get` and `set` method which allows for more control over
 what happens when you retrieve or assign a value to that property.
 
-If the `get` method is omitted, you will get a compile error if you try to
-retrieve the property. If the `set` method is omitted, you will get a compile
-error if you try to assign a value to the property.
+If both a `get` method for a property as well as the actual property is defined,
+the `get` method will take preference whenever that method is used outside of
+the actual code run by the `get` method itself. Similarly, the `set` method also
+overrules an actual property in the type if such actual property is defined.
 
-A `get` method can also be created at the top of the type which will allow you
-to retrieve a custom value by directly using the object name. Note that a
-similar `set` method will not work the same way as assigning a new value at top
-level will create a new object rather that just changing its value.
+A `get` method can also be created for the type itself. This will allow you to
+retrieve a custom value by directly using the object name, so `vertex` would be
+the same as `vertex.get()`. Note that a similar `set` method is not supported.
 
 
 ## Inheritance
 
     Li 0
     
-    import fmt
+    import console
     
     main fn():
         myInt type extends int:
@@ -726,7 +725,7 @@ level will create a new object rather that just changing its value.
                 return self * 2
         
         i myInt = 3
-        fmt.printLn(i.double().double()) // This will print 12
+        console.log(i.double().double()) // This will print 12
 
 The `extends` keyword allows you to create new types by extending existing ones.
 It is possible to inherit from more than one type by listing all the types after
@@ -737,7 +736,7 @@ the `extends` keyword.
 
     Li 0
     
-    import fmt
+    import console
     
     private hasX interface:
         x float
@@ -746,7 +745,7 @@ the `extends` keyword.
         x, y float
     
     private printX fn(h hasX):
-        fmt.print(h.x)
+        console.log(h.x)
     
     main fn():
         v vertex(3, 4)
@@ -768,28 +767,28 @@ of flexibility in using interfaces.
 
     Li 0
     
-    import fmt
+    import console
     
     private person type:
         name string
         age int
         string property:
             get fn(self person) string:
-                return fmt.sPrintF("% (% years)", self.name, self.age)
+                return "% (% years)".in(self.name, self.age)
     
     main fn():
         a person("Arthur Dent", 42)
         z person("Zaphod Beeblebrox", 9001)
-        fmt.printLn(a, z)
+        console.log(a, z)
 
-One of the most ubiquitous interfaces is `stringer` defined by the `fmt`
+One of the most ubiquitous interfaces is `stringer` defined by the `string`
 package.
 
     stringer interface:
-        string string
+        get string() string
 
-A `stringer` is a type that can describe itself as a string. The `fmt` package
-(and many others) look for this interface to print values.
+A `stringer` is a type that can describe itself as a string. The `string`
+package (and many others) look for this interface to print values.
 
 
 ## Errors
@@ -797,7 +796,7 @@ A `stringer` is a type that can describe itself as a string. The `fmt` package
     Li 0
     
     import:
-        fmt
+        console
         time
     
     private myError type:
@@ -807,18 +806,18 @@ A `stringer` is a type that can describe itself as a string. The `fmt` package
         type string = "MyError"
         string property:
             get fn(self myError) string:
-                return fmt.sPrintF("at %, %", self.when, self.what)
+                return "at %, %".in(self.when, self.what)
     
     private run fn() error:
         return myError(time.now(), "it didn't work")
     
     main fn():
         if err error = run(); !err.ok:
-            fmt.printLn(err)
+            console.log(err)
 
 Lithium programs express error state with `error` values.
 
-The `error` type is a built-in interface similar to `fmt.stringer`:
+The `error` type is a built-in interface similar to `string.stringer`:
 
     default interface:
         string string
@@ -834,16 +833,16 @@ by testing whether the `error.ok` is false.
 
     i int, err error = strconv.aToI("42")
     if !err.ok:
-        fmt.printF("couldn't convert number: %\n", err)
+        console.log("couldn't convert number: %".in(err))
         return
-    fmt.printLn("Converted integer:", i)
+    console.log("Converted integer:", i)
 
 
 ## Parametric polymorphism
 
     Li 0
     
-    import fmt
+    import console
     
     private plusable interface[n]:
         plus fn(n, n) n
@@ -854,11 +853,11 @@ by testing whether the `error.ok` is false.
     main fn():
         myInt int = 3
         myInt = double[int](myInt)
-        fmt.printLn(myInt) // This will print 6
+        console.log(myInt) // This will print 6
         
         myFloat float = 3.1
         myFloat = double[float](myFloat)
-        fmt.printLn(myFloat) // This will print 6.2
+        console.log(myFloat) // This will print 6.2
 
 This is often called generics in other languages. What is happening here is that
 we can pass any type of variable to `double()` as long as it implements the
@@ -872,19 +871,44 @@ of the interface, so we would not be able to print it as `plusable` does not
 specify a `string` property.
 
 
+## Default types for polymorphism
+
+    Li 0
+    
+    import console
+    
+    private plusable interface[n]:
+        plus fn(n, n) n
+    
+    private double fn[p plusable[p] int](num p) p:
+        return num + num
+    
+    main fn():
+        myInt int = 3
+        myInt = double(myInt)
+        console.log(myInt) // This will print 6
+        
+        myFloat float = 3.1
+        myFloat = double[float](myFloat)
+        console.log(myFloat) // This will print 6.2
+
+A default type can be set for any polymorphic function. If the type is then
+omitted when calling the function, this default type is assumed.
+
+
 ## Parametric polymorphism for types
 
     Li 0
     
-    imports fmt
+    imports console
     
-    private vertex type[n fmt.stringer]:
+    private vertex type[n string.stringer]:
         x n
         y n
     
     main fn():
         v vertex[int](1, 2)
-        fmt.printLn(v.x)
+        console.log(v.x)
 
 Parametric polymorphism can also be used with type definitions to create more
 generic types. In the above example, `x` and `y` are of type `int`.
@@ -894,17 +918,17 @@ generic types. In the above example, `x` and `y` are of type `int`.
 
     Li 0
     
-    import fmt
+    import console
     
     main fn():
         a array[string]
         a(0) = "Hello"
         a(1) = "World"
-        fmt.printLn(a(0), a(1))
-        fmt.printLn(a)
+        console.log(a(0), a(1))
+        console.log(a)
         
         primes array[int](2, 3, 5, 7, 11, 13)
-        fmt.printLn(primes)
+        console.log(primes)
 
 `array[t]` is a built-in type that stores an array of variables of type `t`.
 
@@ -916,12 +940,12 @@ an array are always of type `int`.
 
     Li 0
     
-    import fmt
+    import console
     
     main fn():
         abcd array[string]("a", "b", "c", "d")
         bc array[string] = abcd(1, 3)
-        fmt.printLn(bc)
+        console.log(bc)
 
 A slice is formed by specifying two indexes, a low and high bound, separated by
 a comma: `array(low, high int)`.
@@ -934,19 +958,19 @@ the last one.
 
     Li 0
     
-    import fmt
+    import console
     
     main fn():
         p array[int](2, 3, 5, 7, 11, 13)
         
         p = p(1, 4)
-        fmt.printLn(p)
+        console.log(p)
         
         p = p(, 2)
-        fmt.printLn(p)
+        console.log(p)
         
         p = p(1, )
-        fmt.printLn(p)
+        console.log(p)
 
 When slicing, you may omit the high or low bounds to use their defaults instead.
 
@@ -958,11 +982,11 @@ bound.
 
     Li 0
     
-    import fmt
+    import console
     
     main fn():
         p array[int](2, 3, 5, 7, 11, 13)
-        fmt.print(p.length)
+        console.log(p.length)
 
 Array have a length property that shows how many items are currently in the
 array.
@@ -972,7 +996,7 @@ array.
 
     Li 0
     
-    import fmt
+    import console
     
     main fn():
         // Create a tic-tac-toe board.
@@ -990,7 +1014,7 @@ array.
         board(0)(2) = "X"
         
         for i int = 0; i < board.length; i++:
-            fmt.printF("%s\n", strings.Join(board(i), " "))
+            console.log(board(i).join(" "))
 
 Arrays can contain any type, including other arrays.
 
@@ -999,21 +1023,21 @@ Arrays can contain any type, including other arrays.
 
     Li 0
     
-    import fmt
+    import console
     
     main fn():
         l array[int]
-        fmt.printLn(l)
+        console.log(l)
         
         l = l.push(3)
-        fmt.printLn(l)
+        console.log(l)
         
         l = l.push(4)
-        fmt.printLn(l)
+        console.log(l)
         
         // We can add more than one element at a time.
         l = l.push(5, 6, 7)
-        fmt.printLn(l)
+        console.log(l)
 
 Lithium provides a built-in `push` method to append items to an array.
 
@@ -1022,13 +1046,13 @@ Lithium provides a built-in `push` method to append items to an array.
 
     Li 0
     
-    import fmt
+    import console
     
     private pow array[int](1, 2, 4, 8, 16, 32, 64, 128)
     
     main fn():
         for i, v int in pow:
-            fmt.printF("2 ** % = %\n", i, v)
+            console.log("2 ** % = %".in(i, v))
 
 The built-in `array` type is iterable, which means that it can be used in a for
 loop with the `in` keyword.
@@ -1038,13 +1062,13 @@ loop with the `in` keyword.
 
     Li 0
     
-    import fmt
+    import console
     
     main fn():
         pow array[int](1, 2, 4, 8, 16, 32, 64, 128)
         
         for _, value int in pow:
-            fmt.printF("%\n", value)
+            console.log(value)
 
 You can skip the key or value by assigning to `_`.
 
@@ -1060,17 +1084,17 @@ If you only want the key, you can omit the second variable.
 
     Li 0
     
-    import fmt
+    import console
     
     main fn():
         m map[int, string]
         m(0) = "Hello"
         m(1) = "World"
-        fmt.printLn(m(0), m(1))
-        fmt.printLn(m)
+        console.log(m(0), m(1))
+        console.log(m)
         
         primes map[int, int](2, 3, 5, 7, 11, 13)
-        fmt.printLn(primes)
+        console.log(primes)
 
 `map[k, v]` is a built-in type that stores a map with keys of type `k` that
 maps to values of type `v`.
@@ -1082,7 +1106,7 @@ The statement `m map[int, string]` declares a variable `m` as a map of strings.
 
     Li 0
     
-    import fmt
+    import console
     
     private vertex type:
         lat, long float
@@ -1093,7 +1117,7 @@ The statement `m map[int, string]` declares a variable `m` as a map of strings.
     )
     
     main fn():
-        fmt.printLn(m)
+        console.log(m)
 
 If the keys are not specified in the initialization of a map, keys are
 automatically created starting at zero. You can specify the keys just like you
@@ -1104,22 +1128,22 @@ would specify the names of parameter in a function call.
 
     Li 0
     
-    import fmt
+    import console
     
     main fn():
         m map[string,int]
         
         m("Answer") = 42
-        fmt.printLn("The value: ", m("Answer"))
+        console.log("The value: ", m("Answer"))
         
         m["Answer"] = 48
-        fmt.printLn("The value: ", m("Answer"))
+        console.log("The value: ", m("Answer"))
         
         m.delete("Answer")
-        fmt.printLn("The value: ", m("Answer"))
+        console.log("The value: ", m("Answer"))
         
         v int, ok bool = m("Answer")
-        fmt.printLn("The value: ", v, "Present? ", ok)
+        console.log("The value: ", v, "Present? ", ok)
 
 Insert or update an element in map `m`:
 
@@ -1141,4 +1165,46 @@ If `key` is in the map, `ok` is `true`. If not, `ok` is `false`.
 
 If `key` is not in the map, then `var` is the zero value for the map's value
 type.
+
+
+## Variadic functions
+
+    Li 0
+    
+    import:
+        console
+    
+    sum fn(...num array[int]) int:
+        s int
+        for _, n int in num:
+            s += n
+        return s
+    
+    main fn():
+        console.log(sum(1, 2, 3, 4, 5)) // This will print 15
+
+Variadic functions are functions that can take an arbitrary number of parameters
+instead of a fixed set. The parameters are rolled up into a list type such as an
+`array` or a `map`.
+
+
+## Spread operator
+
+    Li 0
+    
+    import:
+        console
+    
+    sum fn(...num array[int]) int:
+        s int
+        for _, n int in num:
+            s += n
+        return s
+    
+    main fn():
+        nums array[int](1, 2, 3, 4, 5)
+        console.log(sum(nums...))
+
+It is possible to use the spread operator (`...`) to pass the values in a list
+such as an `array` or `map` as distinct parameters in a variadic function.
 

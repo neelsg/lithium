@@ -56,7 +56,7 @@ Examples:
         This statement is part of a block
         This statement is also part of a block
     
-        This statement creates a block within a block
+        This statement creates a block within a block:
             This statement is part of the nested block
 
 

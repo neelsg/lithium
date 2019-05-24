@@ -469,14 +469,12 @@ Function values may be used as function arguments and return values.
     import console
     
     main fn():
-        defer(console.log, "world!")
+        defer console.log("world!")
         
         console.log("Hello")
 
-The `defer` function is a special built-in function that defers the execution of
-a function until the surrounding function returns. The first parameter is the
-function to be called and any further parameters are the parameters that will be
-passed to this function on execution.
+The `defer` statement defers the execution of a function until the surrounding
+function returns.
 
 The `defer` statement's arguments are evaluated immediately, but the function
 call is not executed until the surrounding function returns.
@@ -492,7 +490,7 @@ call is not executed until the surrounding function returns.
         console.log("counting")
         
         for i int = 0; i < 10; i++:
-            defer(console.log, i)
+            defer console.log(i)
         
         console.log("done")
 
@@ -944,11 +942,11 @@ an array are always of type `int`.
     
     main fn():
         abcd array[string]("a", "b", "c", "d")
-        bc array[string] = abcd(1, 3)
+        bc array[string] = abcd.slice(1, 3)
         console.log(bc)
 
 A slice is formed by specifying two indexes, a low and high bound, separated by
-a comma: `array(low, high int)`.
+a comma: `array.slice(low, high int)`.
 
 This selects a half-open range which includes the first element, but excludes
 the last one.
@@ -963,13 +961,13 @@ the last one.
     main fn():
         p array[int](2, 3, 5, 7, 11, 13)
         
-        p = p(1, 4)
+        p = p.slice(1, 4)
         console.log(p)
         
-        p = p(, 2)
+        p = p.slice(, 2)
         console.log(p)
         
-        p = p(1, )
+        p = p.slice(1, )
         console.log(p)
 
 When slicing, you may omit the high or low bounds to use their defaults instead.
@@ -1136,13 +1134,13 @@ would specify the names of parameter in a function call.
         m("Answer") = 42
         console.log("The value: ", m("Answer"))
         
-        m["Answer"] = 48
+        m("Answer") = 48
         console.log("The value: ", m("Answer"))
         
         m.delete("Answer")
         console.log("The value: ", m("Answer"))
         
-        v int, ok bool = m("Answer")
+        v int, ok bool = m("Answer"), m.exists("Answer")
         console.log("The value: ", v, "Present? ", ok)
 
 Insert or update an element in map `m`:
@@ -1153,18 +1151,18 @@ Retrieve an element:
 
     var = map(key)
 
+If `key` is not in the map, then `var` is the zero value for the map's value
+type.
+
 Delete an element:
 
     map.delete(key)
 
-Test that a key is present with a two-value assignment:
+Test that a key is present:
 
-    var, ok = map(key)
+    ok = map.exists(key)
 
 If `key` is in the map, `ok` is `true`. If not, `ok` is `false`.
-
-If `key` is not in the map, then `var` is the zero value for the map's value
-type.
 
 
 ## Variadic functions
@@ -1208,3 +1206,258 @@ instead of a fixed set. The parameters are rolled up into a list type such as an
 It is possible to use the spread operator (`...`) to pass the values in a list
 such as an `array` or `map` as distinct parameters in a variadic function.
 
+
+## Coroutines
+
+    Li 0
+    
+    import:
+        console
+        exec
+        time
+    
+    say fn(s string):
+        for i int = 0; i < 5; i++:
+            time.sleep(100 * time.millisecond)
+            console.log(s)
+    
+    main fn():
+        exec.co say("world")
+        say("hello")
+
+A coroutine is a lightweight thread managed by the Lithium runtime.
+
+`exec.co f(x, y, z)` starts a new coroutine running `f(x, y, z)`.
+
+The evaluation of the passed parameters happen in the current coroutine, but the
+execution of the function happens in the new coroutine.
+
+Coroutines run in the same address space, so access to shared memory must be
+synchronized. The `sync` package provides useful primitives, although you won't
+need them much in Lithium as there are other ways to handle concurrency as you
+will see shortly.
+
+
+## Channels
+
+    Li 0
+    
+    import:
+        console
+        exec
+    
+    sum fn(s array[int], c chan[int]):
+        sum int = 0
+        for _, v int in s:
+            sum += v
+        c <- sum // Send sum to c
+    
+    main fn():
+        s array[int](7, 2, 8, -9, 4, 0)
+        
+        c chan[int]
+        exec.co sum(s.slice(, s.length / 2), c)
+        exec.co sum(s.slice(s.length / 2, ), c)
+        x, y int = <-c, <-c // receive from c
+        
+        console.log(x, y, x + y)
+
+Channels are a typed conduit through which you can send and receive values with
+the channel operator, <-.
+
+    ch <- v    // Send v to channel ch.
+    v = <-ch   // Receive from ch, and assign value to v.
+
+(The data flows in the direction of the arrow.)
+
+By default, sends and receives block until the other side is ready. This allows
+coroutines to synchronize without explicit locks or condition variables.
+
+The example code sums the numbers in an array, distributing the work between two
+coroutines. Once both coroutines have completed their computation, it calculates
+the final result.
+
+
+## Buffered Channels
+
+    Li 0
+    
+    import console
+    
+    main fn():
+        ch chan[int](2)
+        ch <- 1
+        ch <- 2
+        console.log(<-ch)
+        console.log(<-ch)
+
+Channels can be buffered. Provide the buffer length to the channel initializer
+to make a buffered channel:
+
+    ch chan[int](100)
+
+Sends to a buffered channel block only when the buffer is full. Receives block
+when the buffer is empty.
+
+
+## Closing a channel
+
+    Li 0
+    
+    import:
+        console
+        exec
+    
+    fibonacci fn(n int, c chan[int]):
+        x, y int = 0, 1
+        for i int = 0; i < n; i++:
+            c <- x
+            x, y = y, x + y
+            c.close()
+    
+    main fn():
+        c chan[int](10)
+        exec.co fibonacci(c.capacity, c)
+        for i int in c:
+            console.log(i)
+
+A sender can close a channel to indicate that no more values will be sent.
+Receivers can test whether a channel has been closed by checking `.ok`
+
+    if ch.ok: v int = <-ch
+
+`ok` is `false` if there are no more values to receive and the channel is
+closed.
+
+The loop `for i int in c` receives values from the channel repeatedly until it
+is closed.
+
+Note: Only the sender should close a channel, never the receiver.
+
+Another note: Channels aren't like files; you don't usually need to close them.
+Closing is only necessary when the receiver must be told there are no more
+values coming, such as to terminate a loop.
+
+
+## Select
+
+    Li 0
+    
+    import:
+        console
+        exec
+    
+    fibonacci fn(c, quit chan[int]):
+        x, y int = 0, 1
+        for:
+            select:
+                c <- x:
+                    x, y = y, x+y
+                <-quit:
+                    console.log("quit")
+                    return
+    
+    main fn():
+        c, quit chan[int]
+        exec.co (fn():
+            for i int = 0; i < 10; i++:
+                console.log(<-c)
+            quit <- 0
+        )()
+        fibonacci(c, quit)
+
+The select statement lets a coroutine wait on multiple communication operations.
+
+A select blocks until one of its cases can run, then it executes that case. It
+chooses one at random if multiple are ready.
+
+
+## Default Selection
+
+    Li 0
+    
+    import:
+        console
+        time
+    
+    main fn():
+        tick chan[bool] = time.tick(100 * time.millisecond)
+        boom chan[bool] = time.after(500 * time.millisecond)
+        for:
+            select:
+                <-tick:
+                    console.log("tick.")
+                <-boom:
+                    console.log("BOOM!")
+                    return
+                default:
+                    console.log(".")
+                    time.sleep(50 * time.millisecond)
+
+The `default` case in a `select` is run if no other case is ready.
+
+Use a `default` case to try a send or receive without blocking:
+
+    select:
+        i = <-c:
+            // use i
+        default:
+            // receiving from c would block
+
+
+## Mutual exclusion
+
+    Li 0
+    
+    import:
+        console
+        exec
+        sync
+        time
+    
+    // SafeCounter is safe to use concurrently.
+    safeCounter type:
+        v map[string, int]
+        mux sync.mutex
+        
+        // inc increments the counter for the given key.
+        inc fn(c safeCounter, key string):
+            c.mux.lock()
+            // Lock so only one coroutine at a time can access the map c.v.
+            c.v(key)++
+            c.mux.unlock()
+        
+        // value returns the current value of the counter for the given key.
+        value fn(c safeCounter, key string) int:
+            c.mux.lock()
+            // Lock so only one coroutine at a time can access the map c.v.
+            defer c.mux.unlock()
+            return c.v(key)
+    
+    main fn():
+        c safeCounter
+        for i int = 0; i < 1000; i++:
+            exec.co c.inc("somekey")
+        
+        time.sleep(time.second)
+        console.log(c.value("somekey"))
+
+We've seen how channels are great for communication among coroutines.
+
+But what if we don't need communication? What if we just want to make sure only
+one coroutine can access a variable at a time to avoid conflicts?
+
+This concept is called mutual exclusion, and the conventional name for the data
+structure that provides it is mutex.
+
+Lithium's standard library provides mutual exclusion with `sync.mutex` and its
+two methods:
+
+    lock()
+    unlock()
+
+We can define a block of code to be executed in mutual exclusion by surrounding
+it with a call to `lock` and `unlock` as shown on the `inc` method.
+
+We can also use `defer` to ensure the mutex will be unlocked as in the `value`
+method.

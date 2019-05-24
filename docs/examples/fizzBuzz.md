@@ -5,8 +5,9 @@ Fizz if divisible by 3, Buzz if divisible by 5
     Li 0
     
     import:
-        fmt
-        num
+        console
+    
+    LAST const = 30
     
     fizzBuzz fn(n int) string:
         if n % 3 == 0 && n % 5 == 0:
@@ -19,5 +20,5 @@ Fizz if divisible by 3, Buzz if divisible by 5
             return n.String
     
     main fn():
-        for n int in num.range(30):
-            fmt.printLn(fizzBuzz(n))
+        for i int = 1; i <= LAST; i++:
+            console.log(fizzBuzz(i))

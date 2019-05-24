@@ -1,7 +1,5 @@
 # Lithium Programming Language Development Roadmap
 
-*Last updated 2019-05-07*
-
 This document provides a basic roadmap to follow for further development
 of the Lithium Programming Language
 
@@ -9,7 +7,7 @@ of the Lithium Programming Language
 
 | Goal                         | Status     | Description                                                                                                    |
 |------------------------------|:----------:|----------------------------------------------------------------------------------------------------------------|
-|Tour complete                 |Started     |The tour covers everything that is also covered by the tour for Go (Unless it does not apply)                   |
+|Tour complete                 |Completed   |The tour covers everything that is also covered by the tour for Go (Unless it does not apply)                   |
 |Spec complete                 |Started     |The language specification covers everything that is also covered by the spec for Go (Unless it does not apply) |
 |Spec and Tour aligned         |Not started |The tour and language spec is fully aligned with each other                                                     |
 |Docs cover tour               |Not started |The standard library documentation covers everything listed in the tour                                         |

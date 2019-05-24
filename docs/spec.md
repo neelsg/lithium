@@ -139,6 +139,7 @@ The built-in packages are:
 - `int` Provides a type and methods for working with integer numbers
 - `map` Provides a type and methods for working with generic maps
 - `string` Provides a type and methods for working with strings
+- `type` Provides some interfaces used for checking types
 
 
 ## Operators
@@ -216,7 +217,7 @@ Examples of integer literals:
     123 456 789 000
     0x AA BB CC DD
 
-#### Iota
+#### The `int.iota` keyword
 
 The `int.iota` keyword can be used anywhere in the source code to signify that a
 new integer number literal should be used starting with 0. Each time `int.iota`
@@ -274,8 +275,8 @@ Examples of complex number literals:
 Strings are a sequence of unicode characters that can be formatted in a few
 different ways:
 
-- Characters encapsulated by single `'` or double `"` quotes.
-- A docstring block indicated by the statement `embed string:`
+1. Characters encapsulated by single `'` or double `"` quotes.
+1. Using the `string.embed` keyword.
 
 Strings encapsulated in quotation marks cannot flow over a single line. With
 strings encapsulated in quotation marks, the following escape sequences can be
@@ -301,8 +302,22 @@ Examples of string literals:
     "This is a string\n"
     'This is also a string'
     'Strings are concatenated with a +, so this' + " is a single string literal"
-    
-    embed string:
+
+#### The `string.embed` keyword
+
+The `string.embed` keyword can be used in the following ways:
+
+1. A docstring block indicated by `string.embed {validatable type}:`
+1. Text imported from a file by `string.embed {validatable type} "filepath"`
+
+The `{validatable type}` part is optional and can be any type where the type
+has a method with the signature `validate(string) error`. On compilation, this
+method will be called on the string literal and if the returned `error.ok` value
+is not `true`, the value of `error.string` will be printed as a compile error.
+
+Examples of string literals using `embed`:
+
+    string.embed:
         Use this if you need to create a string that contains lots of raw text
         such as for templates etc.
         
@@ -312,6 +327,16 @@ Examples of string literals:
         escape characters such as \\ or \n have no meaning within a string
         literal. Indicators for comments such as // and /* are also just treated
         as part of the raw text rather than as actual comments in the code.
+    
+    //This will include the full text of the file in the literal at compile time
+    string.embed "./MyTextFile.txt"
+    
+    /*
+       This will run `web.css.validate(string) error` first to check if
+       "./style.css" contains a valid stylesheet. If it does not, the
+       compiler will throw an error.
+    */
+    string.embed web.css "./style.css"
 
 
 ## Constants
@@ -323,26 +348,51 @@ types cannot be mixed.
 
 Examples of constants:
 
-    DEBUG const = true               // This is a boolean constant
-    PI const = 3.14                  // This is a floating-point constant
-    HELLO const = "Hello world!"     // This is a string constant
-    DAY const = 24 * 60 * 60 * 1000  // This is an integer constant
-    I const = 1i                     // This is a complex number constant
+    DEBUG const = true                   // Boolean constant
+    PI const = 3.14                      // Floating-point constant
+    HELLO const = "Hello world!"         // String constant
+    DAY const = 24 * 60 * 60 * 1000      // Integer constant
+    I const = 1i                         // Complex number constant
+    HTML const = string.embed web.html:  // String constant from a block
+        <div class="greeting">
+            Hello world wide web!
+            My name is %.
+        </div>
 
 
 ## Variables and types
 
+The following are built-in types in the language:
 
-## Conditionals
+- `array[v type.comparable]` An array with values of type `v`
+- `bool` A boolean with a value of either `true` or `false`.
+- `byte` An 8-bit integer equivalent to `int.u8`.
+- `complex` A complex number. This can be 64 or 128-bit depending on the target
+   architecture.
+- `complex.p64` A 64-bit complex number.
+- `complex.p128` A 128-bit complex number.
+- `float` A floating-point number. This can be 32 or 64-bit depending on the
+   target architecture.
+- `float.p32` A 32-bit floating-point number.
+- `float.p64` A 64-bit floating-point number.
+- `fn(...) (...)` A function. Functions with different types of parameters or
+   different types of return values are considered to be different types.
+- `int` A signed integer number. This can be 16, 32 or 64-bit depending on the
+   target architecture.
+- `int.s8` A signed 8-bit integer.
+- `int.s16` A signed 16-bit integer.
+- `int.s32` A signed 32-bit integer.
+- `int.s64` A signed 64-bit integer.
+- `int.u` An unsigned integer. This can be 16, 32 or 64-bit depending on the
+   target architecture.
+- `int.u8` An unsigned 8-bit integer.
+- `int.u16` An unsigned 16-bit integer.
+- `int.u32` An unsigned 32-bit integer.
+- `int.u64` An unsigned 64-bit integer.
+- `map[k, v type.comparable]` A map with keys of type `k` and values of `v`
+- `string` A string of text.
 
-
-## Loops
-
-
-## Functions
-
-
-## Methods
+New types can be defined with the `type` keyword.
 
 
 ## Scope
@@ -350,14 +400,53 @@ Examples of constants:
 The following rules apply to determine the scope in which a variable is
 available
 
-1. Variables declared at the top of a file must be either preceded by `private`
-    or `export`. 
-1. Variables preceded by `export` is available by any other package that imports
-    the current package.
-1. Top level variables preceded by `private` is available anywhere in the
-    current package including any other files within this package
-1. Variables declared within a function is only available within that function.
+1. Variables declared at the top of a file may be preceded by `private`. This
+   will make the variable only available to the current package.
 1. Variables declared within an indented block is only available within that
-    block.
-1. Variables declared within the initial statement of a `for` or `if` is only
-    available within that statement, but including any `else` statements.
+   block. This includes functions and also any blocks created by `for`, `if`
+   etc.
+1. Variables declared within the block statement of a `for` or `if` is only
+   available within that block, but also including any `else` statements.
+
+
+## Conditionals
+
+The `if` keyword is used to conditionally execute code. An `if` statement can
+take the following forms:
+
+    // Inline form
+    if {initial statement ;}{condition}: {expression} {else:} {expression}
+    
+    // Block form
+    if {initial statement ;}{condition}:
+        {statement/(s)}
+    {else if condition:}
+        {statement/(s)}
+    {else:}
+        {statement/(s)}
+
+The inline form may be used as an expression in a larger statement. The block
+form can only be used as a self-standing block.
+
+The {initial statement ;} is optional and can contain a single statement that is
+always executed before the condition is evaluated. Any variables defined in this
+statement is available within the if statement/block as well as any else blocks,
+but is not available outside of it.
+
+The {condition} expression must evaluate to a boolean. If the expression
+evaluates to `true`, the [statement/(s)} are executed.
+
+The {else if condition:} and {else:} blocks are optional. There can be an
+arbitrary number of {else if condition:} blocks.
+
+
+## Loops
+
+The `for` keyword is used to execute code multiple times.
+
+
+## Functions and methods
+
+Functions are first-class variables in Lithium. Functions are defined using the
+`fn` keyword.
+

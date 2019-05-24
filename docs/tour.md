@@ -404,8 +404,8 @@ Lithium's `if` statements are like its `for` loops
     
     main fn():
         console.log(
-            pow(3, 2, 10),
-            pow(3, 3, 20),
+            pow(3., 2., 10.),
+            pow(3., 3., 20.),
             )
 
 Like `for`, the `if` statement can start with a short statement to execute
@@ -422,7 +422,7 @@ until the end of the `if`.
         math
     
     private pow fn(x, n, lim float) float:
-        if x**= n; x < lim:
+        if x **= n; x < lim:
             return x
         else:
             console.log("% >= %".in(x, lim))
@@ -588,10 +588,10 @@ Given the above type, the following statements are equivalent:
         x float
         y float
         dist fn(self vertex) float:
-            return math.sqrt(self.x ** 2 + self.y ** 2)
+            return math.sqrt(self.x ** 2. + self.y ** 2.)
     
     main fn():
-        v vertex(1, 2)
+        v vertex(1., 2.)
         console.log(v.dist())
 
 Methods are functions defined within a type.
@@ -616,10 +616,10 @@ with. When calling the method, this parameter is omitted.
             self.x, self.y = x, y
             return self
         dist fn(self vertex) float:
-            return math.sqrt(self.x ** 2 + self.y ** 2)
+            return math.sqrt(self.x ** 2. + self.y ** 2.)
     
     main fn():
-        v vertex(1, 2)
+        v vertex(1., 2.)
         console.log(v.dist())
 
 Just like normal variables, properties in a type can also be set to an initial
@@ -650,10 +650,10 @@ when creating an object of that type such as with `v vertex(1, 2)`.
             return self
         
         dist fn(self vertex) float:
-            return math.sqrt(self.x ** 2 + self.y ** 2)
+            return math.sqrt(self.x ** 2. + self.y ** 2.)
     
     main fn():
-        v vertex(1, 2)
+        v vertex(1., 2.)
         console.log(v.dist())
 
 You can use the `private` keyword to make properties or even methods only
@@ -694,7 +694,7 @@ main function in this case, you will get a compile error.
                 self.y = y * -1
         
         dist fn(self vertex) float:
-            return math.sqrt(self.x ** 2 + self.y ** 2)
+            return math.sqrt(self.x ** 2. + self.y ** 2.)
     
     main fn():
         v vertex(1, 2)
@@ -708,9 +708,9 @@ the `get` method will take preference whenever that method is used outside of
 the actual code run by the `get` method itself. Similarly, the `set` method also
 overrules an actual property in the type if such actual property is defined.
 
-A `get` method can also be created for the type itself. This will allow you to
-retrieve a custom value by directly using the object name, so `vertex` would be
-the same as `vertex.get()`. Note that a similar `set` method is not supported.
+A `get default` method can also be created for the type. This will allow you to
+retrieve a custom value by directly using the object name. Note that a similar
+`set` method is not supported.
 
 
 ## Inheritance

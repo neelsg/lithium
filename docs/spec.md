@@ -1,20 +1,12 @@
 # Lithium Programming Language Specification
 
-This spec was inspired by the
-[Go Programming Language Specification](https://golang.org/ref/spec)
+This document defines the Lithium programming language.
 
 
 ## Doctype indicator
 
 The first line of a Lithium source file must start with the character sequence
-`li ` followed by the version of the language specification that was used.
-
-
-## Comments
-
-Single line comments start with `//` and end at the end of the line.
-
-Block comments start with `/*` and end with `*/`
+`Li ` followed by the version of the language specification that was used.
 
 
 ## Statements and expressions
@@ -39,13 +31,114 @@ rest of the statement into account. For instance, in the statement `a = b + c`,
 the `b + c` is an expression.
 
 
-## Keywords
+## Blocks and indentation
 
-The following keywords are reserved:
+A block is an indented set of statements or other text that is prefixed by a
+block statement followed by a `:` (colon). The indentation of all the lines in
+a block must be deeper than the block statement and must be the same for all
+the lines within the block.
 
-    array bool byte chan complex const defer else embed export extends false
-    float for fn if import int in interface iota map nil private property return
-    string true type
+Indentation may be set using either spaces or tabs, but the characters used for
+indentation may not be mixed. Indentation of lines containing nothing except
+spaces or tabs are ignored.
+
+A block ends when the next line has the same or shallower indentation as the
+block statement.
+
+Examples:
+
+    This is a statement that does not form part of a block
+    
+    This is another statement that does not form part of
+        a block as the previous line does not end with a colon
+    
+    This is a block statement:
+        This statement is part of a block
+        This statement is also part of a block
+    
+        This statement creates a block within a block
+            This statement is part of the nested block
+
+
+## Comments
+
+Single line comments start with `//` and end at the end of the line.
+
+Block comments start with `/*` and end with `*/`
+
+
+## Files
+
+All the files under a single folder is considered part of the same package.
+Files must have the extension ".li".
+
+The underscore ("_") is used in file names to indicate various special affixes
+used by Lithium and should only be used for this purpose. Some of these affixes
+are:
+
+- "_test": Files with this affix is only used for unit testing and does not form
+   part of the final build of a package.
+- "_linux": Files with this affix only applies when compiling to GNU/Linux OS
+- "_riscv": Files with this affix only applies when compiling to the RISC-V
+   architecture
+
+File affixes can be combined such as "Filename_riscv_linux_test.li".
+
+Affixes for test files:
+
+    test
+
+Affixes for operating systems or architectures:
+
+    amd64 android arduino arm jvm linux none riscv riscv64 webasm webjs windows
+
+
+## Importing packages
+
+An `import` statement is used to indicate packages that need to be imported into
+the current package. This statement must be placed at the top level of each file
+where the imported packages are used. This statement can take 2 forms (Inline or
+as a block).
+
+Examples:
+
+    // Inline statement that imports the math package from the standard library
+    import math
+    
+    // This is the block form of the import statement
+    import:
+        math  // Imports the math package from the standard library
+        
+        my "./myfolder" // Imports a custom package from path "./myfolder" accessible as `my` in the current file
+
+
+## Built-in and Standard library packages
+
+There are both built-in as well as standard library packages. The availability
+as well as specific format of any packages may vary depending on the
+architecture and operating system which is targeted.
+
+Built-in packages do not need to be imported with the `import` keyword and are
+available implicitly. Standard packages are shipped with the language, but they
+do need to be imported using an `import` statement to be used by any specific
+file.
+
+We do not list the standard packages here as their documentation is provided
+separately.
+
+The built-in packages are:
+
+- `array` Provides a type and methods for working with generic arrays
+- `bool` Provides a type and methods for working with booleans
+- `byte` Provides a type that is an alias for `int.s8`
+- `chan` Provides a type and methods for working with channels
+- `complex` Provides a type and methods for working with complex numbers
+- `defer` Provides a function for deferring function calls
+- `error` Provides a type and methods for working with errors
+- `float` Provides a type and methods for working with floating-point numbers
+- `int` Provides a type and methods for working with integer numbers
+- `map` Provides a type and methods for working with generic maps
+- `string` Provides a type and methods for working with strings
 
 
 ## Operators
@@ -97,8 +190,9 @@ The following character sequences are operators:
 
 ### Boolean literals
 
-The words `true` and `false` can be used as boolean literals
+The words `true` and `false` can be used as boolean literals.
 
+Boolean literals can only be used for assignment of the type `bool`.
 
 ### Integer literals
 
@@ -106,18 +200,50 @@ Integer literals are a sequence of digits (0..9) that represent an integer
 constant. Integer literals can also be written in hexadecimal, octal or
 binary by using the prefix `0x`, `0o` or `0b` respectively.
 
+Integer literals can be of any size and can be assigned to any type under `int`.
+If the literal is too big to fit in the range of the the given type, a compile
+error should be raised.
+
+For readability, spaces can be used in integer literals to denote groupings such
+as thousands.
+
 Examples of integer literals:
 
     42
     0xFADE123
     0o600
     0b101010
+    123 456 789 000
+    0x AA BB CC DD
+
+#### Iota
+
+The `int.iota` keyword can be used anywhere in the source code to signify that a
+new integer number literal should be used starting with 0. Each time `int.iota`
+is used in a single package, a unique integer is used, but this may overlap with
+integers created with `iota` in imported packages. No guarantees are made that
+the specific numbers will remain the same between compiles of the source.
+
+Example:
+
+    RED const = int.iota // This will set the RED const to 0
+    GREEN, BLUE const = int.iota, int.iota // Will set GREEN to 1 and BLUE to 2
+    myVal int = int.iota // The myVal variable will initially be set to 3
 
 ### Floating-point literals:
 
-Floating-point literals are a sequence of digits, a decimal point, a
-fractional part and optionally and exponent part (prefixed by `e`).
-The decimal point can be omitted if the literal contains an exponent.
+Floating-point literals are a sequence of digits, a decimal point, a fractional
+part and optionally and exponent part (prefixed by `e`). The decimal point can
+be omitted if the literal contains an exponent.
+
+Floating-point literals can be of any size and can be assigned to any type under
+`float`. If the precision of literal is higher than what is possible in the
+given type, a lower precision rounded value will be used and the compiler should
+not raise any error.
+
+As with integer literals, spaces can be used to denote groupings such as
+thousands. Unlike integer literals, floating-point literals must be decimal,
+they cannot be represented in hexadecimal, octal or binary.
 
 Examples of floating-point literals:
 
@@ -125,7 +251,7 @@ Examples of floating-point literals:
     42.4242
     1.e+0
     42e+10
-    0.003e-10
+    0.003 e - 10
 
 ### Complex number literals:
 
@@ -134,32 +260,41 @@ by a `+` where the second floating-point literal ends with the char `i`. The
 first floating-point literal is the real part and the second is the imaginary
 part.
 
+The real part can be omitted if the number only has an imaginary part. The
+decimal point can also be omitted of the imaginary part if not needed.
+
 Examples of complex number literals:
 
-    1 + 2i
-    4.2e+1 + 4.2e-1i
+    1. + 2i
+    4.2e+1 + 4.2e-2i
+    3i
 
 ### String literals:
 
-Strings are a sequence of characters that can be formatted in a few different
-ways:
+Strings are a sequence of unicode characters that can be formatted in a few
+different ways:
 
 - Characters encapsulated by single `'` or double `"` quotes.
 - A docstring block indicated by the statement `embed string:`
 
-Strings encapsulated in quotation marks cannot flow over a single line.
-
-With strings encapsulated in quotation marks, the following escape sequences can
-be used to escape special chars. The following escape sequences are available:
+Strings encapsulated in quotation marks cannot flow over a single line. With
+strings encapsulated in quotation marks, the following escape sequences can be
+used to escape special chars. The following escape sequences are available:
 
 - `\\` This represents a single backslash.
 - `\"` This represents a double quote (Only applies if the literal is
-    encapsulated in double quotes).
+   encapsulated in double quotes).
 - `\'` This represents a single quote (Only applies if the literal is
     encapsulated in single quotes).
-- `\n` A newline character.
-- `\r` A carriage-return character.
-- `\l` A linefeed character.
+- `\a` Bell code.
+- `\b` Backspace.
+- `\e` Escape character.
+- `\f` Page break.
+- `\l` Linefeed.
+- `\n` Newline.
+- `\r` Carriage-return.
+- `\t` Horizontal tab.
+- `\v` Vertical tab.
 
 Examples of string literals:
 
@@ -183,33 +318,19 @@ Examples of string literals:
 
 A constant is defined by the name of the constant followed by the keyword
 `const`, the operator `=` and then an assigned value. The assigned value can be
-any literal of any type or even a simplistic formula using literals.
+any literal of any type or even a simplistic formula using literals, but the
+types cannot be mixed.
 
 Examples of constants:
 
-    PI const = 3.14
-    HELLO const = "Hello world!"
-    DAY const = 24 * 60 * 60 * 1000
-
-
-## Iota
-
-The `iota` keyword can be used anywhere in the source code to signify that a new
-integer number constant should be used starting with 0. Each time `iota` is used
-in a single package, a new integer is used, but this may overlap with integers
-created with `iota` in imported packages.
-
-Example:
-
-    RED const = iota // This will set the RED const to 0
-    GREEN, BLUE const = iota, iota // This will set GREEN to 1 and BLUE to 2
-    myVal int = iota // The myVal variable will initially be set to 3
+    DEBUG const = true               // This is a boolean constant
+    PI const = 3.14                  // This is a floating-point constant
+    HELLO const = "Hello world!"     // This is a string constant
+    DAY const = 24 * 60 * 60 * 1000  // This is an integer constant
+    I const = 1i                     // This is a complex number constant
 
 
 ## Variables and types
-
-
-## Code blocks and indentation
 
 
 ## Conditionals
@@ -222,22 +343,6 @@ Example:
 
 
 ## Methods
-
-
-## Files
-
-All the files under a single folder is considered part of the same package.
-Files must have the extension ".li".
-
-The underscore ("_") is used in file names to indicate various special affixes
-used by Lithium and should only be used for this purpose. Some of these affixes
-are:
-
-- "_test": This file is used for unit testing
-- "_linux": This file only applies when compiling to the GNU/Linux OS
-- "_riscv": This file only applies when compiling to the RISC-V architecture
-
-File affixes can be combined such as "Filename_riscv_linux_test.li".
 
 
 ## Scope

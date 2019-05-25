@@ -843,10 +843,10 @@ by testing whether the `error.ok` is false.
     
     import console
     
-    private plusable interface[n]:
-        plus fn(n, n) n
+    private plusable interface[p]:
+        plus fn(p, p) p
     
-    private double fn[p plusable[p]](num p) p:
+    private double fn[p plusable](num p) p:
         return num + num
     
     main fn():
@@ -879,7 +879,7 @@ specify a `string` property.
     private plusable interface[n]:
         plus fn(n, n) n
     
-    private double fn[p plusable[p] int](num p) p:
+    private double fn[p plusable int](num p) p:
         return num + num
     
     main fn():

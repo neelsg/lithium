@@ -125,7 +125,7 @@ arguments of type `int`. Note that the type comes after the variable name.
     
     private:
         split fn(sum int) (int, int):
-            x, y int = sum * 4 / 9, sum - x
+            x int, y int = sum * 4 / 9, sum - x
             return x, y
     
     main fn(): console.log(split(17))
@@ -140,11 +140,12 @@ A function can return any number of results.
     private swap fn(x, y string) (string, string): return y, x
     
     main fn():
-        a, b string = swap("hello", "world")
+        a string, b string = swap("hello", "world")
         console.log(a, b)
 
-When two or more parameters are of the same type, you can omit the
-type from all but the last parameter.
+When two or more parameters are of the same type, you can omit the type from all
+but the last parameter. Note that you cannot do this with assignment inside
+functions.
 
 
 ## Named parameters
@@ -157,7 +158,7 @@ type from all but the last parameter.
     private swap fn(x = "hello", y string) (string, string): return y, x
     
     main fn():
-        a, b string = swap(y = "world")
+        a string, b string = swap(y = "world")
         console.log(a, b)
 
 When calling a function, the parameters may be named. A function definition can
@@ -190,7 +191,7 @@ type.
     
     import console, math
     
-    private i, j int, p float = 1, 2, math.pi
+    private i, j int, p float = 1, 2, math.PI
     
     main fn():
         c, python bool, java, go string = true, false, "no!", "yes!"
@@ -268,7 +269,7 @@ Custom types can have their own defined default values.
         math
     
     main fn():
-        x, y int = 3, 4
+        x int, y int = 3, 4
         f float = math.sqrt((x * x + y * y).float)
         z int.u = f.intU
         console.log(x, y, z)
@@ -1027,14 +1028,14 @@ Arrays can contain any type, including other arrays.
         l array[int]
         console.log(l)
         
-        l = l.push(3)
+        l.push(3)
         console.log(l)
         
-        l = l.push(4)
+        l.push(4)
         console.log(l)
         
         // We can add more than one element at a time.
-        l = l.push(5, 6, 7)
+        l.push(5, 6, 7)
         console.log(l)
 
 Lithium provides a built-in `push` method to append items to an array.
@@ -1049,7 +1050,7 @@ Lithium provides a built-in `push` method to append items to an array.
     private pow array[int](1, 2, 4, 8, 16, 32, 64, 128)
     
     main fn():
-        for i, v int in pow:
+        for i int, v int in pow:
             console.log("2 ** % = %".in(i, v))
 
 The built-in `array` type is iterable, which means that it can be used in a for
@@ -1072,10 +1073,6 @@ You can skip the key or value by assigning to `_`.
 
     for key, _ in array
     for _, value in array
-
-If you only want the key, you can omit the second variable.
-
-    for key in array
 
 
 ## Maps
@@ -1213,7 +1210,6 @@ such as an `array` or `map` as distinct parameters in a variadic function.
     
     import:
         console
-        exec
         time
     
     say fn(s string):
@@ -1222,12 +1218,12 @@ such as an `array` or `map` as distinct parameters in a variadic function.
             console.log(s)
     
     main fn():
-        exec.co say("world")
+        co say("world")
         say("hello")
 
 A coroutine is a lightweight thread managed by the Lithium runtime.
 
-`exec.co f(x, y, z)` starts a new coroutine running `f(x, y, z)`.
+`co f(x, y, z)` starts a new coroutine running `f(x, y, z)`.
 
 The evaluation of the passed parameters happen in the current coroutine, but the
 execution of the function happens in the new coroutine.
@@ -1244,31 +1240,28 @@ will see shortly.
     
     import:
         console
-        exec
     
     sum fn(s array[int], c chan[int]):
         sum int = 0
         for _, v int in s:
             sum += v
-        c <- sum // Send sum to c
+        c.push(sum) // Send sum to c
     
     main fn():
         s array[int](7, 2, 8, -9, 4, 0)
         
         c chan[int]
-        exec.co sum(s.slice(, s.length / 2), c)
-        exec.co sum(s.slice(s.length / 2, ), c)
-        x, y int = <-c, <-c // receive from c
+        co sum(s.slice(, s.length / 2), c)
+        co sum(s.slice(s.length / 2, ), c)
+        x, y int = c.pop(), c.pop() // receive from c
         
         console.log(x, y, x + y)
 
-Channels are a typed conduit through which you can send and receive values with
-the channel operator, <-.
+Channels are a typed conduit through which you can send values with `push()` and
+receive values with `pop()`
 
-    ch <- v    // Send v to channel ch.
-    v = <-ch   // Receive from ch, and assign value to v.
-
-(The data flows in the direction of the arrow.)
+    ch.push(v)     // Send v to channel ch.
+    v = ch.pop()   // Receive from ch, and assign value to v.
 
 By default, sends and receives block until the other side is ready. This allows
 coroutines to synchronize without explicit locks or condition variables.
@@ -1286,10 +1279,10 @@ the final result.
     
     main fn():
         ch chan[int](2)
-        ch <- 1
-        ch <- 2
-        console.log(<-ch)
-        console.log(<-ch)
+        ch.push(1)
+        ch.push(2)
+        console.log(ch.pop())
+        console.log(ch.pop())
 
 Channels can be buffered. Provide the buffer length to the channel initializer
 to make a buffered channel:
@@ -1306,25 +1299,25 @@ when the buffer is empty.
     
     import:
         console
-        exec
     
     fibonacci fn(n int, c chan[int]):
-        x, y int = 0, 1
+        x int, y int = 0, 1
         for i int = 0; i < n; i++:
-            c <- x
+            c.push(x)
             x, y = y, x + y
             c.close()
     
     main fn():
         c chan[int](10)
-        exec.co fibonacci(c.capacity, c)
+        co fibonacci(c.capacity, c)
         for i int in c:
             console.log(i)
 
 A sender can close a channel to indicate that no more values will be sent.
-Receivers can test whether a channel has been closed by checking `.ok`
+Receivers can test whether a channel has been closed by checking the `ok`
+property.
 
-    if ch.ok: v int = <-ch
+    if ch.ok: v int = ch.pop()
 
 `ok` is `false` if there are no more values to receive and the channel is
 closed.
@@ -1339,40 +1332,37 @@ Closing is only necessary when the receiver must be told there are no more
 values coming, such as to terminate a loop.
 
 
-## Select
+## Checking multiple channels
 
     Li 0
     
     import:
         console
-        exec
     
     fibonacci fn(c, quit chan[int]):
-        x, y int = 0, 1
-        for:
-            select:
-                c <- x:
-                    x, y = y, x+y
-                <-quit:
-                    console.log("quit")
-                    return
+        x int, y int = 0, 1
+        for: if c.capacity > 0: // This checks if you can push new values
+            c.push(x)
+            x, y = y, x+y
+        else if quit.length > 0: // This checks if any values have been pushed
+            console.log("quit")
+            return
     
     main fn():
         c, quit chan[int]
-        exec.co (fn():
+        co (fn():
             for i int = 0; i < 10; i++:
-                console.log(<-c)
-            quit <- 0
+                console.log(c.pop())
+            quit.push(0)
         )()
         fibonacci(c, quit)
 
-The select statement lets a coroutine wait on multiple communication operations.
+The `for: if` pattern lets a coroutine wait on multiple communication
+operations. This will wait until one of its conditions are true, then it
+executes that block.
 
-A select blocks until one of its cases can run, then it executes that case. It
-chooses one at random if multiple are ready.
 
-
-## Default Selection
+## More conditionals with channels
 
     Li 0
     
@@ -1383,26 +1373,18 @@ chooses one at random if multiple are ready.
     main fn():
         tick chan[bool] = time.tick(100 * time.millisecond)
         boom chan[bool] = time.after(500 * time.millisecond)
-        for:
-            select:
-                <-tick:
-                    console.log("tick.")
-                <-boom:
-                    console.log("BOOM!")
-                    return
-                default:
-                    console.log(".")
-                    time.sleep(50 * time.millisecond)
+        for: if tick.length > 0:
+            tick.pop()
+            console.log("tick.")
+        else if boom.length > 0:
+            boom.pop()
+            console.log("BOOM!")
+            return
+        else:
+            console.log(".")
+            time.sleep(25 * time.millisecond)
 
-The `default` case in a `select` is run if no other case is ready.
-
-Use a `default` case to try a send or receive without blocking:
-
-    select:
-        i = <-c:
-            // use i
-        default:
-            // receiving from c would block
+An `else` block can be used to run if no other condition is ready.
 
 
 ## Mutual exclusion
@@ -1411,7 +1393,6 @@ Use a `default` case to try a send or receive without blocking:
     
     import:
         console
-        exec
         sync
         time
     
@@ -1437,7 +1418,7 @@ Use a `default` case to try a send or receive without blocking:
     main fn():
         c safeCounter
         for i int = 0; i < 1000; i++:
-            exec.co c.inc("somekey")
+            co c.inc("somekey")
         
         time.sleep(time.second)
         console.log(c.value("somekey"))

@@ -203,9 +203,9 @@ the variable will be assigned the default value of the type.
 
 Lithium basic types are:
 
-    bool byte complex float int string
+    bool int string float complex
 
-Each of these types are defined in a standard library package that is imported
+Each of these types are defined in a built-in library package that is imported
 implicitly, so you do not need to list them in an import statement.
 
 These packages also provide more fine-grained type definitions such as the

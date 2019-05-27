@@ -1,0 +1,17 @@
+Li 0
+
+default type[n bool.comparable]:
+	init fn(new default[n], ...n in values ???[n]) default[n]:
+		// Initialize a new array
+	
+	slice fn(self default[n], low, high int) default[n]:
+		// Slice and array
+	
+	get length fn(self default[n]) int:
+		// Return the number of items in the array
+	
+	push fn(self default[n], ...n in values ???[n]) bool:
+		// Add new item(/s) to an array
+	
+	pop fn(self default[n]) n:
+		// Remove and return the last item of an array

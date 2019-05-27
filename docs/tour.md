@@ -124,20 +124,22 @@ arguments of type `int`. Note that the type comes after the variable name.
     import console
     
     private:
-        split fn(sum int) (int, int):
+        split fn(sum int) {int, int}:
             x int, y int = sum * 4 / 9, sum - x
             return x, y
     
     main fn(): console.log(split(17))
 
-A function can return any number of results.
+A function can return any number of results. If they do, these must be wrapped
+in curly braces `{ }` (More on that later). Even if a function returns only one
+result, the result type can optionally be wrapped in curly baces.
 
     Li 0
     
     import:
         console
     
-    private swap fn(x, y string) (string, string): return y, x
+    private swap fn(x, y string) {string, string}: return y, x
     
     main fn():
         a string, b string = swap("hello", "world")
@@ -146,24 +148,6 @@ A function can return any number of results.
 When two or more parameters are of the same type, you can omit the type from all
 but the last parameter. Note that you cannot do this with assignment inside
 functions.
-
-
-## Named parameters
-
-    Li 0
-    
-    import:
-        console
-    
-    private swap fn(x = "hello", y string) (string, string): return y, x
-    
-    main fn():
-        a string, b string = swap(y = "world")
-        console.log(a, b)
-
-When calling a function, the parameters may be named. A function definition can
-specify the default value of any parameters. If these parameters are omitted,
-they will be set to the default.
 
 
 ## Variables
@@ -505,7 +489,7 @@ deferred calls are executed in last-in-first-out order.
     
     import console
     
-    private adder fn() fn(int) int:
+    private adder fn() {fn(int) int}:
         sum int = 0
         return fn(x int) int:
             sum += x
@@ -538,7 +522,9 @@ its own `sum` variable.
         y int
     
     main fn():
-        console.log(vertex(1, 2))
+        v vertex
+        v.x, v.y = 1, 2
+        console.log(v)
 
 Lithium allows simple object-oriented programming. A type is a collection of
 properties and methods and is often called a class in other languages.
@@ -555,24 +541,11 @@ properties and methods and is often called a class in other languages.
         y int
     
     main fn():
-        v vertex = vertex(1, 2)
+        v vertex
         v.x = 4
         console.log(v.x)
 
 Type properties are accessed using a dot.
-
-
-## Shorthand for initializing types
-
-    private vertex type:
-        x int
-        y int
-
-Given the above type, the following statements are equivalent:
-
-    v vertex = vertex(1, 2)
-    v vertex(1, 2)
-    v vertex(x = 1, y = 2)
 
 
 ## Methods
@@ -590,7 +563,8 @@ Given the above type, the following statements are equivalent:
             return math.sqrt(self.x ** 2. + self.y ** 2.)
     
     main fn():
-        v vertex(1., 2.)
+        v vertex
+        v.x, v.y = 1., 2.
         console.log(v.dist())
 
 Methods are functions defined within a type.
@@ -610,15 +584,14 @@ with. When calling the method, this parameter is omitted.
     private vertex type:
         x float = 1
         y float = 1
-        init fn(x, y float) vertex:
-            self vertex
+        init fn(self vertex, x, y float) vertex:
             self.x, self.y = x, y
             return self
         dist fn(self vertex) float:
             return math.sqrt(self.x ** 2. + self.y ** 2.)
     
     main fn():
-        v vertex(1., 2.)
+        v vertex = vertex(1., 2.)
         console.log(v.dist())
 
 Just like normal variables, properties in a type can also be set to an initial
@@ -626,7 +599,22 @@ value which will then be the default for any objects of that type.
 
 You can create a function with the label `init` in a type which returns an
 object of that type. This function then becomes the initializer and will be used
-when creating an object of that type such as with `v vertex(1, 2)`.
+when creating an object of that type such as with `v vertex = vertex(1., 2.)`.
+
+
+## Shorthand for initializing types
+
+    private vertex type:
+        x int
+        y int
+        init fn(self vertex, x, y int) vertex:
+            self.x, self.y = x, y
+            return self
+
+Given the above type, the following statements are equivalent:
+
+    v vertex = vertex(1, 2)
+    v vertex(1, 2)
 
 
 ## Private values
@@ -738,16 +726,19 @@ the `extends` keyword.
     import console
     
     private hasX interface:
-        x float
+        get x() float
     
     private vertex type:
         x, y float
+        init fn(self vertex, x, y float) vertex:
+            self.x, self.y = x, y
+            return self
     
     private printX fn(h hasX):
         console.log(h.x)
     
     main fn():
-        v vertex(3, 4)
+        v vertex(3., 4.)
         printX(v) // This will print 3
 
 Interfaces specify which properties and methods a type must have to satisfy it.
@@ -771,9 +762,11 @@ of flexibility in using interfaces.
     private person type:
         name string
         age int
-        string property:
-            get fn(self person) string:
-                return "% (% years)".in(self.name, self.age)
+        init fn(self person, name string, age int) person:
+            self.name, self.age = name, age
+            return self
+        get string fn(self person) string:
+            return "% (% years)".in(self.name, self.age)
     
     main fn():
         a person("Arthur Dent", 42)
@@ -799,13 +792,15 @@ package (and many others) look for this interface to print values.
         time
     
     private myError type:
-        when time.Time
+        init fn(self myError, when time.time, what string) myError:
+            self.when, self.what = when, what
+            return self
+        when time.time
         what string
         ok bool = false
-        type string = "MyError"
-        string property:
-            get fn(self myError) string:
-                return "at %, %".in(self.when, self.what)
+        class string = "MyError"
+        get string fn(self myError) string:
+            return "at %, %".in(self.when, self.what)
     
     private run fn() error:
         return myError(time.now(), "it didn't work")
@@ -819,9 +814,9 @@ Lithium programs express error state with `error` values.
 The `error` type is a built-in interface similar to `string.stringer`:
 
     default interface:
-        string string
-        ok bool
-        type string
+        get string() string
+        get ok() bool
+        get class() string
 
 The name `default` as used for this interface is special in that it indicates
 that this is the default item in this package, so instead of typing
@@ -830,8 +825,8 @@ that this is the default item in this package, so instead of typing
 Functions often return an `error` value, and calling code should handle errors
 by testing whether the `error.ok` is false.
 
-    i int, err error = strconv.aToI("42")
-    if !err.ok:
+    i int
+    if i, err error = strconv.aToI("42"); !err.ok:
         console.log("couldn't convert number: %".in(err))
         return
     console.log("Converted integer:", i)
@@ -844,7 +839,7 @@ by testing whether the `error.ok` is false.
     import console
     
     private plusable interface[p]:
-        plus fn(p, p) p
+        plus(p) p
     
     private double fn[p plusable](num p) p:
         return num + num
@@ -877,7 +872,7 @@ specify a `string` property.
     import console
     
     private plusable interface[n]:
-        plus fn(n, n) n
+        plus(n) n
     
     private double fn[p plusable int](num p) p:
         return num + num
@@ -902,6 +897,9 @@ omitted when calling the function, this default type is assumed.
     imports console
     
     private vertex type[n string.stringer]:
+        init fn(new vertex, x, y n) vertex:
+            new.x, new.y = x, y
+            return new
         x n
         y n
     
@@ -911,6 +909,38 @@ omitted when calling the function, this default type is assumed.
 
 Parametric polymorphism can also be used with type definitions to create more
 generic types. In the above example, `x` and `y` are of type `int`.
+
+
+## Tuples
+
+    Li 0
+    
+    import console
+    
+    main fn():
+        triplets {string, string, string} = "Anna", "Betty", "Carmen"
+        console.log(triplets)
+
+Tuples are ordered pairs of variables. You have actually already seen them used
+for multiple return values for functions as well as with assignments on multiple
+variables. Tuples are wrapped in curly braces `{ }`.
+
+
+## Tuples continued
+
+    Li 0
+    
+    import console
+    
+    main fn():
+        triplets {string, string, string} = "Anna", "Betty", "Carmen"
+        console.log(triplets{0}) // This prints Anna
+        console.log(triplets{1}) // This prints Betty
+        console.log(triplets{2}) // This prints Carmen
+
+The individual values in a tuple can be accessed using the index number starting
+from zero. The index number must be a literal number, it cannot be another
+variable or calculated in some way.
 
 
 ## Arrays
@@ -1088,7 +1118,7 @@ You can skip the key or value by assigning to `_`.
         console.log(m(0), m(1))
         console.log(m)
         
-        primes map[int, int](2, 3, 5, 7, 11, 13)
+        primes map[int, int]({0,2}, {1,3}, {2,5}, {3,7}, {4,11}, {5,13})
         console.log(primes)
 
 `map[k, v]` is a built-in type that stores a map with keys of type `k` that
@@ -1107,16 +1137,15 @@ The statement `m map[int, string]` declares a variable `m` as a map of strings.
         lat, long float
     
     private m [string, vertex](
-        "Bell Labs" = vertex(40.68433, -74.39967),
-        "Google" = vertex(37.42202, -122.08408),
+        {"Bell Labs", vertex(40.68433, -74.39967)},
+        {"Google", vertex(37.42202, -122.08408)},
     )
     
     main fn():
         console.log(m)
 
-If the keys are not specified in the initialization of a map, keys are
-automatically created starting at zero. You can specify the keys just like you
-would specify the names of parameter in a function call.
+The map initializer accepts an arbitrary number of tuples that consist of the
+{key, value} pairs that need to be added.
 
 
 ## Mutating maps
@@ -1137,7 +1166,10 @@ would specify the names of parameter in a function call.
         m.delete("Answer")
         console.log("The value: ", m("Answer"))
         
-        v int, ok bool = m("Answer"), m.exists("Answer")
+        ok bool = m.exists("Answer")
+        console.log("Present? ", ok)
+        
+        v int, ok bool = m.get("Answer")
         console.log("The value: ", v, "Present? ", ok)
 
 Insert or update an element in map `m`:
@@ -1146,9 +1178,9 @@ Insert or update an element in map `m`:
 
 Retrieve an element:
 
-    var = map(key)
+    val = map(key)
 
-If `key` is not in the map, then `var` is the zero value for the map's value
+If `key` is not in the map, then `val` is the zero value for the map's value
 type.
 
 Delete an element:
@@ -1161,6 +1193,9 @@ Test that a key is present:
 
 If `key` is in the map, `ok` is `true`. If not, `ok` is `false`.
 
+Use `val, ok = map.get(key)` as a shorthand for
+`val, ok = map(key), map.exists(key)`
+
 
 ## Variadic functions
 
@@ -1169,9 +1204,9 @@ If `key` is in the map, `ok` is `true`. If not, `ok` is `false`.
     import:
         console
     
-    sum fn(...num array[int]) int:
+    sum fn(...int in nums array[int]) int:
         s int
-        for _, n int in num:
+        for _, n int in nums:
             s += n
         return s
     
@@ -1179,8 +1214,32 @@ If `key` is in the map, `ok` is `true`. If not, `ok` is `false`.
         console.log(sum(1, 2, 3, 4, 5)) // This will print 15
 
 Variadic functions are functions that can take an arbitrary number of parameters
-instead of a fixed set. The parameters are rolled up into a list type such as an
-`array` or a `map`.
+instead of a fixed set. The parameters are passed into the initializer method of
+a list type such as `array`.
+
+
+## Variadic function using map
+
+    Li 0
+    
+    import console
+    
+    number interface[n]:
+        plus(n) n
+        power(n) n
+    
+    sumPower fn[num number](...{num, num} in pairs map[num, num]) num:
+        sum num
+        for base num, exp num in pairs:
+            sum += base ** exp
+        return sum
+    
+    main fn():
+        console.log(sumPower[int]({2,1}, {2,2}, {2,3}, {2,4})) // Output 30
+
+Variadic functions can pass the parameters into any initializer method as long
+as the initializer method is also variadic and accepts the data of the correct
+type. This can include tuples.
 
 
 ## Spread operator
@@ -1190,15 +1249,15 @@ instead of a fixed set. The parameters are rolled up into a list type such as an
     import:
         console
     
-    sum fn(...num array[int]) int:
+    sum fn(...int in nums array[int]) int:
         s int
-        for _, n int in num:
+        for _, n int in nums:
             s += n
         return s
     
     main fn():
-        nums array[int](1, 2, 3, 4, 5)
-        console.log(sum(nums...))
+        numbers array[int](1, 2, 3, 4, 5)
+        console.log(sum(numbers...))
 
 It is possible to use the spread operator (`...`) to pass the values in a list
 such as an `array` or `map` as distinct parameters in a variadic function.

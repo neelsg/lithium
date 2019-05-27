@@ -1,0 +1,16 @@
+Li 0
+
+PI const = 3.14159 26535 89793 23846 26433 83279 50288 41971 69399 37510
+
+number interface[n]:
+	plus(n) n
+	minus(n) n
+	multiply(n) n
+	divide(n) n
+	power(n) n
+	modulo(n) n
+	equal(n) bool
+	less(n) bool
+
+sqrt fn[n number float](num n) n:
+	return n ** 0.5

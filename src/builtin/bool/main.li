@@ -1,0 +1,10 @@
+Li 0
+
+default type:
+	// Boolean type, can be true or false
+
+comparable interface[n]:
+	// bool.comparable can be used to determine if variables of a given type can
+	// be checked to see if they are equal
+	
+	equal(n) bool

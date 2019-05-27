@@ -3,44 +3,41 @@ Li 0
 int implements the basic type for an integer number
 */
 
-export:
-	default type:
-		// This is the basic type
-		
-		init fn(int) int:
-			// An integer can be initialized with a value
-		
-		i8 property:
-			get(self default) i8:
-				// Convert into 8-bit
-		
-		string property:
-			get(self default) string:
-				// Convert into a string
+default type:
+	// This is the basic type
 	
-	i8 type:
-		// 8-bit signed integer
+	init fn(new default) default:
+		// An integer can be initialized with a value
 	
-	i16 type:
-		// 16-bit signed integer
+	get s8 fn(self default) s8:
+		// Convert into 8-bit
 	
-	i32 type:
-		// 32-bit signed integer
-	
-	i64 type:
-		// 64-bit signed integer
-	
-	u type:
-		// Basic unsigned integer
-	
-	u8 type:
-		// 8-bit unsigned integer
-	
-	u16 type:
-		// 16-bit unsigned integer
-	
-	u32 type:
-		// 32-bit unsigned integer
-	
-	u64 type:
-		// 64-bit unsigned integer
+	get string(self default) string:
+		// Convert into a string
+
+s8 type:
+	// 8-bit signed integer
+
+s16 type:
+	// 16-bit signed integer
+
+s32 type:
+	// 32-bit signed integer
+
+s64 type:
+	// 64-bit signed integer
+
+u type:
+	// Basic unsigned integer
+
+u8 type:
+	// 8-bit unsigned integer
+
+u16 type:
+	// 16-bit unsigned integer
+
+u32 type:
+	// 32-bit unsigned integer
+
+u64 type:
+	// 64-bit unsigned integer

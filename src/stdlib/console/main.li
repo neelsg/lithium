@@ -1,0 +1,7 @@
+Li 0
+/*
+console implements a terminal where output can be logged
+*/
+
+log fn(...string.stringer in out array[string.stringer]):
+	// Write the output to the console

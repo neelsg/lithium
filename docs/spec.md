@@ -3,116 +3,119 @@
 This document defines the Lithium programming language.
 
 
-## Doctype indicator
+## doctype indicator
 
 The first line of a Lithium source file must start with the character sequence
 `Li ` followed by the version of the language specification that was used.
 
 
-## Statements and expressions
+## indents and dedents
 
-Statements can end with a `;`, but will also end at the end of the line unless
-the next line is indented. If the next line is indented and the previous line
-does not end with a `:`, this line and any further lines at the same indentation
-level will still be considered to be part of the previous line.
+Indentation is created by adding spaces or tabs to the front of a line. Where we
+specify a line to be indented, this implies that there are more tabs or spaces
+that precede the given line than there was for the previous non-blank line.
+Blank lines are ignored completely, including for indentation purposes.
 
-Examples:
+A line is dedented if it contains fewer tabs or spaces than the previous
+non-blank line.
 
-    This is a statement; This is another statement on the same line
-    
-    This statement ends at the end of this line
-    
-    This statement carries over to the next lines
-        as the next lines
-        have been indented
+A block is a set of lines that have the same level of indentation. Blocks may be
+nested within other blocks if they have a higher level of indentation.
 
-An expression is part of a statement that can be evaluated without taking the
-rest of the statement into account. For instance, in the statement `a = b + c`,
-the `b + c` is an expression.
+For indentation purposes, either tabs or spaces may be used, but they may not
+be mixed.
 
 
-## Blocks and indentation
+## statements
 
-A block is an indented set of statements or other text that is prefixed by a
-block statement followed by a `:` (colon). The indentation of all the lines in
-a block must be deeper than the block statement and must be the same for all
-the lines within the block.
+Statements are discrete steps that are executed by the program. Statements can
+be terminated with a `;`, but will also end at the end of the current line
+unless the next line is indented. If the next line is indented, this line and
+any further lines at the deeper indentation level will still be considered to be
+part of the same statement.
 
-Indentation may be set using either spaces or tabs, but the characters used for
-indentation may not be mixed. Indentation of lines containing nothing except
-spaces or tabs are ignored.
+
+## expressions
+
+An expression can be part of a statement or stand as a statement by itself.
+Expressions evaluate to a value. For instance, in the statement `a = b + c`,
+the part `b + c` is an expression. The part `b` is also an expression within the
+`b + c` expression.
+
+
+## blocks
+
+A block is an indented set of statements or other text that is preceded by a
+block statement followed by a `:`. The indentation of all the lines in a block
+must be deeper than the block statement and must be the same for all the lines
+within the block.
 
 A block ends when the next line has the same or shallower indentation as the
 block statement.
 
-Examples:
 
-    This is a statement that does not form part of a block
-    
-    This is another statement that does not form part of
-        a block as the previous line does not end with a colon
-    
-    This is a block statement:
-        This statement is part of a block
-        This statement is also part of a block
-    
-        This statement creates a block within a block:
-            This statement is part of the nested block
-
-
-## Comments
+## comments
 
 Single line comments start with `//` and end at the end of the line.
 
 Block comments start with `/*` and end with `*/`
 
 
-## Files
+## files
 
 All the files under a single folder is considered part of the same package.
 Files must have the extension ".li".
 
 The underscore ("_") is used in file names to indicate various special affixes
-used by Lithium and should only be used for this purpose. Some of these affixes
-are:
+used by Lithium and should only be used for this purpose.
 
-- "_test": Files with this affix is only used for unit testing and does not form
-   part of the final build of a package.
-- "_linux": Files with this affix only applies when compiling to GNU/Linux OS
-- "_riscv": Files with this affix only applies when compiling to the RISC-V
-   architecture
+A file can have multiple affixes separated by underscores.
 
-File affixes can be combined such as "Filename_riscv_linux_test.li".
-
-Affixes for test files:
+Affix for test files:
 
     test
 
-Affixes for operating systems or architectures:
+Affixes for platforms, operating systems or architectures:
 
     amd64 android arduino arm jvm linux none riscv riscv64 webasm webjs windows
 
 
-## Importing packages
+## keywords
+
+The following keywords are reserved in Lithium:
+
+    array bool chan co complex const default defer else error extends false
+    float fn for get if implements import in init int interface map return set
+    string true type
+
+
+## import
 
 An `import` statement is used to indicate packages that need to be imported into
 the current package. This statement must be placed at the top level of each file
-where the imported packages are used. This statement can take 2 forms (Inline or
-as a block).
+where the imported packages are used.
 
-Examples:
+The package name is a variable name used within the current file to refer to the
+imported package.
 
-    // Inline statement that imports the math package from the standard library
-    import math
-    
-    // This is the block form of the import statement
+The package path is an optional string literal that specifies the path where the
+importer package's source files are located. Package path can be omitted for any
+packages within the standard library.
+
+The `import` statement can take two forms:
+
+### Inline form:
+
+    import package name{ "package path"}{, package name...}
+
+### Block form:
+
     import:
-        math  // Imports the math package from the standard library
-        
-        my "./myfolder" // Imports a custom package from path "./myfolder" accessible as `my` in the current file
+        package name{ "package path"}
+        {...}
 
 
-## Built-in and Standard library packages
+## built-in and standard library packages
 
 There are both built-in as well as standard library packages. The availability
 as well as specific format of any packages may vary depending on the
@@ -130,19 +133,17 @@ The built-in packages are:
 
 - `array` Provides a type and methods for working with generic arrays
 - `bool` Provides a type and methods for working with booleans
-- `byte` Provides a type that is an alias for `int.s8`
 - `chan` Provides a type and methods for working with channels
 - `complex` Provides a type and methods for working with complex numbers
-- `defer` Provides a function for deferring function calls
 - `error` Provides a type and methods for working with errors
 - `float` Provides a type and methods for working with floating-point numbers
 - `int` Provides a type and methods for working with integer numbers
 - `map` Provides a type and methods for working with generic maps
 - `string` Provides a type and methods for working with strings
-- `type` Provides some interfaces used for checking types
+- `type` Provides methods for working with general types
 
 
-## Operators
+## operators
 
 The following character sequences are operators:
 
@@ -152,12 +153,12 @@ The following character sequences are operators:
 - `x / y` Division `x.divide(y)`
 - `x ** y` Exponent `x.power(y)`
 - `x % y` Modulus `x.modulo(y)`
-- `x & y` Bitwise And `x.bitAnd(y)`
-- `x | y` Bitwise Or `x.bitOr(y)`
-- `x ^ y` Bitwise Xor `x.bitXor(y)`
-- `x << y` Left shift `x.shiftLeft(y)`
-- `x >> y` Right shift `x.shiftRight(y)`
-- `~x` Bitwise ones complement `x.bitFlip()`
+- `x & y` Bitwise And `x.and(y)`
+- `x | y` Bitwise Or `x.or(y)`
+- `x ^ y` Bitwise Xor `x.xor(y)`
+- `x << y` Left shift `x.left(y)`
+- `x >> y` Right shift `x.right(y)`
+- `~x` Bitwise ones complement `x.flip()`
 - `x = y` Assignment. Points `x` to the same value as `y`
 - `x.a = y` Set a property `x.a.set(y)`
 - `x(a) = y` Set an internal value `x.set(a, y)`
@@ -176,18 +177,21 @@ The following character sequences are operators:
 - `!x` Boolean not
 - `x || x` Boolean or
 - `x && x` Boolean and
-- `x == y` Is equal to `x.equals(y)`
+- `x == y` Is equal to `x.equal(y)`
 - `x < y` Is less than `x.less(y)`
-- `x > y` Is greater than `x.greater(y)`
-- `x <> y` Is not equal to `!x.equals(y)`
-- `x != y` Is not equal to `!x.equals(y)`
-- `x <= y` Is less than or equal to `x.less(y) || x.equals(y)`
-- `x >= y` Is greater than or equal to `x.greater(y) || x.equals(y)`
+- `x > y` Is greater than `y.less(x)`
+- `x <> y` Is not equal to `!x.equal(y)`
+- `x != y` Is not equal to `!x.equal(y)`
+- `x <= y` Is less than or equal to `x.less(y) || x.equal(y)`
+- `x >= y` Is greater than or equal to `y.less(x) || x.equal(y)`
 - `x++` Increment by one `x = x + 1`
 - `x--` Decrement by one `x = x - 1`
 
 
-## Literals
+## literals
+
+Literals are sequences of characters that Lithium recognizes as a concrete value
+of a certain type.
 
 ### Boolean literals
 
@@ -217,7 +221,7 @@ Examples of integer literals:
     123 456 789 000
     0x AA BB CC DD
 
-#### The `int.iota` keyword
+#### int.iota
 
 The `int.iota` keyword can be used anywhere in the source code to signify that a
 new integer number literal should be used starting with 0. Each time `int.iota`
@@ -303,7 +307,7 @@ Examples of string literals:
     'This is also a string'
     'Strings are concatenated with a +, so this' + " is a single string literal"
 
-#### The `string.embed` keyword
+#### string.embed
 
 The `string.embed` keyword can be used in the following ways:
 
@@ -339,7 +343,7 @@ Examples of string literals using `embed`:
     string.embed web.css "./style.css"
 
 
-## Constants
+## const
 
 A constant is defined by the name of the constant followed by the keyword
 `const`, the operator `=` and then an assigned value. The assigned value can be
@@ -360,13 +364,12 @@ Examples of constants:
         </div>
 
 
-## Variables and types
+## type
 
 The following are built-in types in the language:
 
-- `array[v type.comparable]` An array with values of type `v`
+- `array[v bool.comparable]` An array with values of type `v`
 - `bool` A boolean with a value of either `true` or `false`.
-- `byte` An 8-bit integer equivalent to `int.u8`.
 - `complex` A complex number. This can be 64 or 128-bit depending on the target
    architecture.
 - `complex.p64` A 64-bit complex number.
@@ -375,7 +378,7 @@ The following are built-in types in the language:
    target architecture.
 - `float.p32` A 32-bit floating-point number.
 - `float.p64` A 64-bit floating-point number.
-- `fn(...) (...)` A function. Functions with different types of parameters or
+- `fn(...) {...}` A function. Functions with different types of parameters or
    different types of return values are considered to be different types.
 - `int` A signed integer number. This can be 16, 32 or 64-bit depending on the
    target architecture.
@@ -389,13 +392,13 @@ The following are built-in types in the language:
 - `int.u16` An unsigned 16-bit integer.
 - `int.u32` An unsigned 32-bit integer.
 - `int.u64` An unsigned 64-bit integer.
-- `map[k, v type.comparable]` A map with keys of type `k` and values of `v`
+- `map[k bool.comparable, v type.any]` A map with keys of type `k` and values of `v`
 - `string` A string of text.
 
 New types can be defined with the `type` keyword.
 
 
-## Scope
+## scope
 
 The following rules apply to determine the scope in which a variable is
 available
@@ -409,7 +412,7 @@ available
    available within that block, but also including any `else` statements.
 
 
-## Conditionals
+## if
 
 The `if` keyword is used to conditionally execute code. An `if` statement can
 take the following forms:
@@ -440,13 +443,30 @@ The {else if condition:} and {else:} blocks are optional. There can be an
 arbitrary number of {else if condition:} blocks.
 
 
-## Loops
+## for
 
 The `for` keyword is used to execute code multiple times.
 
 
-## Functions and methods
+## fn
 
 Functions are first-class variables in Lithium. Functions are defined using the
 `fn` keyword.
+
+
+## return
+
+
+## tuples
+
+
+## defer
+
+
+## co
+
+
+## interface
+
+
 

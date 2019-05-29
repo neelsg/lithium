@@ -3,6 +3,8 @@
 The lexer converts raw source code into a tokenized format that can be used by
 the parser. Each token is placed on a new line.
 
+## Row and column values
+
 Each token except `BOF` and `EOF` is followed by the row and column number where
 the token starts. This is required to determine where new statements begin, the
 indentation level of blocks and also providing more useful compile error
@@ -10,6 +12,11 @@ messages. For the purposes of the tokenized file, tabs should be counted as 4
 spaces, but a check needs to be done before this to make sure that the source
 does not mix tabs and spaces.
 
+## Must be lossless
+
+It is important not to lose any detail when converting from source to tokens as
+these tokens are also used to generate formatted source files to ensure that the
+source files all conform to a specific formatting convention.
 
 ## Tokens
 
@@ -17,10 +24,11 @@ does not mix tabs and spaces.
 - `EOF` End of file.
 - `ID` Identifier.
 - `LI` Literal.
-- `LC` Literal continued.
+- `LC` Literal continued. Used for multi-line doc strings
 - `SE` Separator. `: ; , . ( ) [ ] { }`
 - `OP` Operator. `+ - * / ** % & | ^ << >> ~ = += -= *= /= **= %= &= |= ^= <<= >>= ! || && == < > <> != <= >= ++ --`
-- `CO` Comment.
+- `CO` Comment, single line
+- `CM` Comment, multi-line
 - `CC` Comment continued.
 
 ## Examples
@@ -56,7 +64,7 @@ Tokens:
     SE 8 12 .
     ID 8 13 log
     SE 8 16 (
-    LI 8 17 "My favorite number is
+    LI 8 17 "My favorite number is"
     SE 8 40 ,
     ID 8 42 int
     SE 8 45 .

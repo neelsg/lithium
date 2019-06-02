@@ -1,8 +1,8 @@
 Li 0
 
 /*
-	This package provides a generic data type that can be used as a map of
-	key-value pairs.
+	map provides a generic data type that can be used as a map of key-value
+	pairs.
 	
 	The current implementation is highly inefficient as the keys do not get
 	sorted, so looking anything up is very slow.
@@ -14,18 +14,18 @@ default type[k bool.comparable, v type.any]:
 		keys array[k]
 		vals array[v]
 	
-	init fn(self default, ...{k, v} in items array[{k, v}]):
+	init fn(self default[k, v], ...{k, v} in items array[{k, v}]):
 		// Initiate the map with an arbitrary number of items
 		
 		self.push(items...)
 		return
 	
-	get length fn(self default) int:
+	get length fn(self default[k, v]) int:
 		// Return the total number of items in the map
 		
 		return self.keys.length
 	
-	default fn(self default, key k) v:
+	default fn(self default[k, v], key k) v:
 		// Return an item value for the given key
 		
 		for index int, current k in self.keys:
@@ -33,7 +33,7 @@ default type[k bool.comparable, v type.any]:
 				return self.vals(index)
 		return v
 	
-	delete fn(self default, key k):
+	delete fn(self default[k, v], key k):
 		// Remove the item with the given key from the map
 		
 		for index int, current k in self.keys:
@@ -43,7 +43,7 @@ default type[k bool.comparable, v type.any]:
 				return
 		return
 	
-	exists fn(self default, key k) bool:
+	exists fn(self default[k, v], key k) bool:
 		// Check if an item exists with the given key
 		
 		for index int, current k in self.keys:
@@ -51,21 +51,21 @@ default type[k bool.comparable, v type.any]:
 				return true
 		return false
 	
-	first fn(self default) {{k, v}, int, bool}:
+	first fn(self default[k, v]) {{k, v}, int, bool}:
 		// Return the first item in the map for use as an iterable object
 		
 		if self.keys.length == 0:
 			return {k, v}, 0, false
 		return {self.keys(0), self.vals(0)}, 0, true
 	
-	get fn(self default, key k) {v, bool}:
+	get fn(self default[k, v], key k) {v, bool}:
 		// Get an item with the given key and also check if the key exists
 		
 		if self.exists(key):
 			return self.default(key), true
 		return v, false
 	
-	next fn(self default, priorIndex int) {{k, v}, int, bool}:
+	next fn(self default[k, v], priorIndex int) {{k, v}, int, bool}:
 		// Return the next item in the map for use as an iterable object
 		
 		index int = priorIndex + 1
@@ -73,14 +73,14 @@ default type[k bool.comparable, v type.any]:
 			return {k, v}, index, false
 		return {self.keys(index), self.vals(index)}, index, true
 	
-	pop fn(self default) {k, v}:
+	pop fn(self default[k, v]) {k, v}:
 		// Remove and return the last item in the map
 		
 		if self.keys.length == 0:
 			return {k, v}
 		return {self.keys.pop(), self.vals.pop()}
 	
-	push fn(self default, ...{k, v} in items array[{k, v}]):
+	push fn(self default[k, v], ...{k, v} in items array[{k, v}]):
 		// Push an arbitrary number of new items into the map. If items are
 		// pushed with keys that already exist, the new value overrides the old
 		// value

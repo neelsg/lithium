@@ -1,0 +1,5 @@
+Li 0
+
+seekStart const = int.iota
+seekCurrent const = int.iota
+seekEnd const = int.iota

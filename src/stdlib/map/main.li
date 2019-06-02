@@ -1,0 +1,3 @@
+Li 0
+
+default type[k bool.comparable, v type.any]:

@@ -21,18 +21,3 @@ default type:
 	
 	get string fn(default) string:
 		// Return "false" if false and "true" if true
-
-convertable interface:
-	// Can the type be converted into boolean
-	
-	get bool() default
-
-equalable interface[n]:
-	// Can the type be checked if two objects are equal?
-	
-	equal(n) default
-
-comparable interface[n] extends equalable[n]:
-	// Can the type be checked if two objects are equal and which one is less?
-	
-	less(n) default

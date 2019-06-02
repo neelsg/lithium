@@ -707,6 +707,10 @@ capabilities are present.
     {name} interface:
         {signatures of methods required}
 
+Any concrete type can also be used as an iterface where the signatures will then
+be the same as what the type provides. This can be used to provide a default
+implementation for an interface.
+
 ### type.any
 
 `type.any` is an interface that contains no methods or properties at all and can

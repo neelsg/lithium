@@ -1,0 +1,25 @@
+Li 0
+
+readFile type:
+	
+	private err error = error.none
+	
+	init fn(self readFile, fileName string):
+		// Open a file for reading
+		// TODO
+	
+	read fn(self readFile, n int.u64) {bytes array[int.u8], read int.u64, err error}:
+		// Read from the file
+		// TODO
+	
+	seek fn(self readFile, offset int.s64, whence int) {err error}:
+		// Seek a position in the file
+		// TODO
+	
+	close fn(self readFile) error:
+		// Close the file
+		// TODO
+	
+	get error fn(self readFile) error:
+		// Return the current error if any
+		return self.err

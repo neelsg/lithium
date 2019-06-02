@@ -5,7 +5,7 @@ Li 0
 	items of a given type.
 */
 
-default type[n bool.comparable]:
+default type[n type.any]:
 	init fn(new default[n], ...n in values default[n]):
 		// Initialize a new array
 	

@@ -1,10 +1,22 @@
 Li 0
 
+/*
+	bool provides the basic boolean type and some helpful interfaces
+*/
+
 default type:
 	// Boolean type, can be true or false
+	
+	equal fn(default, default) default
+	less fn(default, default) default
+	flip fn(default) default
+	get int fn(default) int
+	get string fn(default) string
+
 
 comparable interface[n]:
 	// bool.comparable can be used to determine if variables of a given type can
-	// be checked to see if they are equal
+	// be checked to see if they are equal or less than
 	
-	equal(n) bool
+	equal(n) default
+	less(n) default

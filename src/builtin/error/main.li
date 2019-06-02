@@ -1,1 +1,48 @@
 Li 0
+
+/*
+	error provides a common type to use for passing errors between functions
+*/
+
+default interface:
+	get ok fn() bool
+	get string fn() string
+	get class fn() string
+
+new type:
+	// This is a general error message type that does not specify a class
+	
+	private message string
+	
+	init fn(self new, message string):
+		self.message = message
+		return
+	
+	get ok fn(self new) bool:
+		return false
+	
+	get string(self new) string
+		return self.message
+	
+	get class(self new) string
+		return "unspecified"
+
+custom type:
+	// This is an error type that accepts a custom class
+	
+	private:
+		message string
+		class string
+	
+	init fn(self new, class, message string):
+		self.class, self.message = class, message
+		return
+	
+	get ok fn(self new) bool:
+		return false
+	
+	get string(self new) string
+		return self.message
+	
+	get class(self new) string
+		return self.class

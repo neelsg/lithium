@@ -7,11 +7,17 @@ Li 0
 default type:
 	// Boolean type, can be true or false
 	
-	equal fn(default, default) default
-	less fn(default, default) default
-	flip fn(default) default
-	get int fn(default) int
-	get string fn(default) string
+	equal fn(default, default) default:
+		// If both are true or both are false, this will return true
+	
+	flip fn(default) default:
+		// If the value is true, this will return false and vice versa
+	
+	get int fn(default) int:
+		// Return 0 if false and 1 if true
+	
+	get string fn(default) string:
+		// Return "false" if false and "true" if true
 
 
 comparable interface[n]:

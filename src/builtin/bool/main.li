@@ -13,16 +13,26 @@ default type:
 	flip fn(default) default:
 		// If the value is true, this will return false and vice versa
 	
+	get bool fn(default) default:
+		// Return boolean 
+	
 	get int fn(default) int:
 		// Return 0 if false and 1 if true
 	
 	get string fn(default) string:
 		// Return "false" if false and "true" if true
 
+convertable interface:
+	// Can the type be converted into boolean
+	
+	get bool() default
 
-comparable interface[n]:
-	// bool.comparable can be used to determine if variables of a given type can
-	// be checked to see if they are equal or less than
+equalable interface[n]:
+	// Can the type be checked if two objects are equal?
 	
 	equal(n) default
+
+comparable interface[n] extends equalable[n]:
+	// Can the type be checked if two objects are equal and which one is less?
+	
 	less(n) default

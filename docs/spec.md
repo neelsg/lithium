@@ -84,9 +84,8 @@ Affixes for platforms, operating systems or architectures:
 
 The following keywords are reserved in Lithium:
 
-    array bool chan co complex const default defer else error extends false
-    float fn for get if implements import in init int interface map return set
-    string true type
+    as co const default defer else extends false fn for get if implements import
+    in init interface return set true type
 
 
 ## import
@@ -133,59 +132,144 @@ The built-in packages are:
 
 - `array` Provides a type and methods for working with generic arrays
 - `bool` Provides a type and methods for working with booleans
-- `chan` Provides a type and methods for working with channels
 - `complex` Provides a type and methods for working with complex numbers
 - `error` Provides a type and methods for working with errors
 - `float` Provides a type and methods for working with floating-point numbers
 - `int` Provides a type and methods for working with integer numbers
-- `map` Provides a type and methods for working with generic maps
 - `string` Provides a type and methods for working with strings
 - `type` Provides methods for working with general types
+- `syscall` Provides platform specific functionality that are used by the
+   standard library. It should not be neccessary to use this outside of the
+   standard library.
 
 
 ## operators
 
-The following character sequences are operators:
+The following operators are available:
 
-- `x + y` Addition `x.plus(y)`
-- `x - y` Subtraction `x.minus(y)`
-- `x * y` Multiplication `x.multiply(y)`
-- `x / y` Division `x.divide(y)`
-- `x ** y` Exponent `x.power(y)`
-- `x % y` Modulus `x.modulo(y)`
-- `x & y` Bitwise And `x.and(y)`
-- `x | y` Bitwise Or `x.or(y)`
-- `x ^ y` Bitwise Xor `x.xor(y)`
-- `x << y` Left shift `x.left(y)`
-- `x >> y` Right shift `x.right(y)`
-- `~x` Bitwise ones complement `x.flip()`
+    !  ||  &&  ==  !=  <  >  <=  >=  +  -  *  /  -/  **  &  |  &|  <<  >>  &!  =
+    +=  -=  *=  /=  **=  -/=  &=  |=  &|=  <<=  >>=  ++  --
+
+### Boolean operators
+
+Boolean operators only work on boolean values. If they are used by any other
+types, it will first implicitly convert to `bool` by trying the `x.bool`
+property. If no such property is present of that property does not return a
+boolean, a compile time error will result. The boolean operators are:
+
+- `!x` Boolean not. Will return the opposite of `x`.
+- `x || y` Boolean or. Will return true if either `x` or `y` is true.
+- `x && y` Boolean and. Will return true if both `x` and `y` is true.
+
+For any boolean expressions, the order will first be `!` (Not) and then `||` and
+`&&` from left to right. Brackets can be used to change the order.
+
+Short circuiting is used, so in the following cases, `y` will not even be
+evaluated:
+
+- `x || y` if `x` is `true`.
+- `x && y` if `x` is `false`.
+
+Note that we do not include an XOR operation as that can be trivially written as
+`x != y` where both `x` and `y` are boolean or more verbosely as
+`(x || y) && !(x && y)`.
+
+### Comparison operators
+
+Comparison operators are syntactic sugar for calling a method on one of the
+operands (Left or right depends on which operator is used as shown below). These
+methods must return a single `bool` value.
+
+The comparison operators are:
+
+- `x == y` Is equal to. `x.equal(y)`
+- `x != y` Is not equal to. `!x.equal(y)`
+- `x < y` Is less than. `x.less(y)`
+- `x > y` Is greater than. `y.less(x)`
+- `x <= y` Is less than or equal to. `!y.less(x)`
+- `x >= y` Is greater than or equal to. `!x.less(y)`
+
+Boolean operators are evaluated before comparison operators. The order of
+evaluation can be changed with brackets.
+
+### Mathematical operators
+
+Mathematical operators perform mathematical operations on operands of the same
+type and return a result of that same type. These operators are syntactic sugar
+for calling a method on the left operand passing the right operand as the
+parameter.
+
+The mathematical operators are:
+
+- `x + y` Addition. `x.plus(y)`
+- `x - y` Subtraction. `x.minus(y)`
+- `x * y` Multiplication. `x.multiply(y)`
+- `x / y` Division. `x.divide(y)`
+- `x -/ y` Modulus. `x.modulo(y)`
+- `x ** y` Exponent. `x.power(y)`
+
+Mathematical operators are evaluated before boolean or comparison operators and
+follow a conventional order as follows:
+
+1. Exponent.
+1. Multiplication, division and modulus from left to right.
+1. Addition and subtraction from left to right.
+
+### Bitwise operators
+
+Bitwise operators are similar to mathematical operators except that the right
+operand must be of type `int` instead of the same as the left operand (Or in the
+case of bitwise ones complement, there is only one operand).
+
+The bitwise operators are:
+
+- `x & y` Bitwise And. `x.and(y)`
+- `x | y` Bitwise Or. `x.or(y)`
+- `x &| y` Bitwise Xor. `x.xor(y)`
+- `x << y` Left shift. `x.left(y)`
+- `x >> y` Right shift. `x.right(y)`
+- `&!x` Bitwise ones complement. `x.flip()`
+
+Bitwise operators are evaluated before mathematical operators and internally
+follow the following conventions:
+
+1. Ones complement.
+1. Left and right shift in order of left to right.
+1. And, or and xor in order of left to right.
+
+### Assignment operators
+
+Assignment operators will set the value of the left operand to the value of the
+right operand or to the result of an operation between the left and right
+operands.
+
+The assignment operators are:
+
 - `x = y` Assignment. Points `x` to the same value as `y`
-- `x.a = y` Set a property `x.a.set(y)`
-- `x(a) = y` Set an internal value `x.set(a, y)`
-- `x(a)(b) = y` Set a nested internal value `x(a).set(b, y)`
-- `x += y` Add assign `x = x + y`
-- `x -= y` Subtract assign `x = x - y`
-- `x *= y` Multiply assign `x = x * y`
-- `x /= y` Divide assign `x = x / y`
-- `x **= y` Exponent assign `x = x ** y`
-- `x %= y` Modulo assign `x = x % y`
-- `x &= y` Bitwise And assign `x = x & y`
-- `x |= y` Bitwise Or assign `x = x | y`
-- `x ^= y` Bitwise Xor assign `x = x ^ y`
-- `x <<= y` Left shift assign `x = x << y`
-- `x >>= y` Right shift assign `x = x >> y`
-- `!x` Boolean not
-- `x || x` Boolean or
-- `x && x` Boolean and
-- `x == y` Is equal to `x.equal(y)`
-- `x < y` Is less than `x.less(y)`
-- `x > y` Is greater than `y.less(x)`
-- `x <> y` Is not equal to `!x.equal(y)`
-- `x != y` Is not equal to `!x.equal(y)`
-- `x <= y` Is less than or equal to `x.less(y) || x.equal(y)`
-- `x >= y` Is greater than or equal to `y.less(x) || x.equal(y)`
-- `x++` Increment by one `x = x + 1`
-- `x--` Decrement by one `x = x - 1`
+- `x.a = y` Set a property. `x.a.set(y)`
+- `x(a) = y` Set an internal value. `x.set(a, y)`
+- `x(a)(b) = y` Set a nested internal value. `x(a).set(b, y)`
+- `x += y` Add assign. `x = x + y`
+- `x -= y` Subtract assign. `x = x - y`
+- `x *= y` Multiply assign. `x = x * y`
+- `x /= y` Divide assign. `x = x / y`
+- `x **= y` Exponent assign. `x = x ** y`
+- `x -/= y` Modulo assign. `x = x -/ y`
+- `x &= y` Bitwise And assign. `x = x & y`
+- `x |= y` Bitwise Or assign. `x = x | y`
+- `x &|= y` Bitwise Xor assign. `x = x &| y`
+- `x <<= y` Left shift assign. `x = x << y`
+- `x >>= y` Right shift assign. `x = x >> y`
+
+Assignment operations are performed last and cannot be nested further within
+other operations, they must stand as statements by themselves.
+
+#### Assignment increment and decrement shorthand
+
+The following shorthands are available for assignments:
+
+- `x++` Increment by one `x += 1`
+- `x--` Decrement by one `x -= 1`
 
 
 ## literals
@@ -342,6 +426,18 @@ Examples of string literals using `embed`:
     */
     string.embed web.css "./style.css"
 
+### Tuple literals
+
+Tuple literals are a collection of other literals enclosed in curly braces to
+indicate that they are part of a tuple.
+
+Examples of tuple literals are:
+
+    {1, 2, 3}
+    
+    // Nested tuples are also possible:
+    {{"a", "b", "c"}, {1, 2, 3}, {1.111, 2.222, 3.333}}
+
 
 ## const
 
@@ -392,10 +488,59 @@ The following are built-in types in the language:
 - `int.u16` An unsigned 16-bit integer.
 - `int.u32` An unsigned 32-bit integer.
 - `int.u64` An unsigned 64-bit integer.
-- `map[k bool.comparable, v type.any]` A map with keys of type `k` and values of `v`
 - `string` A string of text.
+- `{...}` A tuple. See below.
+
+### Tuples as types
+
+It is possible to use tuples are types where a single variable may contain a
+more complex set of values.
+
+Example of using a tuple as type:
+
+    vector {float, float, fn(float, float) float}
+        = 3., 4., fn(x, y float) float:
+            return (x ** 2. + y ** 2.) ** 0.5
+    vector{2}(vector{0}, vector{1}) // This will return 5.
+
+### Defining new types
 
 New types can be defined with the `type` keyword.
+
+    {name} type:
+        {properties and methods}
+
+### extends
+
+Extends can be used for type inheritence.
+
+    {name} type extends {parent type}:
+        {properties and methods}
+
+#### extends as
+
+The `as` keyword can be used to make the properties and methods of the parent
+type accessible within the methods of the child type.
+
+    {name} type extends {parent type} as {parent name}:
+        {properties and methods}
+
+
+## tuples
+
+A tuple is a finite ordered list of elements. The elements can be of any type
+including tuples. Tuples are defined as the set of elements encapsulated in
+curly braces. A tuple with only one element is the same type as the element
+itself and can be used interchangeably. Tuples with a different number of
+elements or elements of a different type are considered different types.
+
+Functions that return more than one result actually returns a tuple of the
+results. Assignment statements where multiple elements are assigned to are
+actually a destructuring assignment of tuple elements.
+
+A single value in a tuple can be accessed with the name of the tuple followed by
+curly braces containing the index number of the element starting at zero. The
+index number in this case must be an integer literal number.
 
 
 ## scope
@@ -418,10 +563,10 @@ The `if` keyword is used to conditionally execute code. An `if` statement can
 take the following forms:
 
     // Inline form
-    if {initial statement ;}{condition}: {expression} {else:} {expression}
+    if {init statement ;}{condition}: {statement} {else:} {statement}
     
     // Block form
-    if {initial statement ;}{condition}:
+    if {init statement ;}{condition}:
         {statement/(s)}
     {else if condition:}
         {statement/(s)}
@@ -442,31 +587,134 @@ evaluates to `true`, the [statement/(s)} are executed.
 The {else if condition:} and {else:} blocks are optional. There can be an
 arbitrary number of {else if condition:} blocks.
 
+### if implements
+
+A special kind of if statement can be used to check if a variable implements
+a certain interface. Inside the if statement, the functionality of that
+interface can then be used for the variable. Multiple variables can be used
+before the `implements` keyword to check if they all implement the interface.
+
+The `&&` operator can be used to check multiple variables against different
+kinds of interfaces or to check for additional conditions. Note that `||` cannot
+be used in the same way, as there would then be ambiguity within the if block
+whether a variable does implement the interface. `else` can be used just as with
+a normal `if`.
+
+    if {init statement ;}{variable}{, variable...} implements {interface}{ && condition}:
+        {statement/(s)}
+
 
 ## for
 
-The `for` keyword is used to execute code multiple times.
+The `for` keyword is used to execute code multiple times. `for` can take the
+following forms:
+
+    // Inline form
+    for {init statement ;}{condition}{ ; post statement}: {statement}
+    
+    // Shortened inline form
+    for {condition}: {statement}
+    
+    // Block form
+    for {init statement ;}{condition}{ ; post statement}:
+        {statement/(s)}
+    
+
+If neither an init nor a post statement is required, the for can be shortened.
+In this case, for is the same as "while" in other languages.
+
+### for else
+
+The `else` keyword can be used to execute code if the for loop does not execute
+even once.
+
+    for {init statement ;}{condition}{ ; post statement}:
+        {statement/(s)}
+    else:
+        {statement/(s)}
+
+In addition, it is possible that the code within the loop must be executed at
+least once (Such as with a "do while" loop in other languages). In this case,
+the `else` keyword can be used within the shortened form to indicate that the
+code must run at least once:
+
+    for else {condition}:
+        {statement/(s)}
+
+### for in
+
+A special kind of for loop can be used to loop through all the items in an
+iterable object.
+
+    for {item tuple} in {iterable object}:
+        {statement/(s)}
+
+An object is iterable if it includes the following methods:
+
+    first() {item tuple, index int, ok bool}
+    // `index` is the index number of the first item
+    // if `ok` is false, the object is empty
+    
+    next(priorIndex int) {item tuple, index int, ok bool}
+    // the `priorIndex` is the index number of the previous item
+    // if `ok` is flase, there is no item after the `priorIndex`
+
+An else can be used as with a normal for to run if the object was empty.
 
 
 ## fn
 
 Functions are first-class variables in Lithium. Functions are defined using the
-`fn` keyword.
+`fn` keyword. The function signature consists of the parameters it can take,
+including their type, and the return values it will send, including their type.
+The function signature is considered to be the function's type. Functions with
+the same signature are considered to be the same type and functions with
+signatures that are different are considered to be of different types.
+
+There cannot be multiple functions with the same name as with programming
+languages like C or C++. Parameters cannot have default values and be optionally
+omitted when called as with C++ or JavaScript.
 
 
-## return
+### return
 
-
-## tuples
+The `return` keyword is used to return from a function. If the function has no
+return values, `return` can be used as a single statment that will return back
+to the parent function. If the function should return values, these must be
+listed after the `return` keyword as a comma separated list.
 
 
 ## defer
 
+The `defer` keyword will defer execution of a function until the end of the
+current function. The parameters of the function are evaluated immediately, but
+the execution is delayed until the current function returns.
+
 
 ## co
+
+The `co` keyword is used to create a new coroutine. Coroutines share the same
+address space, but can be executed in parallel.
 
 
 ## interface
 
+The `interface` keyword can be used to define a new interface. Interfaces are
+used in the place of concrete types when passing parameters or return values for
+functions so that more than one type can be used as long as the required
+capabilities are present.
+
+    {name} interface:
+        {signatures of methods required}
+
+### type.any
+
+`type.any` is an interface that contains no methods or properties at all and can
+be used to pass any type of value.
 
 
+## polymorphism
+
+Parametric polymorphism allows for functions, types and interfaces to
+transparently support more than one concrete type as long as the required
+interface functionality is provided.

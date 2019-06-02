@@ -1448,6 +1448,7 @@ An `else` block can be used to run if no other condition is ready.
         console
         sync
         time
+        map
     
     // SafeCounter is safe to use concurrently.
     safeCounter type:

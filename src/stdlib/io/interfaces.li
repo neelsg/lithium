@@ -1,0 +1,55 @@
+Li 0
+
+writer interface:
+	write fn(bytes array[int.u8]) {written int.u64, err error}
+
+reader interface:
+	read fn(n int.u64) {bytes array[int.u8], read int.u64, err error}
+
+seeker interface:
+	seek fn(offset int.s64, whence int) {err error}
+
+closer interface:
+	close fn() error
+
+readCloser interface:
+	reader
+	closer
+
+readWriter interface:
+	reader
+	writer
+
+readWriteCloser interface:
+	reader
+	writer
+	closer
+
+readSeeker interface:
+	reader
+	seeker
+
+readSeekCloser interface:
+	reader
+	seeker
+	closer
+
+readWriteSeeker interface:
+	reader
+	writer
+	seeker
+
+readWriteSeekCloser interface:
+	reader
+	writer
+	seeker
+	closer
+
+writeSeeker interface:
+	writer
+	seeker
+
+writeSeekCloser interface:
+	writer
+	seeker
+	closer

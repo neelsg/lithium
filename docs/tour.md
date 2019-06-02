@@ -3,9 +3,7 @@
 ## Welcome
 
 This tour aims to cover the most important parts of the Lithium Programming
-Language. This tour borrows heavily on the
-[Go Programming Language tour](https://tour.golang.org) as I have based quite a
-significant part of this programming language on Go.
+Language.
 
 
 ## Start
@@ -24,7 +22,7 @@ There is quite a bit happening here. This code will print the text
 
 ## File format and doctype
 
-    Li 0.0.1
+    Li 0
 
 Lithium source code is stored in plain text files that have the `.li` file
 extension. All files that are located in the same folder are considered to be
@@ -34,14 +32,10 @@ by the language version used in the file. Note that the "L" is uppercase and the
 older specs of the language and for older packages to be incorporated into newer
 projects.
 
-The version can be written in full such as `0.0.1` or shortened such as `0.0` or
-`0`. If any part of the version is omitted, the compiler will assume the most
-recent sub-version should be used.
-
 
 ## Importing from other packages
 
-    Li 0.0
+    Li 0
 
     import:
         console
@@ -584,9 +578,9 @@ with. When calling the method, this parameter is omitted.
     private vertex type:
         x float = 1
         y float = 1
-        init fn(self vertex, x, y float) vertex:
+        init fn(self vertex, x, y float):
             self.x, self.y = x, y
-            return self
+            return
         dist fn(self vertex) float:
             return math.sqrt(self.x ** 2. + self.y ** 2.)
     
@@ -597,9 +591,8 @@ with. When calling the method, this parameter is omitted.
 Just like normal variables, properties in a type can also be set to an initial
 value which will then be the default for any objects of that type.
 
-You can create a function with the label `init` in a type which returns an
-object of that type. This function then becomes the initializer and will be used
-when creating an object of that type such as with `v vertex = vertex(1., 2.)`.
+You can create a function with the label `init` in a type which will initialize
+it by calling the type as a function such as `v vertex = vertex(1., 2.)`.
 
 
 ## Shorthand for initializing types
@@ -607,9 +600,9 @@ when creating an object of that type such as with `v vertex = vertex(1., 2.)`.
     private vertex type:
         x int
         y int
-        init fn(self vertex, x, y int) vertex:
+        init fn(self vertex, x, y int):
             self.x, self.y = x, y
-            return self
+            return
 
 Given the above type, the following statements are equivalent:
 
@@ -631,10 +624,9 @@ Given the above type, the following statements are equivalent:
             x float = 1
             y float = 1
         
-        init fn(x, y float) vertex:
-            self vertex
+        init fn(self vertex, x, y float):
             self.x, self.y = x, y
-            return self
+            return
         
         dist fn(self vertex) float:
             return math.sqrt(self.x ** 2. + self.y ** 2.)
@@ -657,10 +649,9 @@ main function in this case, you will get a compile error.
         math
     
     private vertex type:
-        init fn(x, y float) vertex:
-            self vertex
+        init fn(self vertex, x, y float):
             self.x, self.y = x, y // This will call the respective set functions
-            return self
+            return
         
         private x float
         get x fn(self vertex) float:
@@ -730,9 +721,9 @@ the `extends` keyword.
     
     private vertex type:
         x, y float
-        init fn(self vertex, x, y float) vertex:
+        init fn(self vertex, x, y float):
             self.x, self.y = x, y
-            return self
+            return
     
     private printX fn(h hasX):
         console.log(h.x)
@@ -762,9 +753,9 @@ of flexibility in using interfaces.
     private person type:
         name string
         age int
-        init fn(self person, name string, age int) person:
+        init fn(self person, name string, age int):
             self.name, self.age = name, age
-            return self
+            return
         get string fn(self person) string:
             return "% (% years)".in(self.name, self.age)
     
@@ -792,9 +783,9 @@ package (and many others) look for this interface to print values.
         time
     
     private myError type:
-        init fn(self myError, when time.time, what string) myError:
+        init fn(self myError, when time.time, what string):
             self.when, self.what = when, what
-            return self
+            return
         when time.time
         what string
         ok bool = false
@@ -897,9 +888,9 @@ omitted when calling the function, this default type is assumed.
     imports console
     
     private vertex type[n string.stringer]:
-        init fn(new vertex, x, y n) vertex:
+        init fn(new vertex, x, y n):
             new.x, new.y = x, y
-            return new
+            return
         x n
         y n
     
@@ -1109,7 +1100,7 @@ You can skip the key or value by assigning to `_`.
 
     Li 0
     
-    import console
+    import console, map
     
     main fn():
         m map[int, string]
@@ -1121,8 +1112,8 @@ You can skip the key or value by assigning to `_`.
         primes map[int, int]({0,2}, {1,3}, {2,5}, {3,7}, {4,11}, {5,13})
         console.log(primes)
 
-`map[k, v]` is a built-in type that stores a map with keys of type `k` that
-maps to values of type `v`.
+`map[k, v]` is a data type that stores a map with keys of type `k` that maps to
+values of type `v`.
 
 The statement `m map[int, string]` declares a variable `m` as a map of strings.
 
@@ -1131,12 +1122,12 @@ The statement `m map[int, string]` declares a variable `m` as a map of strings.
 
     Li 0
     
-    import console
+    import console, map
     
     private vertex type:
         lat, long float
     
-    private m [string, vertex](
+    private m map[string, vertex](
         {"Bell Labs", vertex(40.68433, -74.39967)},
         {"Google", vertex(37.42202, -122.08408)},
     )
@@ -1152,10 +1143,10 @@ The map initializer accepts an arbitrary number of tuples that consist of the
 
     Li 0
     
-    import console
+    import console, map
     
     main fn():
-        m map[string,int]
+        m map[string, int]
         
         m("Answer") = 42
         console.log("The value: ", m("Answer"))
@@ -1193,8 +1184,8 @@ Test that a key is present:
 
 If `key` is in the map, `ok` is `true`. If not, `ok` is `false`.
 
-Use `val, ok = map.get(key)` as a shorthand for
-`val, ok = map(key), map.exists(key)`
+You can use `val, ok = map.get(key)` as a shorthand for
+`val, ok = map(key), map.exists(key)`.
 
 
 ## Variadic functions
@@ -1299,6 +1290,7 @@ will see shortly.
     
     import:
         console
+        chan
     
     sum fn(s array[int], c chan[int]):
         sum int = 0
@@ -1334,7 +1326,7 @@ the final result.
 
     Li 0
     
-    import console
+    import console, chan
     
     main fn():
         ch chan[int](2)
@@ -1357,7 +1349,7 @@ when the buffer is empty.
     Li 0
     
     import:
-        console
+        console, chan
     
     fibonacci fn(n int, c chan[int]):
         x int, y int = 0, 1
@@ -1397,6 +1389,7 @@ values coming, such as to terminate a loop.
     
     import:
         console
+        chan
     
     fibonacci fn(c, quit chan[int]):
         x int, y int = 0, 1
@@ -1427,6 +1420,7 @@ executes that block.
     
     import:
         console
+        chan
         time
     
     main fn():

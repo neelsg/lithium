@@ -3,13 +3,3 @@ Li 0
 any interface:
 	// This interface is here so that there is a standard interface available
 	// when literally any type is allowed
-
-numeric interface[n] extends bool.comparable:
-	// This interface checks if a type is numeric
-	
-	plus(n) n
-	minus(n) n
-	multiply(n) n
-	divide(n) n
-	modulo(n) n
-	power(n) n

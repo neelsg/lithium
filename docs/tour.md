@@ -10,17 +10,11 @@ Language.
 
     Li 0
     
-    import:
-        console
-    
-    main fn():
+    main func():
         console.log("My favorite number is", int.rand(10))
 
 There is quite a bit happening here. This code will print the text
 "My favorite number is" and a random number from 0 to 10.
-
-
-## File format and doctype
 
     Li 0
 
@@ -32,30 +26,9 @@ by the language version used in the file. Note that the "L" is uppercase and the
 older specs of the language and for older packages to be incorporated into newer
 projects.
 
+    main func():
 
-## Importing from other packages
-
-    Li 0
-
-    import:
-        console
-        math
-
-    main fn():
-        console.log("Now you have % problems.".in(math.sqrt(7.0)))
-
-Here we import `console` and `math` from the standard library so that they can
-be used in this file. We could also write:
-
-    import console
-    import math
-
-
-## The main function
-
-    main fn():
-
-The `fn` keyword is used to define functions (which are blocks of code that can
+The `func` keyword is used to define functions (which are blocks of code that can
 be executed. When a program is executed, the first thing that will run is the
 "main" function.
 
@@ -64,11 +37,11 @@ be executed. When a program is executed, the first thing that will run is the
 
     Li 0
     
-    private sqr2 fn(x int) int:
+    private sqr2 func(x int) int:
         // This function is only available within the current package
         return x * x
     
-    sqr fn(x int) int:
+    sqr func(x int) int:
         // This function can be used by other packages
         return sqr2(x)
 
@@ -78,37 +51,41 @@ current package. Anything without the `private` keyword is made available to any
 other packages that import this one.
 
 
-## Importing custom packages
+## Importing packages
 
     Li 0
     
-    import:
-        console
-        myMath "./myMathFolder"
+    import myMath "./myMathFolder"
     
-    main fn():
+    main func():
         console.log(myMath.sqr(3.0))
 
-You can import your own packages just as easily as packages from the standard
-library by providing the file path to the folder where the source code is
-located.
+You can import your own packages or third-party libraries using the `import`
+keyword.
+
+    import:
+        myMath "./myMathFolder"
+        dbConnect "./dbConnection"
+
+Multiple imports can be written as an `import` block.
 
 
 ## Functions
 
     Li 0
     
-    import:
-        console
-    
-    private add fn(x int, y int) int:
+    private add func(x int, y int) int:
         return x + y
     
-    main fn():
+    main func():
         console.log(add(42, 13))
 
 A function can take zero or more arguments. In this example, `add` takes two
 arguments of type `int`. Note that the type comes after the variable name.
+
+A function that takes no arguments can be declared without brackets:
+
+    main func: console.log(add(42, 13))
 
 
 ## Multiple results
@@ -118,24 +95,21 @@ arguments of type `int`. Note that the type comes after the variable name.
     import console
     
     private:
-        split fn(sum int) {int, int}:
+        split func(sum int) (int, int):
             x int, y int = sum * 4 / 9, sum - x
             return x, y
     
-    main fn(): console.log(split(17))
+    main func: console.log(split(17))
 
 A function can return any number of results. If they do, these must be wrapped
-in curly braces `{ }` (More on that later). Even if a function returns only one
-result, the result type can optionally be wrapped in curly baces.
+in brackets `( )`. Even if a function returns only one result, the result type
+can optionally be wrapped in brackets.
 
     Li 0
     
-    import:
-        console
+    private swap func(x, y string) (string, string): return y, x
     
-    private swap fn(x, y string) {string, string}: return y, x
-    
-    main fn():
+    main func():
         a string, b string = swap("hello", "world")
         console.log(a, b)
 
@@ -148,16 +122,14 @@ functions.
 
     Li 0
     
-    import console
-    
     private:
-        c, python, java bool
+        i, j, k bool
     
-    go bool
+    l bool
     
-    main fn():
-        i int
-        console.log(i, c, python, java, go)
+    main func:
+        m int
+        console.log(i, j, k, l, m)
 
 Variables are declared by specifying the name of the variable followed by the
 type.
@@ -167,13 +139,11 @@ type.
 
     Li 0
     
-    import console, math
+    private i, j int, p float = 1, 2, math.pi
     
-    private i, j int, p float = 1, 2, math.PI
-    
-    main fn():
-        c, python bool, java, go string = true, false, "no!", "yes!"
-        console.log(i, j, p, c, python, java, go)
+    main func:
+        k, l bool, m, n string = true, false, "no!", "yes!"
+        console.log(i, j, p, k, l, m, n)
 
 A variable declaration can include initializers. If an initializer is omitted,
 the variable will be assigned the default value of the type.
@@ -183,27 +153,23 @@ the variable will be assigned the default value of the type.
 
     Li 0
     
-    import console, math
-    
     private:
         toBe bool = false
         maxInt int.u64 = 2 ** 64 - 1
         z complex.p128 = math.sqrt[complex.p128](-5. + 12i)
     
-    main fn():
-        console.log("Value: %".in(toBe))
-        console.log("Value: %".in(maxInt))
-        console.log("Value: %".in(z))
+    main func():
+        console.log("Value: \(toBe)")
+        console.log("Value: \(maxInt)")
+        console.log("Value: \(z)")
 
 Lithium basic types are:
 
     bool int string float complex
 
-Each of these types are defined in a built-in library package that is imported
-implicitly, so you do not need to list them in an import statement.
+Each of these types are defined in a built-in library package.
 
-These packages also provide more fine-grained type definitions such as the
-following:
+There are also more specific data types such as:
 
     int.s8 int.s16 int.s32 int.s64
     int.u int.u8 int.u16 int.u32 int.u64
@@ -217,14 +183,12 @@ following:
 
     Li 0
     
-    import console
-    
-    main fn():
+    main func:
         i int
         f float
         b bool
         s string
-        console.log("% , % , % , %".in(i, f, b, s))
+        console.log("\(i) , \(f) , \(b) , \(s)")
 
 Variables declared without an explicit initial value are given their default
 value.
@@ -242,11 +206,7 @@ Custom types can have their own defined default values.
 
     Li 0
     
-    import:
-        console
-        math
-    
-    main fn():
+    main func:
         x int, y int = 3, 4
         f float = math.sqrt((x * x + y * y).float)
         z int.u = f.intU
@@ -269,17 +229,15 @@ explicit conversion.
 
     Li 0
     
-    import console
+    private pi const = 3.14
     
-    private PI const = 3.14
-    
-    main fn = fn():
-        WORLD const = "Mars"
-        console.log("Hello", WORLD)
-        console.log("Happy", PI, "Day")
+    main func = func():
+        world const = "Mars"
+        console.log("Hello", world)
+        console.log("Happy", pi, "Day")
         
-        TRUTH const = true
-        console.log("Humans rock?", TRUTH)
+        truth const = true
+        console.log("Humans rock?", truth)
 
 Constants are declared like variables, but with the `const` keyword as type.
 Constants can be string, boolean, or numeric values. Constants cannot be
@@ -291,9 +249,7 @@ function.
 
     Li 0
     
-    import console
-    
-    main fn():
+    main func:
         sum int = 0
         for i int = 0; i < 10; i++:
             sum += i
@@ -317,9 +273,7 @@ The loop will stop iterating once the boolean condition evaluates to `false`.
 
     Li 0
     
-    import console
-    
-    main fn():
+    main func:
         sum int = 1
         for ; sum < 1000; :
             sum += sum
@@ -330,9 +284,7 @@ semicolons:
 
     Li 0
     
-    import console
-    
-    main fn():
+    main func:
         sum int = 1
         for sum < 1000:
             sum += sum
@@ -343,7 +295,7 @@ semicolons:
 
     Li 0
     
-    main fn():
+    main func:
         for:
             // Whatever code goes here will run in an infinite loop
 
@@ -354,34 +306,27 @@ If you omit the loop condition it loops forever.
 
     Li 0
     
-    import:
-        console
-        math
-    
-    private sqrt fn(x float) string:
+    private sqrt func(x float) string:
         if x < 0:
             return sqrt(-x).string + "i"
         return math.sqrt(x).string
     
-    main fn():
+    main func:
         console.log(sqrt(2.), sqrt(-4.))
 
-Lithium's `if` statements are like its `for` loops
+Lithium's `if` statements are similar to its `for` loops
 
 
 ## If with an init statement
 
     Li 0
     
-    import:
-        console
-    
-    private pow fn(x, n, lim float) float:
+    private pow func(x, n, lim float) float:
         if v float = x ** n; v < lim:
             return v
         return lim
     
-    main fn():
+    main func:
         console.log(
             pow(3., 2., 10.),
             pow(3., 3., 20.),
@@ -396,18 +341,14 @@ until the end of the `if`.
 
     Li 0
     
-    import:
-        console
-        math
-    
-    private pow fn(x, n, lim float) float:
+    private pow func(x, n, lim float) float:
         if x **= n; x < lim:
             return x
         else:
             console.log("% >= %".in(x, lim))
         return lim
     
-    main fn():
+    main func:
         console.log(pow(3., 2., 10.), pow(3., 3., 20.), )
 
 Variables declared inside an `if` init statement are also available inside any
@@ -418,17 +359,13 @@ of the else blocks.
 
     Li 0
     
-    import:
-        console
-        math
+    private compute func(f func(float, float) float) float:
+        return f(3, 4)
     
-    private compute fn(func fn(float, float) float) float:
-        return func(3, 4)
-    
-    main fn():
-        hypot fn(x, y float) float:
+    main func:
+        hypot func(x, y float) float:
             return math.sqrt(x*x + y*y)
-        ave fn(x, y float) float:
+        ave func(x, y float) float:
             return (x + y) / 2
         
         console.log(hypot(5., 12.))
@@ -445,9 +382,7 @@ Function values may be used as function arguments and return values.
 
     Li 0
     
-    import console
-    
-    main fn():
+    main func:
         defer console.log("world!")
         
         console.log("Hello")
@@ -463,9 +398,7 @@ call is not executed until the surrounding function returns.
 
     Li 0
     
-    import console
-    
-    main fn():
+    main func:
         console.log("counting")
         
         for i int = 0; i < 10; i++:
@@ -481,15 +414,13 @@ deferred calls are executed in last-in-first-out order.
 
     Li 0
     
-    import console
-    
-    private adder fn() {fn(int) int}:
+    private adder func() (func(int) int):
         sum int = 0
-        return fn(x int) int:
+        return func(x int) int:
             sum += x
             return sum
     
-    main fn():
+    main func:
         pos int, neg int = adder(), adder()
         for i int; i < 10; i++:
             console.log(
@@ -509,13 +440,11 @@ its own `sum` variable.
 
     Li 0
     
-    import console
-    
     private vertex type:
         x int
         y int
     
-    main fn():
+    main func:
         v vertex
         v.x, v.y = 1, 2
         console.log(v)
@@ -528,13 +457,11 @@ properties and methods and is often called a class in other languages.
 
     Li 0
     
-    import console
-    
     private vertex type:
         x int
         y int
     
-    main fn():
+    main func:
         v vertex
         v.x = 4
         console.log(v.x)
@@ -546,17 +473,13 @@ Type properties are accessed using a dot.
 
     Li 0
     
-    import
-        console
-        math
-    
     private vertex type:
         x float
         y float
-        dist fn(self vertex) float:
+        dist func(self vertex) float:
             return math.sqrt(self.x ** 2. + self.y ** 2.)
     
-    main fn():
+    main func:
         v vertex
         v.x, v.y = 1., 2.
         console.log(v.dist())
@@ -571,20 +494,16 @@ with. When calling the method, this parameter is omitted.
 
     Li 0
     
-    import
-        console
-        math
-    
     private vertex type:
         x float = 1
         y float = 1
-        init fn(self vertex, x, y float):
+        init func(self vertex, x, y float):
             self.x, self.y = x, y
             return
-        dist fn(self vertex) float:
+        dist func(self vertex) float:
             return math.sqrt(self.x ** 2. + self.y ** 2.)
     
-    main fn():
+    main func:
         v vertex = vertex(1., 2.)
         console.log(v.dist())
 
@@ -600,7 +519,7 @@ it by calling the type as a function such as `v vertex = vertex(1., 2.)`.
     private vertex type:
         x int
         y int
-        init fn(self vertex, x, y int):
+        init func(self vertex, x, y int):
             self.x, self.y = x, y
             return
 
@@ -614,24 +533,20 @@ Given the above type, the following statements are equivalent:
 
     Li 0
     
-    import
-        console
-        math
-    
     private vertex type:
         
         private: // X and Y can now only be used by methods within the object
             x float = 1
             y float = 1
         
-        init fn(self vertex, x, y float):
+        init func(self vertex, x, y float):
             self.x, self.y = x, y
             return
         
-        dist fn(self vertex) float:
+        dist func(self vertex) float:
             return math.sqrt(self.x ** 2. + self.y ** 2.)
     
-    main fn():
+    main func:
         v vertex(1., 2.)
         console.log(v.dist())
 
@@ -644,37 +559,33 @@ main function in this case, you will get a compile error.
 
     Li 0
     
-    import
-        console
-        math
-    
     private vertex type:
-        init fn(self vertex, x, y float):
+        init func(self vertex, x, y float):
             self.x, self.y = x, y // This will call the respective set functions
             return
         
         private x float
-        get x fn(self vertex) float:
+        get x func(self vertex) float:
             return self.x
-        set x fn(self vertex, x float):
+        set x func(self vertex, x float):
             if x >= 0:
                 self.x = x
             else:
                 self.x = x * -1
         
         private y float
-        get y fn(self vertex) float:
+        get y func(self vertex) float:
             return self.y
-        set y fn(self vertex, y float):
+        set y func(self vertex, y float):
             if y >= 0:
                 self.y = y
             else:
                 self.y = y * -1
         
-        dist fn(self vertex) float:
+        dist func(self vertex) float:
             return math.sqrt(self.x ** 2. + self.y ** 2.)
     
-    main fn():
+    main func:
         v vertex(1, 2)
         console.log(v.dist())
 
@@ -695,11 +606,9 @@ retrieve a custom value by directly using the object name. Note that a similar
 
     Li 0
     
-    import console
-    
-    main fn():
+    main func:
         myInt type extends int:
-            double fn(self myInt) myInt:
+            double func(self myInt) myInt:
                 return self * 2
         
         i myInt = 3
@@ -714,21 +623,19 @@ the `extends` keyword.
 
     Li 0
     
-    import console
-    
     private hasX interface:
         get x() float
     
     private vertex type:
         x, y float
-        init fn(self vertex, x, y float):
+        init func(self vertex, x, y float):
             self.x, self.y = x, y
             return
     
-    private printX fn(h hasX):
+    private printX func(h hasX):
         console.log(h.x)
     
-    main fn():
+    main func:
         v vertex(3., 4.)
         printX(v) // This will print 3
 
@@ -748,18 +655,16 @@ of flexibility in using interfaces.
 
     Li 0
     
-    import console
-    
     private person type:
         name string
         age int
-        init fn(self person, name string, age int):
+        init func(self person, name string, age int):
             self.name, self.age = name, age
             return
-        get string fn(self person) string:
+        get string func(self person) string:
             return "% (% years)".in(self.name, self.age)
     
-    main fn():
+    main func:
         a person("Arthur Dent", 42)
         z person("Zaphod Beeblebrox", 9001)
         console.log(a, z)
@@ -778,25 +683,21 @@ package (and many others) look for this interface to print values.
 
     Li 0
     
-    import:
-        console
-        time
-    
     private myError type:
-        init fn(self myError, when time.time, what string):
+        init func(self myError, when time.time, what string):
             self.when, self.what = when, what
             return
         when time.time
         what string
         ok bool = false
         class string = "MyError"
-        get string fn(self myError) string:
+        get string func(self myError) string:
             return "at %, %".in(self.when, self.what)
     
-    private run fn() error:
+    private run func() error:
         return myError(time.now(), "it didn't work")
     
-    main fn():
+    main func:
         if err error = run(); !err.ok:
             console.log(err)
 
@@ -817,8 +718,8 @@ Functions often return an `error` value, and calling code should handle errors
 by testing whether the `error.ok` is false.
 
     i int
-    if i, err error = strconv.aToI("42"); !err.ok:
-        console.log("couldn't convert number: %".in(err))
+    if i, err error = "42".string; !err.ok:
+        console.log("couldn't convert number: \(err)")
         return
     console.log("Converted integer:", i)
 
@@ -827,15 +728,13 @@ by testing whether the `error.ok` is false.
 
     Li 0
     
-    import console
-    
     private plusable interface[p]:
         plus(p) p
     
-    private double fn[p plusable](num p) p:
+    private double func[p plusable](num p) p:
         return num + num
     
-    main fn():
+    main func:
         myInt int = 3
         myInt = double[int](myInt)
         console.log(myInt) // This will print 6
@@ -860,15 +759,13 @@ specify a `string` property.
 
     Li 0
     
-    import console
-    
     private plusable interface[n]:
         plus(n) n
     
-    private double fn[p plusable int](num p) p:
+    private double func[p plusable int](num p) p:
         return num + num
     
-    main fn():
+    main func:
         myInt int = 3
         myInt = double(myInt)
         console.log(myInt) // This will print 6
@@ -885,16 +782,14 @@ omitted when calling the function, this default type is assumed.
 
     Li 0
     
-    imports console
-    
     private vertex type[n string.stringer]:
-        init fn(new vertex, x, y n):
+        init func(new vertex, x, y n):
             new.x, new.y = x, y
             return
         x n
         y n
     
-    main fn():
+    main func():
         v vertex[int](1, 2)
         console.log(v.x)
 
@@ -908,26 +803,21 @@ generic types. In the above example, `x` and `y` are of type `int`.
     
     import console
     
-    main fn():
-        triplets {string, string, string} = "Anna", "Betty", "Carmen"
+    main func():
+        triplets (string, string, string) = "Anna", "Betty", "Carmen"
         console.log(triplets)
 
 Tuples are ordered pairs of variables. You have actually already seen them used
 for multiple return values for functions as well as with assignments on multiple
-variables. Tuples are wrapped in curly braces `{ }`.
-
-
-## Tuples continued
+variables. Tuples defined as a set of types wrapped in brackets.
 
     Li 0
     
-    import console
-    
-    main fn():
-        triplets {string, string, string} = "Anna", "Betty", "Carmen"
-        console.log(triplets{0}) // This prints Anna
-        console.log(triplets{1}) // This prints Betty
-        console.log(triplets{2}) // This prints Carmen
+    main func():
+        triplets (string, string, string) = "Anna", "Betty", "Carmen"
+        console.log(triplets.0) // This prints Anna
+        console.log(triplets.1) // This prints Betty
+        console.log(triplets.2) // This prints Carmen
 
 The individual values in a tuple can be accessed using the index number starting
 from zero. The index number must be a literal number, it cannot be another
@@ -938,9 +828,7 @@ variable or calculated in some way.
 
     Li 0
     
-    import console
-    
-    main fn():
+    main func():
         a array[string]
         a(0) = "Hello"
         a(1) = "World"
@@ -960,9 +848,7 @@ an array are always of type `int`.
 
     Li 0
     
-    import console
-    
-    main fn():
+    main func():
         abcd array[string]("a", "b", "c", "d")
         bc array[string] = abcd.slice(1, 3)
         console.log(bc)
@@ -978,9 +864,7 @@ the last one.
 
     Li 0
     
-    import console
-    
-    main fn():
+    main func:
         p array[int](2, 3, 5, 7, 11, 13)
         
         p = p.slice(1, 4)
@@ -1002,9 +886,7 @@ bound.
 
     Li 0
     
-    import console
-    
-    main fn():
+    main func():
         p array[int](2, 3, 5, 7, 11, 13)
         console.log(p.length)
 
@@ -1016,9 +898,7 @@ array.
 
     Li 0
     
-    import console
-    
-    main fn():
+    main func():
         // Create a tic-tac-toe board.
         board array[array[string]](
             array[string]("_", "_", "_"),
@@ -1043,9 +923,7 @@ Arrays can contain any type, including other arrays.
 
     Li 0
     
-    import console
-    
-    main fn():
+    main func():
         l array[int]
         console.log(l)
         
@@ -1066,13 +944,11 @@ Lithium provides a built-in `push` method to append items to an array.
 
     Li 0
     
-    import console
-    
     private pow array[int](1, 2, 4, 8, 16, 32, 64, 128)
     
-    main fn():
+    main func:
         for i int, v int in pow:
-            console.log("2 ** % = %".in(i, v))
+            console.log("2 ** \(i) = \(v)".in(i, v))
 
 The built-in `array` type is iterable, which means that it can be used in a for
 loop with the `in` keyword.
@@ -1082,9 +958,7 @@ loop with the `in` keyword.
 
     Li 0
     
-    import console
-    
-    main fn():
+    main func:
         pow array[int](1, 2, 4, 8, 16, 32, 64, 128)
         
         for _, value int in pow:
@@ -1100,9 +974,7 @@ You can skip the key or value by assigning to `_`.
 
     Li 0
     
-    import console, map
-    
-    main fn():
+    main func:
         m map[int, string]
         m(0) = "Hello"
         m(1) = "World"
@@ -1122,30 +994,26 @@ The statement `m map[int, string]` declares a variable `m` as a map of strings.
 
     Li 0
     
-    import console, map
-    
     private vertex type:
         lat, long float
     
     private m map[string, vertex](
-        {"Bell Labs", vertex(40.68433, -74.39967)},
-        {"Google", vertex(37.42202, -122.08408)},
+        ("Bell Labs", vertex(40.68433, -74.39967)),
+        ("Google", vertex(37.42202, -122.08408)),
     )
     
-    main fn():
+    main func():
         console.log(m)
 
 The map initializer accepts an arbitrary number of tuples that consist of the
-{key, value} pairs that need to be added.
+(key, value) pairs that need to be added.
 
 
 ## Mutating maps
 
     Li 0
     
-    import console, map
-    
-    main fn():
+    main func():
         m map[string, int]
         
         m("Answer") = 42
@@ -1192,16 +1060,13 @@ You can use `val, ok = map.get(key)` as a shorthand for
 
     Li 0
     
-    import:
-        console
-    
-    sum fn(...int in nums array[int]) int:
+    sum func(...int in nums array[int]) int:
         s int
         for _, n int in nums:
             s += n
         return s
     
-    main fn():
+    main func:
         console.log(sum(1, 2, 3, 4, 5)) // This will print 15
 
 Variadic functions are functions that can take an arbitrary number of parameters
@@ -1213,20 +1078,18 @@ a list type such as `array`.
 
     Li 0
     
-    import console
-    
     number interface[n]:
         plus(n) n
         power(n) n
     
-    sumPower fn[num number](...{num, num} in pairs map[num, num]) num:
+    sumPower func[num number](...(num, num) in pairs map[num, num]) num:
         sum num
         for base num, exp num in pairs:
             sum += base ** exp
         return sum
     
-    main fn():
-        console.log(sumPower[int]({2,1}, {2,2}, {2,3}, {2,4})) // Output 30
+    main func:
+        console.log(sumPower[int]((2, 1), (2, 2), (2, 3), (2, 4))) // Output 30
 
 Variadic functions can pass the parameters into any initializer method as long
 as the initializer method is also variadic and accepts the data of the correct
@@ -1237,16 +1100,13 @@ type. This can include tuples.
 
     Li 0
     
-    import:
-        console
-    
-    sum fn(...int in nums array[int]) int:
+    sum func(...int in nums array[int]) int:
         s int
         for _, n int in nums:
             s += n
         return s
     
-    main fn():
+    main func:
         numbers array[int](1, 2, 3, 4, 5)
         console.log(sum(numbers...))
 
@@ -1258,16 +1118,12 @@ such as an `array` or `map` as distinct parameters in a variadic function.
 
     Li 0
     
-    import:
-        console
-        time
-    
-    say fn(s string):
+    say func(s string):
         for i int = 0; i < 5; i++:
             time.sleep(100 * time.millisecond)
             console.log(s)
     
-    main fn():
+    main func():
         co say("world")
         say("hello")
 
@@ -1288,17 +1144,13 @@ will see shortly.
 
     Li 0
     
-    import:
-        console
-        chan
-    
-    sum fn(s array[int], c chan[int]):
+    sum func(s array[int], c chan[int]):
         sum int = 0
         for _, v int in s:
             sum += v
         c.push(sum) // Send sum to c
     
-    main fn():
+    main func():
         s array[int](7, 2, 8, -9, 4, 0)
         
         c chan[int]
@@ -1326,9 +1178,7 @@ the final result.
 
     Li 0
     
-    import console, chan
-    
-    main fn():
+    main func():
         ch chan[int](2)
         ch.push(1)
         ch.push(2)
@@ -1348,17 +1198,14 @@ when the buffer is empty.
 
     Li 0
     
-    import:
-        console, chan
-    
-    fibonacci fn(n int, c chan[int]):
+    fibonacci func(n int, c chan[int]):
         x int, y int = 0, 1
         for i int = 0; i < n; i++:
             c.push(x)
             x, y = y, x + y
             c.close()
     
-    main fn():
+    main func():
         c chan[int](10)
         co fibonacci(c.capacity, c)
         for i int in c:
@@ -1387,11 +1234,7 @@ values coming, such as to terminate a loop.
 
     Li 0
     
-    import:
-        console
-        chan
-    
-    fibonacci fn(c, quit chan[int]):
+    fibonacci func(c, quit chan[int]):
         x int, y int = 0, 1
         for: if c.capacity > 0: // This checks if you can push new values
             c.push(x)
@@ -1400,9 +1243,9 @@ values coming, such as to terminate a loop.
             console.log("quit")
             return
     
-    main fn():
+    main func:
         c, quit chan[int]
-        co (fn():
+        co (func:
             for i int = 0; i < 10; i++:
                 console.log(c.pop())
             quit.push(0)
@@ -1418,12 +1261,7 @@ executes that block.
 
     Li 0
     
-    import:
-        console
-        chan
-        time
-    
-    main fn():
+    main func:
         tick chan[bool] = time.tick(100 * time.millisecond)
         boom chan[bool] = time.after(500 * time.millisecond)
         for: if tick.length > 0:
@@ -1444,32 +1282,26 @@ An `else` block can be used to run if no other condition is ready.
 
     Li 0
     
-    import:
-        console
-        sync
-        time
-        map
-    
     // SafeCounter is safe to use concurrently.
     safeCounter type:
         v map[string, int]
         mux sync.mutex
         
         // inc increments the counter for the given key.
-        inc fn(c safeCounter, key string):
+        inc func(c safeCounter, key string):
             c.mux.lock()
             // Lock so only one coroutine at a time can access the map c.v.
             c.v(key)++
             c.mux.unlock()
         
         // value returns the current value of the counter for the given key.
-        value fn(c safeCounter, key string) int:
+        value func(c safeCounter, key string) int:
             c.mux.lock()
             // Lock so only one coroutine at a time can access the map c.v.
             defer c.mux.unlock()
             return c.v(key)
     
-    main fn():
+    main func:
         c safeCounter
         for i int = 0; i < 1000; i++:
             co c.inc("somekey")

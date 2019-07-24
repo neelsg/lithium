@@ -127,8 +127,8 @@ available implicitly.
 
 The following operators are available:
 
-    !  ||  &&  ==  !=  <  >  <=  >=  +  -  *  /  %  **  =
-    +=  -=  *=  /=  **=  -/=  &=  |=  &|=  <<=  >>=  ++  --
+    !  ||  &&  ==  !=  <  >  <=  >=  +  -  *  /  %  =
+    +=  -=  *=  /=  -/=  &=  |=  &|=  <<=  >>=  ++  --
 
 ### Boolean operators
 
@@ -186,12 +186,10 @@ The mathematical operators are:
 - `x * y` Multiplication. `x.*(y)`
 - `x / y` Division. `x./(y)`
 - `x % y` Modulus. `x.%(y)`
-- `x ** y` Exponent. `x.**(y)`
 
 Mathematical operators are evaluated before boolean or comparison operators and
 follow a conventional order as follows:
 
-1. Exponent.
 1. Multiplication, division and modulus from left to right.
 1. Addition and subtraction from left to right.
 
@@ -219,7 +217,6 @@ The following operators can be used when the result should be assigned to the le
 - `x -= y` Subtract assign. `x = x - y`
 - `x *= y` Multiply assign. `x = x * y`
 - `x /= y` Divide assign. `x = x / y`
-- `x **= y` Exponent assign. `x = x ** y`
 - `x %= y` Modulo assign. `x = x % y`
 
 #### Assignment increment and decrement shorthand
@@ -319,18 +316,14 @@ Examples of complex number literals:
 
 ### String literals:
 
-Strings are a sequence of unicode characters encapsulated by single `'` or
-double `"` quotes.
+Strings are a sequence of unicode characters encapsulated by quotes `"`.
 
 String literals cannot flow over a single line (Use embedded blocks for that).
 With string literals, the following escape sequences can be used to escape special
 chars. The following escape sequences are available:
 
 - `\\` This represents a single backslash.
-- `\"` This represents a double quote (Only applies if the literal is
-   encapsulated in double quotes).
-- `\'` This represents a single quote (Only applies if the literal is
-    encapsulated in single quotes).
+- `\"` This represents a double quote.
 - `\a` Bell code.
 - `\b` Backspace.
 - `\e` Escape character.
@@ -344,17 +337,21 @@ chars. The following escape sequences are available:
 Examples of string literals:
 
     "This is a string\n"
-    'This is also a string'
-    'Strings are concatenated with a +, so this' + " is a single string literal"
+    "Strings are concatenated with a +, so this" + " is a single string literal"
 
 #### String interpolation
 
 String interpolation can be used to embed the result of an expression within a
 string. The syntax is as follows: `\(expression)`
 
+Example:
+
+    "1 + 2 = \(1 + 2)" # This represents "1 + 2 = 3"
+    "The value of myVar is: \(myVar)"
+
 #### Strings using embedded blocks 
 
-To define an embbed string block use `[string]:` to begin the block and follow
+To define an embbed string block use `string:` to begin the block and follow
 normal indentation rules within the block. This is using embedded blocks which
 can actually be custom created as long as the type referred to in the square
 brackets define a method with the signature `compile(string) (type.any, error)`.
@@ -363,7 +360,7 @@ returned `error.ok` value is not `true`, a compile error will be raised.
 
 Examples of string literals using embedded blocks:
 
-    myVar string = [string]:
+    myString string:
         Use this if you need to create a string that contains lots of raw text
         such as for templates etc.
         
@@ -374,9 +371,9 @@ Examples of string literals using embedded blocks:
         literal. Indicators for comments such as // and /* are also just treated
         as part of the raw text rather than as actual comments in the code.
     
-    # This will run `web.css.embed(string) (string,error)` first to check if
+    # This will run `web.css.embed(string) (string, error)` first to check if
     # this is a valid stylesheet. If it is not, the compiler will throw an error.
-    myStyle string = [web.css]:
+    myStyle string = web.css:
         body {
             font-size: 1.5em;
         }
@@ -408,7 +405,7 @@ Examples of constants:
     hello const = "Hello world!"         # String constant
     day const = 24 * 60 * 60 * 1000      # Integer constant
     i const = 1i                         # Complex number constant
-    html const = [web.html]:             # String constant from a block
+    html const = web.html:               # String constant from a block
         <div class="greeting">
             Hello world wide web!
             My name is %.
@@ -455,7 +452,7 @@ Example of using a tuple as type:
 
     vector (float, float, fn(float, float) float)
         = 3, 4, func(x, y float) float:
-            return (x ** 2 + y ** 2) ** 0.5
+            return math.sqrt(math.power(x, 2) + math.power(y, 2))
     vector.2(vector.0, vector.1) # This will return 5.
 
 ### Defining new types

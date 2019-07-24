@@ -1,23 +1,21 @@
 Li 0
 
-/*
-	bool provides the basic boolean type and some helpful interfaces
-*/
+# bool provides the basic boolean type and some helpful interfaces
 
 default type:
-	// Boolean type, can be true or false
+	# Boolean type, can be true or false
 	
-	equal fn(default, default) default:
-		// If both are true or both are false, this will return true
+	pub equal fn(default, default) default:
+		# If both are true or both are false, this will return true
 	
-	flip fn(default) default:
-		// If the value is true, this will return false and vice versa
+	pub flip fn(default) default:
+		# If the value is true, this will return false and vice versa
 	
 	get bool fn(default) default:
-		// Return boolean 
+		# Return boolean 
 	
 	get int fn(default) int:
-		// Return 0 if false and 1 if true
+		# Return 0 if false and 1 if true
 	
 	get string fn(default) string:
-		// Return "false" if false and "true" if true
+		# Return "false" if false and "true" if true

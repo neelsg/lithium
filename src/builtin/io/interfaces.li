@@ -1,16 +1,16 @@
 Li 0
 
 writer interface:
-	write fn(bytes array[int.u8]) {written int.u64, err error}
+	write(bytes array[int.u8]) {written int.u64, err error}
 
 reader interface:
-	read fn(n int.u64) {bytes array[int.u8], read int.u64, err error}
+	read(n int.u64) {bytes array[int.u8], read int.u64, err error}
 
 seeker interface:
-	seek fn(offset int.s64, whence int) {err error}
+	seek(offset int.s64, whence int) {err error}
 
 closer interface:
-	close fn() error
+	close() error
 
 readCloser interface:
 	reader

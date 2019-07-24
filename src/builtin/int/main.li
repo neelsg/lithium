@@ -40,3 +40,6 @@ pub u32 type(i):
 
 pub u64 type(i):
 	# 64-bit unsigned integer
+
+pub range func(first int = 0, last int, step int = 1) iterable:
+	# Return an iterable range of integers

@@ -2,5 +2,5 @@ Li 0
 
 # console implements a terminal where output can be logged
 
-log func(...string.stringer in out array[string.stringer]):
+pub log func(...string.stringer in out array[string.stringer]):
 	# Write the output to the console

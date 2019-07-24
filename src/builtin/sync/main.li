@@ -1,0 +1,20 @@
+Li 0
+
+pub mutex type:
+	locked bool = false
+	
+	pub lock func(m mutex):
+		# Lock the mutex. If the lock is already in use, block until available
+	
+	pub unlock func(m mutex) error:
+		# Unlock the mutex. Return an error if the mutex was not locked to
+		# begin with
+		
+		if m.locked:
+			m.locked = false
+			return error.none
+		else:
+			return error.new(
+				"SyncError",
+				"Tried to unlock mutex that was already unlocked",
+			)

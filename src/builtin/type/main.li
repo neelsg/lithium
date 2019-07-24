@@ -1,5 +1,5 @@
 Li 0
 
 any interface:
-	// This interface is here so that there is a standard interface available
-	// when literally any type is allowed
+	# This interface is here so that there is a standard interface available
+	# when literally any type is allowed

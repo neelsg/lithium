@@ -17,5 +17,5 @@ Fizz if divisible by 3, Buzz if divisible by 5
             return n.string
     
     main fn:
-        for i in range(1, last):
+        for i in int.range(1, last):
             console.log(fizzBuzz(i))

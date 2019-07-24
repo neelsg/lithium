@@ -1,0 +1,25 @@
+Li 0
+
+readFile type:
+	
+	err error = error.none
+	
+	init func(self readFile, fileName string):
+		# Open a file for reading
+		# TODO
+	
+	pub read func(self readFile, n int.u64) {bytes array[int.u8], read int.u64, err error}:
+		# Read from the file
+		# TODO
+	
+	pub seek func(self readFile, offset int.s64, whence int) {err error}:
+		# Seek a position in the file
+		# TODO
+	
+	pub close func(self readFile) error:
+		# Close the file
+		# TODO
+	
+	get error func(self readFile) error:
+		# Return the current error if any
+		return self.err

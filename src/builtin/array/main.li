@@ -1,37 +1,35 @@
 Li 0
 
-/*
-	array provides a generic data type that can be used to store an array of
-	items of a given type.
-*/
+# array provides a generic data type that can be used to store an array of
+# items of a given type.
 
 default type[n type.any]:
-	init fn(new default[n], ...n in values default[n]):
-		// Initialize a new array
+	init func(new default[n], ...n in values default[n]):
+		# Initialize a new array
 	
-	slice fn(self default[n], low, high int) default[n]:
-		// Slice and array
+	pub slice func(a default[n], low, high int) default[n]:
+		# Slice and array
 	
-	get length fn(self default[n]) int:
-		// Return the number of items in the array
+	get length func(a default[n]) int:
+		# Return the number of items in the array
 	
-	default fn(self default[n], int) n:
-		// Return the item at the index
+	default func(a default[n], int) n:
+		# Return the item at the index
 	
-	exists fn(self default[n], int) bool:
-		// Check if the index exists
+	pub exists func(a default[n], int) bool:
+		# Check if the index exists
 	
-	get fn(self default[n], int) {n, bool}:
-		// Get an item with the given index and also check if the index exists
+	pub get func(a default[n], int) (n, bool):
+		# Get an item with the given index and also check if the index exists
 	
-	push fn(self default[n], ...n in values default[n]):
-		// Add new item(/s) to an array
+	pub push func(a default[n], ...n in values default[n]):
+		# Add new item(/s) to an array
 	
-	pop fn(self default[n]) n:
-		// Remove and return the last item of an array
+	pub pop func(a default[n]) n:
+		# Remove and return the last item of an array
 	
-	first fn(self default[n]) {{int, n}, int, bool}:
-		// Return the first item for use in iteration
+	pub first func(a default[n]) ((int, n), int, bool):
+		# Return the first item for use in iteration
 	
-	next fn(self default[n], priorIndex int) {{int, n}, int, bool}:
-		// Return the next item for use in iteration
+	pub next func(a default[n], priorIndex int) {{int, n}, int, bool}:
+		# Return the next item for use in iteration

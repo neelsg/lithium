@@ -1,7 +1,7 @@
 Li 0
 
-copy fn(dst writer, src reader) {written int.u64, err error}:
-	// Copy from src to dst
+copy func(dst writer, src reader) (written int.u64, err error):
+	# Copy from src to dst
 	bytes array[int.u8]
 	if bytes, read int.u64, err error = src.read(0); read == 0:
 		return 0, err

@@ -1,0 +1,91 @@
+Li 0
+
+# map provides a generic data type that can be used as a map of key-value pairs.
+#
+# The current implementation is highly inefficient as the keys do not get sorted,
+# so looking anything up is very slow.
+
+
+default type[k bool.comparable, v type.any]:
+	
+	keys array[k]
+	vals array[v]
+	
+	init fn(self default[k, v], ...{k, v} in items array[{k, v}]):
+		# Initiate the map with an arbitrary number of items
+		
+		self.push(items...)
+		return
+	
+	get length fn(self default[k, v]) int:
+		# Return the total number of items in the map
+		
+		return self.keys.length
+	
+	pub default fn(self default[k, v], key k) v:
+		# Return an item value for the given key
+		
+		for index int, current k in self.keys:
+			if current == key:
+				return self.vals(index)
+		return v
+	
+	pub delete fn(self default[k, v], key k):
+		# Remove the item with the given key from the map
+		
+		for index int, current k in self.keys:
+			if current == key:
+				self.keys = self.keys.slice(, index) + self.keys.slice(index + 1, )
+				self.vals = self.vals.slice(, index) + self.vals.slice(index + 1, )
+				return
+		return
+	
+	pub exists fn(self default[k, v], key k) bool:
+		# Check if an item exists with the given key
+		
+		for index int, current k in self.keys:
+			if current == key:
+				return true
+		return false
+	
+	pub first fn(self default[k, v]) {{k, v}, int, bool}:
+		# Return the first item in the map for use as an iterable object
+		
+		if self.keys.length == 0:
+			return {k, v}, 0, false
+		return {self.keys(0), self.vals(0)}, 0, true
+	
+	pub get fn(self default[k, v], key k) {v, bool}:
+		# Get an item with the given key and also check if the key exists
+		
+		if self.exists(key):
+			return self.default(key), true
+		return v, false
+	
+	pub next fn(self default[k, v], priorIndex int) {{k, v}, int, bool}:
+		# Return the next item in the map for use as an iterable object
+		
+		index int = priorIndex + 1
+		if self.keys.length <= index:
+			return {k, v}, index, false
+		return {self.keys(index), self.vals(index)}, index, true
+	
+	pub pop fn(self default[k, v]) {k, v}:
+		# Remove and return the last item in the map
+		
+		if self.keys.length == 0:
+			return {k, v}
+		return {self.keys.pop(), self.vals.pop()}
+	
+	pub push fn(self default[k, v], ...{k, v} in items array[{k, v}]):
+		# Push an arbitrary number of new items into the map. If items are
+		# pushed with keys that already exist, the new value overrides the old
+		# value
+		
+		for _, item {k, v} in items:
+			if self.exists(item{0}):
+				self(item{0}) = item{1}
+			else:
+				self.keys.push(item{0})
+				self.vals.push(item{1})
+		return

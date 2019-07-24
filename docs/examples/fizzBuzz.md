@@ -4,12 +4,9 @@ Fizz if divisible by 3, Buzz if divisible by 5
 
     Li 0
     
-    import:
-        console
+    last const = 30
     
-    LAST const = 30
-    
-    fizzBuzz fn(n int) string.stringer:
+    fizzBuzz func(n int) string:
         if n % 3 == 0 && n % 5 == 0:
             return "FizzBuzz"
         else if n % 3 == 0:
@@ -17,8 +14,8 @@ Fizz if divisible by 3, Buzz if divisible by 5
         else if n % 5 == 0:
             return "Buzz"
         else:
-            return n
+            return n.string
     
-    main fn():
-        for i int = 1; i <= LAST; i++:
+    main fn:
+        for i in range(1, last):
             console.log(fizzBuzz(i))

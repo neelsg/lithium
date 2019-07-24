@@ -48,11 +48,8 @@ File: myfile.li
 
     Li 0
     
-    import:
-        console
-    
-    // This is the main function
-    main fn():
+    # This is the main function
+    main func:
         console.log("My favorite number is", int.rand(10))
 
 Object file:

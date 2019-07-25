@@ -3,18 +3,21 @@ Li 0
 # array provides a generic data type that can be used to store an array of
 # items of a given type.
 
-default type[n type.any](a):
-	init func(...n in values default[n]):
+def type[n any]:
+	init func(...n):
 		# Initialize a new array
 	
-	pub slice func(low, high int) default[n]:
+	pub slice func(low, high int) def[n]:
 		# Slice and array
 	
 	get length int:
 		# Return the number of items in the array
 	
-	default func(int) n:
+	def func(int) n:
 		# Return the item at the index
+	
+	pub mod clear func:
+		# Remove all items from the array
 	
 	pub exists func(int) bool:
 		# Check if the index exists
@@ -22,14 +25,30 @@ default type[n type.any](a):
 	pub get func(int) (n, bool):
 		# Get an item with the given index and also check if the index exists
 	
-	pub push func(...n in values default[n]):
+	pub mod push func(...n):
 		# Add new item(/s) to an array
 	
-	pub pop func() n:
+	pub mod pop func() n:
 		# Remove and return the last item of an array
 	
 	pub first func() ((int, n), int, bool):
 		# Return the first item for use in iteration
+		
 	
-	pub next func(priorIndex int) ((int, n), int, bool):
+	pub next func(prior int) ((int, n), int, bool):
 		# Return the next item for use in iteration
+	
+	.= func(other def[n]):
+		# Create a copy of an array
+		clear()
+		for item n in other:
+			push(item)
+		return
+	
+	.+= func(item n):
+		# Add an item to an array
+		push(item)
+		return
+	
+	.== func(other def[n]):
+		# Check if the array is equal to another array

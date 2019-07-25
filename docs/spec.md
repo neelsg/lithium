@@ -2,72 +2,45 @@
 
 This document defines the Lithium programming language.
 
-
-## Doctype indicator
-
-The first line of a Lithium source file must start with the character sequence
-`Li ` followed by the version of the language specification that was used.
-
-
-## Indents and dedents
-
-Indentation is created by adding spaces or tabs to the front of a line. Where we
-specify a line to be indented, this implies that there are more tabs or spaces
-that precede the given line than there was for the previous non-blank line.
-Blank lines are ignored completely, including for indentation purposes.
-
-A line is dedented if it contains fewer tabs or spaces than the previous
-non-blank line.
-
-A block is a set of lines that have the same level of indentation. Blocks may be
-nested within other blocks if they have a higher level of indentation.
-
-For indentation purposes, either tabs or spaces may be used, but they may not
-be mixed.
+Note: Where curly braces (`{ }`) are used in this documentation, these indicate customizable parts of the source code and does not literally include curly braces.
 
 
 ## Statements
 
-Statements are discrete steps that are executed by the program. Statements can
-be terminated with a `;`, but will also end at the end of the current line
-unless the next line is indented. If the next line is indented, this line and
-any further lines at the deeper indentation level will still be considered to be
-part of the same statement.
+Statements are discrete steps that are executed by the program. Statements can be terminated with a `;`, but will also end at the end of the current line unless the next line is indented. If the next line is indented, this line and any further lines at the deeper indentation level will still be considered to be part of the same statement.
 
 
 ## Expressions
 
-An expression can be part of a statement or stand as a statement by itself.
-Expressions evaluate to a value. For instance, in the statement `a = b + c`,
-the part `b + c` is an expression. The part `b` is also an expression within the
-`b + c` expression.
+An expression can be part of a statement or stand as a statement by itself. Expressions evaluate to a value. For instance, in the statement `a = b + c`, the part `b + c` is an expression. The part `b` is also an expression within the `b + c` expression.
+
+
+## Indents and dedents
+
+Indentation is created by adding spaces or tabs to the front of a line. A line is indented when it has more tabs or spaces at the start of the line than there was for the previous non-blank line. A line is dedented if it contains fewer tabs or spaces than the previous non-blank line. Blank lines are ignored completely, including for indentation purposes.
+
+A block is a set of lines that have the same level of indentation. Blocks may be nested within other blocks if they have a higher level of indentation.
+
+For indentation purposes, either tabs or spaces may be used, but they may not be mixed.
 
 
 ## Blocks
 
-A block is an indented set of statements or other text that is preceded by a
-block statement followed by a `:`. The indentation of all the lines in a block
-must be deeper than the block statement and must be the same for all the lines
-within the block.
+A block is an indented set of statements or other text that is preceded by a block statement followed by a `:`. The indentation of all the lines in a block must be deeper than the block statement and must be the same for all the lines within the block.
 
-A block ends when the next line has the same or shallower indentation as the
-block statement.
+A block ends when the next line has the same or shallower indentation as the block statement.
 
 
 ## Comments
 
-Comments start with `#` and end at the end of the line. There is no special
-support for multi-line comments as you might find in other languages such as
-C
+Comments start with `#` and end at the end of the line. There is no special support for multi-line comments as you might find in other languages such as C
 
 
 ## Files
 
-All the files under a single folder are considered part of the same package.
-Files must have the extension ".li".
+All the files under a single folder are considered part of the same package. Files must have the extension ".li".
 
-The underscore ("\_") is used in file names to indicate various special affixes
-used by Lithium and should only be used for this purpose.
+The underscore ("\_") is used in file names to indicate various special affixes used by Lithium and should only be used for this purpose.
 
 A file can have multiple affixes separated by underscores.
 
@@ -80,104 +53,103 @@ Affixes for platforms, operating systems or architectures:
     amd64 android arduino arm jvm linux none riscv riscv64 webasm webjs windows
 
 
+## Doctype indicator
+
+A Lithium source file must start with the character sequence `Li` followed by the version of the language specification that was used.
+
+A standard doctype is of the form:
+
+    Li 0
+
+Only comments are permitted before the doctype indicator for a file.
+
+The doctype can optionally contain a type that can be used to compile files of other formats into data that can be used by Lithium programs.
+
+For files that are compiled by a built-in type, the type should follow after the language version as follows:
+
+    Li 0 {type name}
+
+For files that are compiled by a type in a custom package, the type should follow after the language version and then be followed by the path to the relevant package as follows:
+
+    Li 0 {type name} "{path to package}"
+
+
 ## Keywords
 
 The following keywords are reserved in Lithium:
 
-    co const default defer else extends false func for get if implements
-    import in init interface return set true type
+    co const def defer else enum false func for get if import in init interface is mut pub return set true type
 
 
 ## Import
 
-An `import` statement is used to indicate packages that need to be imported into
-the current package. This statement must be placed at the top level of each file
-where the imported packages are used.
+An `import` statement is used to indicate packages that need to be imported into the current package. This statement must be placed at the top level of each file where the imported packages are used.
 
-The package name is a variable name used within the current file to refer to the
-imported package.
+The package name is a variable name used within the current file to refer to the imported package.
 
-The package path is a string literal that specifies the path where the imported
-package's source files are located.
+The package path is a string literal that specifies the path where the imported package's source files are located.
 
 The `import` statement can take two forms:
 
 ### Inline form:
 
-    import package name "package path"{, package name "package path"...}
+    import {package name} "{package path}"{, ...}
 
 ### Block form:
 
     import:
-        package name "package path"
+        {package name} "{package path}"
         {...}
 
 
 ## Built-in library packages
 
-The built-in library packages provide basic functionality. The availability
-as well as contents of any built-in packages may vary depending on the
-architecture and operating system which is targeted.
+The built-in library packages provide basic functionality. The availability as well as contents of any built-in packages may vary depending on the architecture and operating system which is targeted.
 
-Built-in packages do not need to be imported with the `import` keyword and are
-available implicitly.
+Built-in packages do not need to be imported with the `import` keyword and are available implicitly.
 
 
 ## Operators
 
 The following operators are available:
 
-    !  ||  &&  ==  !=  <  >  <=  >=  +  -  *  /  %  =
-    +=  -=  *=  /=  -/=  &=  |=  &|=  <<=  >>=  ++  --
+    !  ||  &&  ==  !=  <  >  <=  >=  +  -  *  /  %  =  +=  -=  ++  --
 
 ### Boolean operators
 
-Boolean operators only work on boolean values. If they are used by any other
-types, it will first implicitly convert to `bool` by trying the `x.bool`
-property. If no such property is present or that property does not return a
-boolean, a compile time error will result. The boolean operators are:
+Boolean operators only work on boolean values. If they are used by any other types, it will first implicitly convert to `bool` by trying the `x.bool` property. If no such property is present or that property does not return a boolean, a compile time error will result. The boolean operators are:
 
 - `!x` Boolean not. Will return the opposite of `x`.
 - `x || y` Boolean or. Will return true if either `x` or `y` is true.
 - `x && y` Boolean and. Will return true if both `x` and `y` is true.
 
-For any boolean expressions, the order will first be `!` (Not) and then `||` and
-`&&` from left to right. Brackets can be used to change the order.
+For any boolean expressions, the order will first be `!` (Not) and then `||` and `&&` from left to right. Brackets can be used to change the order.
 
-Short circuiting is used, so in the following cases, `y` will not even be
-evaluated:
+Short circuiting is used, so in the following cases, `y` will not even be evaluated:
 
 - `x || y` if `x` is `true`.
 - `x && y` if `x` is `false`.
 
-Note that we do not include an XOR operation as that can be trivially written as
-`x != y` where both `x` and `y` are boolean or more verbosely as
-`(x || y) && !(x && y)`.
+Note that we do not include an XOR operation as that can be trivially written as `x != y` where both `x` and `y` are boolean or more verbosely as `(x || y) && !(x && y)`.
 
 ### Comparison operators
 
-Comparison operators are syntactic sugar for calling a method on one of the
-operands (Left or right depends on which operator is used as shown below). These
-methods must return a single `bool` value.
+Comparison operators are syntactic sugar for calling a method on one of the operands (Left or right depends on which operator is used as shown below). These methods must return a single `bool` value.
 
 The comparison operators are:
 
-- `x == y` Is equal to. `x.=(y)`
-- `x != y` Is not equal to. `!x.=(y)`
+- `x == y` Is equal to. `x.==(y)`
+- `x != y` Is not equal to. `!x.==(y)`
 - `x < y` Is less than. `x.<(y)`
 - `x > y` Is greater than. `x.>(y)` or `y.<(x)`
 - `x <= y` Is less than or equal to. `!x.>(y)` or `!y.<(x)`
 - `x >= y` Is greater than or equal to. `!x.<(y)` or `!y.>(x)`
 
-Boolean operators are evaluated before comparison operators. The order of
-evaluation can be changed with brackets.
+Boolean operators are evaluated before comparison operators. The order of evaluation can be changed with brackets.
 
 ### Mathematical operators
 
-Mathematical operators perform mathematical operations on operands of the same
-type and return a result of that same type. These operators are syntactic sugar
-for calling a method on the left operand passing the right operand as the
-parameter.
+Mathematical operators perform mathematical operations on operands of the same type and return a result of that same type. These operators are syntactic sugar for calling a method on the left operand passing the right operand as the parameter.
 
 The mathematical operators are:
 
@@ -187,17 +159,14 @@ The mathematical operators are:
 - `x / y` Division. `x./(y)`
 - `x % y` Modulus. `x.%(y)`
 
-Mathematical operators are evaluated before boolean or comparison operators and
-follow a conventional order as follows:
+Mathematical operators are evaluated before boolean or comparison operators and follow a conventional order as follows:
 
 1. Multiplication, division and modulus from left to right.
 1. Addition and subtraction from left to right.
 
 ### Assignment operators
 
-Assignment operators will set the value of the left operand to the value of the
-right operand or to the result of an operation between the left and right
-operands.
+Assignment operators will set the value of the left operand to the value of the right operand or to the result of an operation between the left and right operands.
 
 The assignment operators are:
 
@@ -206,8 +175,7 @@ The assignment operators are:
 - `x(a) = y` Set an internal value. `x.=(a, y)`
 - `x(a)(b) = y` Set a nested internal value. `x(a).=(b, y)`
 
-Assignment operations are performed last and cannot be nested further within
-other operations, they must stand as statements by themselves.
+Assignment operations are performed last and cannot be nested further within other operations, they must stand as statements by themselves.
 
 #### In-place assignments
 
@@ -215,9 +183,6 @@ The following operators can be used when the result should be assigned to the le
 
 - `x += y` Add assign. `x = x + y`
 - `x -= y` Subtract assign. `x = x - y`
-- `x *= y` Multiply assign. `x = x * y`
-- `x /= y` Divide assign. `x = x / y`
-- `x %= y` Modulo assign. `x = x % y`
 
 #### Assignment increment and decrement shorthand
 
@@ -229,8 +194,7 @@ The following shorthands are available for assignments:
 
 ## Literals
 
-Literals are sequences of characters that Lithium recognizes as a concrete value
-of a certain type.
+Literals are sequences of characters that Lithium recognizes as a concrete value of a certain type.
 
 ### Boolean literals
 
@@ -240,17 +204,11 @@ Boolean literals can only be used for assignment of the type `bool`.
 
 ### Integer literals
 
-Integer literals are a sequence of digits (0..9) that represent an integer
-constant. Integer literals can also be written in hexadecimal, octal or
-binary by using the prefix `0x`, `0o` or `0b` respectively.
+Integer literals are a sequence of digits (0..9) that represent an integer constant. Integer literals can also be written in hexadecimal, octal or binary by using the prefix `0x`, `0o` or `0b` respectively.
 
-Integer literals can be of any size and can be assigned to any type under `int`
-and can also be assigned to any type under `float` and `complex`.
-If the literal is too big to fit in the range of the the given type, a compile
-error should be raised.
+Integer literals can be of any size and can be assigned to any type under `int` and can also be assigned to any type under `float` and `complex`. If the literal is too big to fit in the range of the the given type, a compile error should be raised.
 
-For readability, spaces can be used in integer literals to denote groupings such
-as thousands.
+For readability, spaces can be used in integer literals to denote groupings such as thousands.
 
 Examples of integer literals:
 
@@ -261,34 +219,13 @@ Examples of integer literals:
     123 456 789 000
     0x AA BB CC DD
 
-#### int.iota
-
-The `int.iota` keyword can be used anywhere in the source code to signify that a
-new integer number literal should be used starting with 0. Each time `int.iota`
-is used in a single package, a unique integer is used, but this may overlap with
-integers created with `iota` in imported packages. No guarantees are made that
-the specific numbers will remain the same between compiles of the source code.
-
-Example:
-
-    red const = int.iota // This will set the red const to 0
-    green, blue const = int.iota, int.iota // Will set green to 1 and blue to 2
-    myVal int = int.iota // The myVal variable will initially be set to 3
-
 ### Floating-point literals:
 
-Floating-point literals are a sequence of digits, a decimal point, a fractional
-part and optionally and exponent part (prefixed by `e`). The decimal point can
-be omitted if the literal contains an exponent.
+Floating-point literals are a sequence of digits, a decimal point, a fractional part and optionally and exponent part (prefixed by `e`). The decimal point can be omitted if the literal contains an exponent.
 
-Floating-point literals can be of any size and can be assigned to any type under
-`float`. If the precision of literal is higher than what is possible in the
-given type, a lower precision rounded value will be used and the compiler should
-not raise any error.
+Floating-point literals can be of any size and can be assigned to any type under `float`. If the precision of literal is higher than what is possible in the given type, a lower precision rounded value will be used and the compiler should not raise any error.
 
-As with integer literals, spaces can be used to denote groupings such as
-thousands. Unlike integer literals, floating-point literals must be decimal,
-they cannot be represented in hexadecimal, octal or binary.
+As with integer literals, spaces can be used to denote groupings such as thousands. Unlike integer literals, floating-point literals must be decimal, they cannot be represented in hexadecimal, octal or binary.
 
 Examples of floating-point literals:
 
@@ -300,13 +237,9 @@ Examples of floating-point literals:
 
 ### Complex number literals:
 
-Complex numbers are represented as two floating-point literals separated
-by a `+` where the second floating-point literal ends with the char `i`. The
-first floating-point literal is the real part and the second is the imaginary
-part.
+Complex numbers are represented as two floating-point literals separated by a `+` where the second floating-point literal ends with the char `i`. The first floating-point literal is the real part and the second is the imaginary part.
 
-The real part can be omitted if the number only has an imaginary part. The
-decimal point can also be omitted of the imaginary part if not needed.
+The real part can be omitted if the number only has an imaginary part. The decimal point can also be omitted of the imaginary part if not needed.
 
 Examples of complex number literals:
 
@@ -318,9 +251,7 @@ Examples of complex number literals:
 
 Strings are a sequence of unicode characters encapsulated by quotes `"`.
 
-String literals cannot flow over a single line (Use embedded blocks for that).
-With string literals, the following escape sequences can be used to escape special
-chars. The following escape sequences are available:
+String literals cannot flow over a single line (Use embedded blocks for that). With string literals, the following escape sequences can be used to escape special chars. The following escape sequences are available:
 
 - `\\` This represents a single backslash.
 - `\"` This represents a double quote.
@@ -341,8 +272,7 @@ Examples of string literals:
 
 #### String interpolation
 
-String interpolation can be used to embed the result of an expression within a
-string. The syntax is as follows: `\(expression)`
+String interpolation can be used to embed the result of an expression within a string. The syntax is as follows: `\(expression)`
 
 Example:
 
@@ -351,12 +281,7 @@ Example:
 
 #### Strings using embedded blocks 
 
-To define an embbed string block use `string:` to begin the block and follow
-normal indentation rules within the block. This is using embedded blocks which
-can actually be custom created as long as the type referred to in the square
-brackets define a method with the signature `compile(string) (type.any, error)`.
-On compilation, this method will be called on the string literal and if the
-returned `error.ok` value is not `true`, a compile error will be raised.
+To define an embbed string block use `string:` to begin the block and follow normal indentation rules within the block. This is using embedded blocks which can actually be custom created as long as the type referred to in the square brackets define a method with the signature `compile(string) (type.any, error)`. On compilation, this method will be called on the string literal and if the returned `error.ok` value is not `true`, a compile error will be raised.
 
 Examples of string literals using embedded blocks:
 
@@ -380,8 +305,7 @@ Examples of string literals using embedded blocks:
 
 ### Tuple literals
 
-Tuple literals are a collection of other literals enclosed in braces and
-separated by commas to indicate that they are part of a tuple.
+Tuple literals are a collection of other literals enclosed in braces and separated by commas to indicate that they are part of a tuple.
 
 Examples of tuple literals are:
 
@@ -393,10 +317,7 @@ Examples of tuple literals are:
 
 ## Constants
 
-A constant is defined by the name of the constant followed by the keyword
-`const`, the operator `=` and then an assigned value. The assigned value can be
-any literal of any type or even a simplistic formula using literals, but the
-types cannot be mixed.
+A constant is defined by the name of the constant followed by the keyword `const`, the operator `=` and then an assigned value. The assigned value can be any literal of any type or even a simplistic formula using literals, but the types cannot be mixed.
 
 Examples of constants:
 
@@ -414,39 +335,11 @@ Examples of constants:
 
 ## Types
 
-The following are built-in types in the language:
-
-- `array[v bool.comparable]` An array with values of type `v`
-- `bool` A boolean with a value of either `true` or `false`.
-- `complex` A complex number. This can be 64 or 128-bit depending on the target
-   architecture.
-- `complex.p64` A 64-bit complex number.
-- `complex.p128` A 128-bit complex number.
-- `float` A floating-point number. This can be 32 or 64-bit depending on the
-   target architecture.
-- `float.p32` A 32-bit floating-point number.
-- `float.p64` A 64-bit floating-point number.
-- `fn(...) {...}` A function. Functions with different types of parameters or
-   different types of return values are considered to be different types.
-- `int` A signed integer number. This can be 16, 32 or 64-bit depending on the
-   target architecture.
-- `int.s8` A signed 8-bit integer.
-- `int.s16` A signed 16-bit integer.
-- `int.s32` A signed 32-bit integer.
-- `int.s64` A signed 64-bit integer.
-- `int.u` An unsigned integer. This can be 16, 32 or 64-bit depending on the
-   target architecture.
-- `int.u8` An unsigned 8-bit integer.
-- `int.u16` An unsigned 16-bit integer.
-- `int.u32` An unsigned 32-bit integer.
-- `int.u64` An unsigned 64-bit integer.
-- `string` A string of text.
-- `{...}` A tuple. See below.
+Lithium uses static typing
 
 ### Tuples as types
 
-It is possible to use tuples as types where a single variable may contain a
-more complex set of values.
+It is possible to use tuples as types where a single variable may contain a more complex set of values.
 
 Example of using a tuple as type:
 
@@ -472,97 +365,77 @@ Extends can be used for type inheritence.
 
 ## Tuples
 
-A tuple is a finite ordered list of elements. The elements can be of any type
-including tuples. Tuples are defined as the set of elements encapsulated in
-brackets. A tuple with only one element is the same type as the element
-itself and can be used interchangeably. Tuples with a different number of
-elements or elements of a different type are considered different types.
+A tuple is a finite ordered list of elements. The elements can be of any type including tuples. Tuples are defined as the set of elements encapsulated in brackets. A tuple with only one element is the same type as the element itself and can be used interchangeably. Tuples with a different number of elements or elements of a different type are considered different types.
 
-Functions that return more than one result actually returns a tuple of the
-results. Assignment statements where multiple elements are assigned to are
-actually a destructuring assignment of tuple elements.
+Functions that return more than one result actually returns a tuple of the results. Assignment statements where multiple elements are assigned to are actually a destructuring assignment of tuple elements.
 
-A single value in a tuple can be accessed with the name of the tuple followed by
-`.` and then the index number of the element starting at zero. The index number
-in this case must be an integer literal number.
+A single value in a tuple can be accessed with the name of the tuple followed by `.` and then the index number of the element starting at zero. The index number in this case must be an integer literal number.
 
 
 ## Scope
 
-The following rules apply to determine the scope in which a variable is
-available
+The following rules apply to determine the scope in which a variable is available
 
-1. Variables declared at the top of a file may be preceded by `pub`. This
-   will make the variable available to other packages that import this package.
-1. Variables declared within an indented block is only available within that
-   block. This includes functions and also any blocks created by `for`, `if`
-   etc.
-1. Variables declared within the block statement of a `for` or `if` is only
-   available within that block, but also including any `else` statements.
+1. Variables declared at the top of a file may be preceded by `pub`. This will make the variable available to other packages that import this package.
+1. Variables declared within an indented block is only available within that block. This includes functions and also any blocks created by `for`, `if` etc.
+1. Variables declared within the block statement of a `for` or `if` is only available within that block, but also including any `else` statements.
 
 
 ## Conditionals
 
-The `if` keyword is used to conditionally execute code. An `if` statement can
-take the following forms:
+The `if` keyword is used to conditionally execute code. An `if` statement can take various forms:
 
     # Inline form
-    if {init statement ;}{condition}: {statement} {else:} {statement}
+    if {init statement; }{condition}: {statement} {else:} {statement}
     
     # Block form
-    if {init statement ;}{condition}:
+    if {init statement; }{condition}:
         {statement/(s)}
     {else if condition:}
         {statement/(s)}
     {else:}
         {statement/(s)}
 
-The inline form may be used as an expression in a larger statement. The block
-form can only be used as a self-standing block.
+The inline form may be used as an expression in a larger statement. The block form can only be used as a self-standing block.
 
-The {initial statement ;} is optional and can contain a single statement that is
-always executed before the condition is evaluated. Any variables defined in this
-statement is available within the if statement/block as well as any else blocks,
-but is not available outside of it.
+The {initial statement ;} is optional and can contain a single statement that is always executed before the condition is evaluated. Any variables defined in this statement is available within the if statement/block as well as any else blocks, but is not available outside of it.
 
-The {condition} expression must evaluate to a boolean. If the expression
-evaluates to `true`, the {statement/(s)} are executed.
+The {condition} expression must evaluate to a boolean. If the expression evaluates to `true`, the {statement/(s)} are executed.
 
-The {else if condition:} and {else:} blocks are optional. There can be an
-arbitrary number of {else if condition:} blocks.
+The {else if condition:} and {else:} blocks are optional. There can be an arbitrary number of {else if condition:} blocks.
 
-### If implements
+### if is
 
-A special kind of if statement can be used to check if a variable implements
-a certain interface. Inside the if statement, the functionality of that
-interface can then be used for the variable. Multiple variables can be used
-before the `implements` keyword to check if they all implement the interface.
+Another form of if statement can be used to check if a variable implements a certain interface. Inside the if statement, the functionality of that interface can then be used for the variable. Multiple variables can be used before the `is` keyword to check if they all implement the interface.
 
-The `&&` operator can be used to check multiple variables against different
-kinds of interfaces or to check for additional conditions. Note that `||` cannot
-be used in the same way, as there would then be ambiguity within the if block
-whether a variable does implement the interface. `else` can be used just as with
-a normal `if`.
+The `&&` operator can be used to check multiple variables against different kinds of interfaces or to check for additional conditions. Note that `||` cannot be used in the same way, as there would then be ambiguity within the if block whether a variable does implement the interface. `else` can be used just as with a normal `if`.
 
-    if {init statement ;}{variable}{, variable...} implements {interface}{ && condition}:
+    if {init statement; }{variable}{, variable...} is {interface}{ && condition/(s)}:
+        {statement/(s)}
+
+### if in
+
+Another form of if statement can be used to check if an element exists within a collection. Multiple elements can be used before the `in` keyword to check if they are all in the collection.
+
+The `&&` and `||` operators can be used to check multiple elements in different collections or to check for additional conditions. `else` can be used just as with a normal `if`.
+
+    if {init statement; }{element}{, element...} in {collection}{ && / || conditions/(s)}:
         {statement/(s)}
 
 
 ## Loops
 
-The `for` keyword is used to execute code multiple times. `for` can take the
-following forms:
+The `for` keyword is used to execute code multiple times. `for` can take various forms:
 
     # Inline form
-    for {init statement ;}{condition}{ ; post statement}: {statement}
+    for {init statement; }{condition}{; post statement}: {statement}
     
     # Shortened inline form
     for {condition}: {statement}
     
     # Block form
-    for {init statement ;}{condition}{ ; post statement}:
+    for {init statement; }{condition}{; post statement}:
         {statement/(s)}
-    
 
 If neither an init nor a post statement is required, the for can be shortened.
 In this case, for is the same as "while" in other languages.
@@ -572,7 +445,7 @@ In this case, for is the same as "while" in other languages.
 The `else` keyword can be used to execute code if the for loop does not execute
 even once.
 
-    for {init statement ;}{condition}{ ; post statement}:
+    for {init statement; }{condition}{; post statement}:
         {statement/(s)}
     else:
         {statement/(s)}
@@ -599,43 +472,39 @@ An object is iterable if it includes the following methods:
     # `index` is the index number of the first item
     # if `ok` is false, the object is empty
     
-    next(priorIndex int) (item tuple, index int, ok bool)
-    # the `priorIndex` is the index number of the previous item
-    # if `ok` is flase, there is no item after the `priorIndex`
+    next(prior int) (item tuple, index int, ok bool)
+    # the `prior` is the index number of the previous item
+    # if `ok` is false, there is no item after the `prior` index
 
-An else can be used as with a normal for to run if the object was empty.
+An else can be used as with a normal `for` to run if the object was empty.
 
 
 ## Functions
 
-Functions are first-class citizens in Lithium. Functions are defined using the
-`func` keyword. The function signature consists of the parameters it can take,
-including their type, and the return values it will send, including their type.
-The function signature is considered to be the function's type. Functions with
-the same signature are considered to be the same type and functions with
-signatures that are different are considered to be of different types.
+Functions are first-class citizens in Lithium. Functions are defined using the `func` keyword. The function signature consists of the parameters it can take, including their type, and the return values it will send, including their type. The function signature is considered to be the function's type. Functions with the same signature are considered to be the same type and functions with signatures that are different are considered to be of different types.
 
-There cannot be multiple functions with the same name as with programming
-languages like C or C++.
+There cannot be multiple functions with the same name as with programming languages like C or C++.
 
 ### Default parameter values
 
-Parameters can have default values assigned and then be optionally omitted when
-called. If no default value is assigned, the parameter must be specified when
-called.
+Parameters can have default values assigned and then be optionally omitted when called. If no default value is assigned, the parameter must be specified when called.
+
+### Named parameters
+
+Parameters can optionally be assigned a different name from what the variable name will be internally for the function. This is useful to improve readability of the code.
 
 ### Returning values
 
-The `return` keyword is used to return from a function. If the function has no
-return values, `return` can be used as a single statment that will return back
-to the parent function. If the function should return values, these must be
-listed after the `return` keyword as a comma separated list.
+The `return` keyword is used to return from a function. If the function has no return values, `return` can be used as a single statment that will return back to the parent function. If the function should return values, these must be listed after the `return` keyword as a comma separated list.
+
+### Function signatures
+
+Functions with different signatures are considered different types
 
 
 ## Deferring execution
 
-The `defer` keyword will defer execution of a function or block until the end of
-the current function. There are two forms a `defer` statement can take:
+The `defer` keyword will defer execution of a function or block until the end of the current function. There are two forms a `defer` statement can take:
 
     # Inline form
     defer function({parameters...})
@@ -644,40 +513,28 @@ the current function. There are two forms a `defer` statement can take:
     defer:
         {statements/(s)}
 
-In the inline form, the parameters of the function are evaluated immediately, but
-the execution is delayed until the current function returns. In the block form,
-the statements are only executed when the current function returns and no
-evaluation is done immediately
+In the inline form, the parameters of the function are evaluated immediately, but the execution is delayed until the current function returns. In the block form, the statements are only executed when the current function returns and no evaluation is done immediately
 
 
 ## Coroutines
 
-The `co` keyword is used to create a new coroutine. Coroutines share the same
-address space, but can be executed in parallel.
+The `co` keyword is used to create a new coroutine. Coroutines share the same address space, but can be executed in parallel.
 
 
 ## Interfaces
 
-The `interface` keyword can be used to define a new interface. Interfaces are
-used in the place of concrete types when passing parameters or return values for
-functions so that more than one type can be used as long as the required
-capabilities are present.
+The `interface` keyword can be used to define a new interface. Interfaces are used in the place of concrete types when passing parameters or return values for functions so that more than one type can be used as long as the required capabilities are present.
 
     {name} interface:
         {signatures of methods required}
 
-Any concrete type can also be used as an iterface where the signatures will then
-be the same as what the type provides. This can be used to provide a default
-implementation for an interface.
+Any concrete type can also be used as an iterface where the signatures will then be the same as what the type provides. This can be used to provide a default implementation for an interface.
 
-### type.any
+### any
 
-`type.any` is an interface that contains no methods or properties at all and can
-be used to pass any type of value.
+`any` is an interface that contains no methods or properties at all and can be used to pass any type of value.
 
 
 ## Polymorphism
 
-Parametric polymorphism allows for functions, types and interfaces to
-transparently support more than one concrete type as long as the required
-interface functionality is provided.
+Parametric polymorphism allows for functions, types and interfaces to transparently support more than one concrete type as long as the required interface functionality is provided.

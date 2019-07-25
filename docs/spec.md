@@ -491,7 +491,7 @@ Parameters can have default values assigned and then be optionally omitted when 
 
 ### Named parameters
 
-Parameters can optionally be assigned a different name from what the variable name will be internally for the function. This is useful to improve readability of the code.
+Parameters can be specified by name when calling the function.
 
 ### Returning values
 

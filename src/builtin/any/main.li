@@ -4,17 +4,22 @@ def interface:
 	# This interface is here so that there is a standard interface available
 	# when literally any type is allowed
 
-pub boolable interface:
+pub bool interface:
 	# Can the type be converted into boolean
-	
-	get bool default
+	get bool bool
+
+pub int interface:
+	# Can the type be converted into an integer
+	get int int
+
+pub string interface:
+	# Can the type be converted into a string
+	get string string
 
 pub equalable interface[n]:
 	# Can the type be checked if two objects are equal?
-	
 	equal(n) bool
 
 pub comparable interface[n](equalable[n]):
 	# Can the type be checked if two objects are equal and which one is less?
-	
 	less(n) bool

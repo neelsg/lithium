@@ -2,7 +2,7 @@
 
 This example was translated from [www.arduino.cc](https://www.arduino.cc/en/Tutorial/AnalogReadSerial)
 
-    Li 0.0
+    Li 0
     
     # AnalogReadSerial
     #
@@ -14,13 +14,15 @@ This example was translated from [www.arduino.cc](https://www.arduino.cc/en/Tuto
     #
     # http://www.arduino.cc/en/Tutorial/AnalogReadSerial
     
-    # the setup routine runs once when you press reset
     setup func:
+        # the setup routine runs once when you press reset
+        
         # initialize serial communication at 9600 bits per second:
         serial.begin(9600)
     
-    # the loop routine runs over and over again forever
     loop func:
+        # the loop routine runs over and over again forever
+        
         # read the input on analog pin 0:
         sensorValue int = analog.read(0)
         

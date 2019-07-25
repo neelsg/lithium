@@ -50,5 +50,5 @@ def type[n any]:
 		push(item)
 		return
 	
-	.== func(other def[n]):
+	.== func(other def[n]) bool:
 		# Check if the array is equal to another array

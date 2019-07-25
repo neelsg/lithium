@@ -4,7 +4,7 @@ Li 0
 # items of a given type.
 
 def type[n any]:
-	init func(...n):
+	init func(...items n):
 		# Initialize a new array
 	
 	pub slice func(low, high int) def[n]:
@@ -13,19 +13,19 @@ def type[n any]:
 	get length int:
 		# Return the number of items in the array
 	
-	def func(int) n:
+	def func(index int) n:
 		# Return the item at the index
 	
 	pub mod clear func:
 		# Remove all items from the array
 	
-	pub exists func(int) bool:
+	pub exists func(index int) bool:
 		# Check if the index exists
 	
-	pub get func(int) (n, bool):
+	pub get func(index int) (n, bool):
 		# Get an item with the given index and also check if the index exists
 	
-	pub mod push func(...n):
+	pub mod push func(...item n):
 		# Add new item(/s) to an array
 	
 	pub mod pop func() n:

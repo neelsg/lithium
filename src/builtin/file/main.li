@@ -1,8 +1,8 @@
 Li 0
 
-pub read type(f):
+pub read type:
 	
-	err error = error.none
+	err error = error.ok
 	
 	init func(fileName string):
 		# Open a file for reading
@@ -22,4 +22,4 @@ pub read type(f):
 	
 	get error error:
 		# Return the current error if any
-		return f.err
+		return err

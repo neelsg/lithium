@@ -1,6 +1,6 @@
 Li 0
 
-pub def interface:
+def interface:
 	# This interface is here so that there is a standard interface available
 	# when literally any type is allowed
 

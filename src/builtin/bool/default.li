@@ -2,16 +2,16 @@ Li 0
 
 # bool provides the basic boolean type and some helpful interfaces
 
-default type(b):
+def type:
 	# Boolean type, can be true or false
 	
-	pub equal func(compareTo default) default:
+	.== func(compareTo default) def:
 		# If both are true or both are false, this will return true
 	
-	pub flip func() default:
+	.! func() def:
 		# If the value is true, this will return false and vice versa
 	
-	get bool default:
+	get bool def:
 		# Return boolean 
 	
 	get int int:

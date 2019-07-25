@@ -2,8 +2,7 @@
 
 ## Welcome
 
-This tour aims to cover the most important parts of the Lithium Programming
-Language.
+This tour aims to cover the basics of the Lithium Programming Language.
 
 
 ## Start
@@ -14,35 +13,26 @@ Language.
     main func:
         console.log("My favorite number is", int.rand(10))
 
-There is quite a bit happening here. This code will print the text
-"My favorite number is" and a random number from 0 to 10.
+This code will print the text "My favorite number is" and a random number from 0 to 10.
 
-Lithium source code is stored in plain text files that have the `.li` file
-extension. All files that are located in the same folder are considered to be
-part of the same package. Each file needs to start with the chars `Li ` followed
-by the language version used in the file. Note that the "L" is uppercase and the
-"i" is lowercase. This will allow newer compilers to compile files written using
-older specs of the language and for older packages to be incorporated into newer
-projects.
+Each file needs to start with `Li 0` to indicate that version 0 of the language is used. Note that the "L" is uppercase and the "i" is lowercase. This will allow newer compilers to compile files written using older specs of the language and for older packages to be incorporated into newer projects.
 
 Anything after a `#` on a line is a comment and is ignored by the compiler.
 
-The `func` keyword is used to define functions (which are blocks of code that
-can be executed. When a program is executed, the first thing that will run is
-the "main" function.
+The `func` keyword is used to define functions (which are blocks of code that can be executed. When a program is executed, the first thing that will run is the "main" function.
 
 
 ## Exporting components
 
     Li 0
     
-    sqr2 func(x int) int:
+    multiply func(x, y int) int:
         # This function is only available within the current package
-        return x * x
+        return x * y
     
     pub sqr func(x int) int:
         # This function can be used by other packages
-        return sqr2(x)
+        return multiply(x, x)
 
 Use the `pub` keyword to make your components available to other packages
 
@@ -56,61 +46,41 @@ Use the `pub` keyword to make your components available to other packages
     main func:
         console.log(myMath.sqr(3.0))
 
-You can import your own packages or third-party libraries using the `import`
-keyword.
-
-    import:
-        myMath "./myMathFolder"
-        dbConnect "./dbConnection"
-
-Multiple imports can be written as an `import` block.
+You can import your own packages or third-party libraries using the `import` keyword.
 
 
 ## Functions
 
     Li 0
     
-    add func(x int, y int) int:
+    add func(x, y int) int:
         return x + y
     
-    main func():
+    main func:
         console.log(add(42, 13))
 
-A function can take zero or more arguments. In this example, `add` takes two
-arguments of type `int`. Note that the type comes after the variable name.
+A function can take zero or more arguments. In this example, `add` takes two arguments of type `int`. Note that the type comes after the variable name. If two or more consecutive arguments are of the same type, you only need to specify the type for the last argument.
 
-A function that takes no arguments can be declared without brackets:
-
-    main func: console.log(add(42, 13))
+A function that takes no arguments can optionally be declared without brackets:
 
 
 ## Multiple results
 
     Li 0
     
-    import console
-    
     split func(sum int) (int, int):
         x int, y int = sum * 4 / 9, sum - x
         return x, y
-    
-    main func: console.log(split(17))
 
-A function can return any number of results. If they do, these must be wrapped
-in brackets `( )`. Even if a function returns only one result, the result type
-can optionally be wrapped in brackets.
-
-    Li 0
-    
     swap func(x, y string) (string, string): return y, x
-    
+
     main func:
+        console.log(split(17))
+        
         a string, b string = swap("hello", "world")
         console.log(a, b)
 
-When two or more parameters are of the same type, you can omit the type from all
-but the last parameter. Note that you cannot do this with assignment inside
-functions.
+A function can return any number of results. If they do, these must be wrapped in brackets `( )`. Even if a function returns only one result, the result type can optionally be wrapped in brackets.
 
 
 ## Variables
@@ -125,8 +95,7 @@ functions.
         m int
         console.log(i, j, k, l, m)
 
-Variables are declared by specifying the name of the variable followed by the
-type.
+Variables are declared by specifying the name of the variable followed by the type.
 
 
 ## Initializers
@@ -139,8 +108,7 @@ type.
         k, l bool, m, n string = true, false, "no!", "yes!"
         console.log(i, j, p, k, l, m, n)
 
-A variable declaration can include initializers. If an initializer is omitted,
-the variable will be assigned the default value of the type.
+A variable declaration can include initializers. If an initializer is omitted, the variable will be assigned the default value of the type.
 
 
 ## Basic types
@@ -148,7 +116,7 @@ the variable will be assigned the default value of the type.
     Li 0
     
     toBe bool = false
-    maxInt int.u64 = 2 ** 64 - 1
+    maxInt int.u64 = math.power[int.u64](2, 64) - 1
     z complex.p128 = math.sqrt[complex.p128](-5 + 12i)
     
     main func:
@@ -183,8 +151,7 @@ There are also more specific data types such as:
         s string
         console.log("\(i) , \(f) , \(b) , \(s)")
 
-Variables declared without an explicit initial value are given their default
-value.
+Variables declared without an explicit initial value are given their default value.
 
 The default values for built in types are:
 
@@ -205,8 +172,7 @@ Custom types can have their own defined default values.
         z int.u = f.intU
         console.log(x, y, z)
 
-The built in types have properties to convert to different types. Custom defined
-types should also include similar functionality.
+The built in types have properties to convert to different types. Custom defined types should also include similar functionality.
 
 Some numeric conversions:
 
@@ -214,8 +180,7 @@ Some numeric conversions:
     f float.p64 = i.float64
     u int.u = f.intU
 
-Unlike in C, assignment in Lithium between items of different type requires an
-explicit conversion.
+Unlike in C, assignment in Lithium between items of different type requires an explicit conversion.
 
 
 ## Constants
@@ -232,10 +197,7 @@ explicit conversion.
         truth const = true
         console.log("Humans rock?", truth)
 
-Constants are declared like variables, but with the `const` keyword as type.
-Constants can be string, boolean, or numeric values. Constants cannot be
-declared with an expression that requires runtime evaluation such as calling a
-function.
+Constants are declared like variables, but with the `const` keyword as type. Constants can be string, boolean, or numeric values. Constants cannot be declared with an expression that requires runtime evaluation such as calling a function.
 
 
 ## For
@@ -256,8 +218,7 @@ The basic for loop has three components separated by semicolons:
     The condition expression: evaluated before every iteration
     The post statement: executed at the end of every iteration
 
-The init statement will often be a short variable declaration, and the variables
-declared there are visible only in the scope of the for statement.
+The init statement will often be a short variable declaration, and the variables declared there are visible only in the scope of the for statement.
 
 The loop will stop iterating once the boolean condition evaluates to `false`.
 
@@ -272,8 +233,7 @@ The loop will stop iterating once the boolean condition evaluates to `false`.
             sum += sum
         console.log(sum)
 
-The init and post statements are optional. At that point you can drop the
-semicolons:
+The init and post statements are optional. At that point you can drop the semicolons:
 
     Li 0
     
@@ -315,7 +275,7 @@ Lithium's `if` statements are similar to its `for` loops
     Li 0
     
     pow func(x, n, lim float) float:
-        if v float = x ** n; v < lim:
+        if v float = math.power(x, n); v < lim:
             return v
         return lim
     
@@ -325,9 +285,7 @@ Lithium's `if` statements are similar to its `for` loops
             pow(3, 3, 20),
             )
 
-Like `for`, the `if` statement can start with a short statement to execute
-before the condition. Variables declared by the statement are only in scope
-until the end of the `if`.
+Like `for`, the `if` statement can start with a short statement to execute before the condition. Variables declared by the statement are only in scope until the end of the `if`.
 
 
 ## If and else
@@ -335,17 +293,16 @@ until the end of the `if`.
     Li 0
     
     pow func(x, n, lim float) float:
-        if x **= n; x < lim:
-            return x
+        if y = math.power(x, n); y < lim:
+            return y
         else:
-            console.log("\(x) >= \(lim)")
+            console.log("\(y) >= \(lim)")
         return lim
     
     main func:
         console.log(pow(3, 2, 10), pow(3, 3, 20), )
 
-Variables declared inside an `if` init statement are also available inside any
-of the else blocks.
+Variables declared inside an `if` init statement are also available inside any of the else blocks.
 
 
 ## Function values
@@ -380,11 +337,9 @@ Function values may be used as function arguments and return values.
         
         console.log("Hello")
 
-The `defer` statement defers the execution of a function until the surrounding
-function returns.
+The `defer` statement defers the execution of a function until the surrounding function returns.
 
-The `defer` statement's arguments are evaluated immediately, but the function
-call is not executed until the surrounding function returns.
+The `defer` statement's arguments are evaluated immediately, but the function call is not executed until the surrounding function returns.
 
 
 ## Stacking defers
@@ -399,8 +354,7 @@ call is not executed until the surrounding function returns.
         
         console.log("done")
 
-Deferred function calls are pushed onto a stack. When a function returns, its
-deferred calls are executed in last-in-first-out order.
+Deferred function calls are pushed onto a stack. When a function returns, its deferred calls are executed in last-in-first-out order.
 
 
 ## Function closures
@@ -421,12 +375,9 @@ deferred calls are executed in last-in-first-out order.
                 neg(-2 * i),
             )
 
-Lithium functions may be closures. A closure is a function value that references
-variables from outside its body. The function may access and assign to the
-referenced variables. In this sense the function is "bound" to the variables.
+Lithium functions may be closures. A closure is a function value that references variables from outside its body. The function may access and assign to the referenced variables. In this sense the function is "bound" to the variables.
 
-For example, the `adder` function returns a closure. Each closure is bound to
-its own `sum` variable.
+For example, the `adder` function returns a closure. Each closure is bound to its own `sum` variable.
 
 
 ## Defining new types
@@ -442,10 +393,7 @@ its own `sum` variable.
         v.x, v.y = 1, 2
         console.log(v)
 
-Lithium allows simple object-oriented programming. A type is a collection of
-properties and methods and is often called a class in other languages. Note the
-`pub` keyword in front of the property names that make these properties
-available for use outside of the type itself.
+Lithium allows simple object-oriented programming. A type is a collection of properties and methods and is often called a class in other languages. Note the `pub` keyword in front of the property names that make these properties available for use outside of the type itself.
 
 
 ## Methods
@@ -456,8 +404,8 @@ available for use outside of the type itself.
         pub:
             x float
             y float
-            dist func(v vertex) float:
-                return math.sqrt(v.x ** 2 + v.y ** 2)
+            dist func() float:
+                return math.sqrt(x * x + y * y)
     
     main func:
         v vertex
@@ -466,47 +414,27 @@ available for use outside of the type itself.
 
 Methods are functions defined within a type.
 
-Note the first parameter refers to the object which the method is associated
-with. When calling the method, this parameter is omitted.
 
-
-## Default values and the initializer function
+## The initializer function
 
     Li 0
     
     vertex type:
-        pub x float = 1
-        pub y float = 1
-        init func(v vertex, x, y float):
-            v.x, v.y = x, y
+        
+        pub x, y float
+        
+        init func(xInit = 1, yInit float = 1):
+            x, y = xInit, yInit
             return
-        pub dist func(v vertex) float:
-            return math.sqrt(v.x ** 2 + v.y ** 2)
+        
+        pub dist func() float:
+            return math.sqrt(x * x + y * y)
     
     main func:
-        v vertex = vertex(1, 2)
+        v vertex(1, 2)
         console.log(v.dist())
 
-Just like normal variables, properties in a type can also be set to an initial
-value which will then be the default for any objects of that type.
-
-You can create a function with the label `init` in a type which will initialize
-it by calling the type as a function such as `v vertex = vertex(1, 2)`.
-
-
-## Shorthand for initializing types
-
-    vertex type:
-        pub x int
-        pub y int
-        init func(v vertex, x, y int):
-            v.x, v.y = x, y
-            return
-
-Given the above type, the following statements are equivalent:
-
-    v vertex = vertex(1, 2)
-    v vertex(1, 2)
+You can create a function with the label `init` in a type which will initialize it by calling the type as a function such as `v vertex = vertex(1, 2)`. This can further be shortened to `v vertex(1, 2)`.
 
 
 ## Private values
@@ -515,22 +443,20 @@ Given the above type, the following statements are equivalent:
     
     vertex type:
         
-        # X and Y can now only be used by methods within the object
-        x float = 1
-        y float = 1
+        x, y float
         
-        init func(v vertex, x, y float):
-            v.x, v.y = x, y
+        init func(xInit = 1, yInit float = 1):
+            x, y = xInit, yInit
             return
         
-        pub dist func(v vertex) float:
-            return math.sqrt(v.x ** 2 + v.y ** 2)
+        pub dist func() float:
+            return math.sqrt(x * x + y * y)
     
     main func:
         v vertex(1, 2)
         console.log(v.dist())
 
-If you omit the `pub` keyword these properties or even methods are only
+If you omit the `pub` keyword for properties or methods, they are only
 available to the methods in the object itself. If you try to use `v.x` in the
 main function in this case, you will get a compile error.
 
@@ -540,47 +466,38 @@ main function in this case, you will get a compile error.
     Li 0
     
     vertex type:
-        init func(v vertex, x, y float):
-            v.x, v.y = x, y # This will call the respective set functions
+        init func(xInit, yInit float):
+            x, y = xInit, yInit # This will call the respective set functions
             return
         
         x float
-        get x func(v vertex) float:
-            return v.x
-        set x func(v vertex, x float):
-            if x >= 0:
-                v.x = x
+        get x func() float:
+            return x # This will get the underlying variable only because it is used inside the get method
+        set x func(xVal float):
+            if xVal >= 0:
+                x = xVal # This will set the underlying variable only because it is used inside the set method
             else:
-                v.x = x * -1
+                x = -xVal
         
         y float
-        get y func(v vertex) float:
-            return v.y
-        set y func(v vertex, y float):
-            if y >= 0:
-                v.y = y
+        get y func() float:
+            return y
+        set y func(yVal float):
+            if yVal >= 0:
+                y = yVal
             else:
-                v.y = y * -1
+                y = -yVal
         
-        pub dist func(v vertex) float:
-            return math.sqrt(v.x ** 2 + v.y ** 2)
+        pub dist func() float:
+            return math.sqrt(x * x + y * y)
     
     main func:
         v vertex(1, 2)
         console.log(v.dist())
 
-Properties can have a `get` and `set` method which allows for more control over
-what happens when you retrieve or assign a value to that property. These methods
-are public by definition.
+Properties can have a `get` and `set` method which allows for more control over what happens when you retrieve or assign a value to that property. These methods are public by definition.
 
-If both a `get` method for a property as well as the actual property is defined,
-the `get` method will take preference whenever that method is used outside of
-the actual code run by the `get` method itself. Similarly, the `set` method also
-overrules an actual property in the type if such actual property is defined.
-
-A `get default` method can also be created for the type. This will allow you to
-retrieve a custom value by directly using the object name. Note that a similar
-`set` method is not supported.
+If both a `get` method for a property as well as the actual property is defined, the `get` method will take preference whenever that method is used outside of the actual code run by the `get` method itself. Similarly, the `set` method also overrules an actual property in the type if such actual property is defined.
 
 
 ## Inheritance
@@ -588,16 +505,14 @@ retrieve a custom value by directly using the object name. Note that a similar
     Li 0
     
     main func:
-        myInt type extends int:
-            double func(v myInt) myInt:
-                return v * 2
+        myInt type(i int):
+            double func() myInt:
+                return i * 2
         
         i myInt = 3
         console.log(i.double().double()) # This will print 12
 
-The `extends` keyword allows you to create new types by extending existing ones.
-It is possible to inherit from more than one type by listing all the types after
-the `extends` keyword.
+The `type` keyword can take parameters to specify which other type/(s) it should inherit from which allows you to create new types by extending existing ones.
 
 
 ## Interfaces
@@ -609,8 +524,8 @@ the `extends` keyword.
     
     vertex type:
         pub x, y float
-        init func(v vertex, x, y float):
-            v.x, v.y = x, y
+        init func(xInit, yInit float):
+            x, y = xInit, yInit
             return
     
     printX func(o hasX):
@@ -620,16 +535,9 @@ the `extends` keyword.
         v vertex(3, 4)
         printX(v) # This will print 3
 
-Interfaces specify which properties and methods a type must have to satisfy it.
-You can use an interface as a parameter in a function and ensure that any object
-that is passed to that function must satisfy that interface. If you try to pass
-an object that does not satisfy the interface or try to use the parameter in the
-function in a way that is not allowed by the interface, you will get a compile
-error.
+Interfaces specify which properties and methods a type must have to satisfy it. You can use an interface as a parameter in a function and ensure that any object that is passed to that function must satisfy that interface. If you try to pass an object that does not satisfy the interface or try to use the parameter in the function in a way that is not allowed by the interface, you will get a compile error.
 
-Note that a type does not need to specify that it implements the interface, all
-it needs to do is to actually conform to it. This allows for an enormous amount
-of flexibility in using interfaces.
+Note that a type does not need to specify that it implements the interface, all it needs to do is to actually conform to it. This allows for quite a bit of flexibility in using interfaces.
 
 
 ## Stringers
@@ -639,25 +547,23 @@ of flexibility in using interfaces.
     person type:
         pub name string
         pub age int
-        init func(p person, name string, age int):
-            p.name, p.age = name, age
+        init func(nameInit string, ageInit int):
+            name, age = nameInit, ageInit
             return
-        get string func(p person) string:
-            return "\(p.name) (\(p.age) years)"
+        get string func() string:
+            return "\(name) (\(age) years)"
     
     main func:
         a person("Arthur Dent", 42)
         z person("Zaphod Beeblebrox", 9001)
         console.log(a, z)
 
-One of the most ubiquitous interfaces is `stringer` defined by the `string`
-package.
+One of the most ubiquitous interfaces is `any.string`.
 
-    stringer interface:
+    pub string interface:
         get string string
 
-A `stringer` is a type that can describe itself as a string. The `string`
-package (and many others) look for this interface to print values.
+Many packages look for this interface to print values.
 
 
 ## Errors
@@ -665,15 +571,18 @@ package (and many others) look for this interface to print values.
     Li 0
     
     myError type:
-        init func(e myError, when time.time, what string):
-            e.when, e.what = when, what
+        init func(when time, what string):
+            at, msg = when, what
             return
-        when time.time
-        what string
+        
+        at time
+        msg string
+        
         pub ok bool = false
         pub class string = "MyError"
-        get string func(e myError) string:
-            return "at \(e.when), \(e.what)"
+        
+        get string string:
+            return "at \(at), \(msg)"
     
     run func() error:
         return myError(time.now(), "it didn't work")
@@ -684,19 +593,15 @@ package (and many others) look for this interface to print values.
 
 Lithium programs express error state with `error` values.
 
-The `error` type is a built-in interface similar to `string.stringer`:
+The `error` type is a built-in interface:
 
-    default interface:
+    def interface:
         get string string
         get ok bool
-        get class string
 
-The name `default` as used for this interface is special in that it indicates
-that this is the default item in this package, so instead of typing
-`error.default`, you can simply use `error`.
+The name `def` as used for this interface is special in that it indicates that this is the default item in this package, so instead of typing `error.def`, you can simply use `error`.
 
-Functions often return an `error` value, and calling code should handle errors
-by testing whether the `error.ok` is false.
+Functions often return an `error` value, and calling code should handle errors by testing whether the `error.ok` is false.
 
     i int
     if i, err error = "42".string; !err.ok:
@@ -710,7 +615,7 @@ by testing whether the `error.ok` is false.
     Li 0
     
     plusable interface[p]:
-        plus(p) p
+        .+(p) p
     
     double func[p plusable](num p) p:
         return num + num
@@ -724,16 +629,9 @@ by testing whether the `error.ok` is false.
         myFloat = double[float](myFloat)
         console.log(myFloat) # This will print 6.2
 
-This is often called generics in other languages. What is happening here is that
-we can pass any type of variable to `double()` as long as it implements the
-`plusable` interface.
+This is often called generics in other languages. What is happening here is that we can pass any type of variable to `double()` as long as it implements the `plusable` interface.
 
-The advantage over just using interfaces is that we can make sure that the
-variables retain their original type, so in the first case, `double()` actually
-returns an `int` and in the second, `double()` actually returns a `float`. If we
-used only interfaces, the return value would only allow properties and methods
-of the interface, so we would not be able to print it as `plusable` does not
-specify a `string` property.
+The advantage over just using interfaces is that we can make sure that the variables retain their original type, so in the first case, `double()` actually returns an `int` and in the second, `double()` actually returns a `float`. If we used only interfaces, the return value would only allow properties and methods of the interface, so we would not be able to print it as `plusable` does not specify a `string` property.
 
 
 ## Default types for polymorphism
@@ -741,7 +639,7 @@ specify a `string` property.
     Li 0
     
     plusable interface[n]:
-        plus(n) n
+        .+(n) n
     
     double func[p plusable int](num p) p:
         return num + num
@@ -755,17 +653,16 @@ specify a `string` property.
         myFloat = double[float](myFloat)
         console.log(myFloat) # This will print 6.2
 
-A default type can be set for any polymorphic function. If the type is then
-omitted when calling the function, this default type is assumed.
+A default type can be set for any polymorphic function. If the type is then omitted when calling the function, this default type is assumed.
 
 
 ## Parametric polymorphism for types
 
     Li 0
     
-    vertex type[n string.stringer]:
-        init func(new vertex, x, y n):
-            new.x, new.y = x, y
+    vertex type[n any.string]:
+        init func(xInit, yInit n):
+            x, y = xInit, yInit
             return
         pub x n
         pub y n
@@ -774,23 +671,18 @@ omitted when calling the function, this default type is assumed.
         v vertex[int](1, 2)
         console.log(v.x)
 
-Parametric polymorphism can also be used with type definitions to create more
-generic types. In the above example, `x` and `y` are of type `int`.
+Parametric polymorphism can also be used with type definitions to create more generic types. In the above example, `x` and `y` are of type `int`.
 
 
 ## Tuples
 
     Li 0
     
-    import console
-    
     main func:
         triplets (string, string, string) = "Anna", "Betty", "Carmen"
         console.log(triplets)
 
-Tuples are ordered pairs of variables. You have actually already seen them used
-for multiple return values for functions as well as with assignments on multiple
-variables. Tuples defined as a set of types wrapped in brackets.
+Tuples are ordered pairs of variables. You have actually already seen them used for multiple return values for functions as well as with assignments on multiple variables. Tuples defined as a set of types wrapped in brackets.
 
     Li 0
     
@@ -800,9 +692,7 @@ variables. Tuples defined as a set of types wrapped in brackets.
         console.log(triplets.1) # This prints Betty
         console.log(triplets.2) # This prints Carmen
 
-The individual values in a tuple can be accessed using the index number starting
-from zero. The index number must be a literal number, it cannot be another
-variable or calculated in some way.
+The individual values in a tuple can be accessed using the index number starting from zero. The index number must be a literal number, it cannot be another variable or calculated in some way.
 
 
 ## Arrays
@@ -821,8 +711,7 @@ variable or calculated in some way.
 
 `array[t]` is a built-in type that stores an array of variables of type `t`.
 
-The statement `a array[string]` declares a new array `a` of strings. The keys in
-an array are always of type `int`.
+The statement `a array[string]` declares a new array `a` of strings. The keys in an array are always of type `int`.
 
 
 ## Array slices
@@ -834,11 +723,9 @@ an array are always of type `int`.
         bc array[string] = abcd.slice(1, 3)
         console.log(bc)
 
-A slice is formed by specifying two indexes, a low and high bound, separated by
-a comma: `array.slice(low, high int)`.
+A slice is formed by specifying two indexes, a low and high bound, separated by a comma: `array.slice(low, high int)`.
 
-This selects a half-open range which includes the first element, but excludes
-the last one.
+This selects a half-open range which includes the first element, but excludes the last one.
 
 
 ## Array slice defaults
@@ -859,8 +746,7 @@ the last one.
 
 When slicing, you may omit the high or low bounds to use their defaults instead.
 
-The default is zero for the low bound and the length of the array for the high
-bound.
+The default is zero for the low bound and the length of the array for the high bound.
 
 
 ## Array length
@@ -871,8 +757,7 @@ bound.
         p array[int](2, 3, 5, 7, 11, 13)
         console.log(p.length)
 
-Array have a length property that shows how many items are currently in the
-array.
+Array have a length property that shows how many items are currently in the array.
 
 
 ## Arrays of arrays
@@ -931,8 +816,7 @@ Lithium provides a built-in `push` method to append items to an array.
         for i int, v int in pow:
             console.log("2 ** \(i) = \(v)")
 
-The built-in `array` type is iterable, which means that it can be used in a for
-loop with the `in` keyword.
+The built-in `array` type is iterable, which means that it can be used in a for loop with the `in` keyword.
 
 
 ## Iterating continued
@@ -965,8 +849,7 @@ You can skip the key or value by assigning to `_`.
         primes map[int, int]((0,2), (1,3), (2,5), (3,7), (4,11), (5,13))
         console.log(primes)
 
-`map[k, v]` is a data type that stores a map with keys of type `k` that maps to
-values of type `v`.
+`map[k, v]` is a data type that stores a map with keys of type `k` that maps to values of type `v`.
 
 The statement `m map[int, string]` declares a variable `m` as a map of strings.
 
@@ -986,8 +869,7 @@ The statement `m map[int, string]` declares a variable `m` as a map of strings.
     main func:
         console.log(m)
 
-The map initializer accepts an arbitrary number of tuples that consist of the
-(key, value) pairs that need to be added.
+The map initializer accepts an arbitrary number of tuples that consist of the (key, value) pairs that need to be added.
 
 
 ## Mutating maps
@@ -1050,9 +932,7 @@ You can use `val, ok = map.get(key)` as a shorthand for
     main func:
         console.log(sum(1, 2, 3, 4, 5)) # This will print 15
 
-Variadic functions are functions that can take an arbitrary number of parameters
-instead of a fixed set. The parameters are passed into the initializer method of
-a list type such as `array`.
+Variadic functions are functions that can take an arbitrary number of parameters instead of a fixed set. The parameters are passed into the initializer method of a list type such as `array`.
 
 
 ## Variadic function using map
@@ -1072,16 +952,14 @@ a list type such as `array`.
     main func:
         console.log(sumPower[int]((2, 1), (2, 2), (2, 3), (2, 4))) # Output 30
 
-Variadic functions can pass the parameters into any initializer method as long
-as the initializer method is also variadic and accepts the data of the correct
-type. This can include tuples.
+Variadic functions can pass the parameters into any initializer method as long as the initializer method is also variadic and accepts the data of the correct type. This can include tuples.
 
 
 ## Spread operator
 
     Li 0
     
-    sum func(...int in nums array[int]) int:
+    sum func(...nums int) int:
         s int
         for _, n int in nums:
             s += n
@@ -1091,8 +969,7 @@ type. This can include tuples.
         numbers array[int](1, 2, 3, 4, 5)
         console.log(sum(numbers...))
 
-It is possible to use the spread operator (`...`) to pass the values in a list
-such as an `array` or `map` as distinct parameters in a variadic function.
+It is possible to use the spread operator (`...`) to pass the values in an `array` as distinct parameters in a variadic function.
 
 
 ## Coroutines
@@ -1101,7 +978,7 @@ such as an `array` or `map` as distinct parameters in a variadic function.
     
     say func(s string):
         for i int = 0; i < 5; i++:
-            time.sleep(100 * time.millisecond)
+            time.sleep(100 * time.milliSecond)
             console.log(s)
     
     main func:
@@ -1112,13 +989,9 @@ A coroutine is a lightweight thread managed by the Lithium runtime.
 
 `co f(x, y, z)` starts a new coroutine running `f(x, y, z)`.
 
-The evaluation of the passed parameters happen in the current coroutine, but the
-execution of the function happens in the new coroutine.
+The evaluation of the passed parameters happen in the current coroutine, but the execution of the function happens in the new coroutine.
 
-Coroutines run in the same address space, so access to shared memory must be
-synchronized. The `sync` package provides useful primitives, although you won't
-need them much in Lithium as there are other ways to handle concurrency as you
-will see shortly.
+Coroutines run in the same address space, so access to shared memory must be synchronized. The `sync` package provides useful primitives, although you won't need them much in Lithium as there are other ways to handle concurrency as you will see shortly.
 
 
 ## Channels
@@ -1141,18 +1014,14 @@ will see shortly.
         
         console.log(x, y, x + y)
 
-Channels are a typed conduit through which you can send values with `push()` and
-receive values with `pop()`
+Channels are a typed conduit through which you can send values with `push()` and receive values with `pop()`
 
     ch.push(v)     # Send v to channel ch.
     v = ch.pop()   # Receive from ch, and assign value to v.
 
-By default, sends and receives block until the other side is ready. This allows
-coroutines to synchronize without explicit locks or condition variables.
+By default, sends and receives block until the other side is ready. This allows coroutines to synchronize without explicit locks or condition variables.
 
-The example code sums the numbers in an array, distributing the work between two
-coroutines. Once both coroutines have completed their computation, it calculates
-the final result.
+The example code sums the numbers in an array, distributing the work between two coroutines. Once both coroutines have completed their computation, it calculates the final result.
 
 
 ## Buffered Channels
@@ -1166,13 +1035,11 @@ the final result.
         console.log(ch.pop())
         console.log(ch.pop())
 
-Channels can be buffered. Provide the buffer length to the channel initializer
-to make a buffered channel:
+Channels can be buffered. Provide the buffer length to the channel initializer to make a buffered channel:
 
     ch chan[int](100)
 
-Sends to a buffered channel block only when the buffer is full. Receives block
-when the buffer is empty.
+Sends to a buffered channel block only when the buffer is full. Receives block when the buffer is empty.
 
 
 ## Closing a channel
@@ -1192,23 +1059,17 @@ when the buffer is empty.
         for i int in c:
             console.log(i)
 
-A sender can close a channel to indicate that no more values will be sent.
-Receivers can test whether a channel has been closed by checking the `ok`
-property.
+A sender can close a channel to indicate that no more values will be sent. Receivers can test whether a channel has been closed by checking the `ok` property.
 
     if ch.ok: v int = ch.pop()
 
-`ok` is `false` if there are no more values to receive and the channel is
-closed.
+`ok` is `false` if there are no more values to receive and the channel is closed.
 
-The loop `for i int in c` receives values from the channel repeatedly until it
-is closed.
+The loop `for i int in c` receives values from the channel repeatedly until it is closed.
 
 Note: Only the sender should close a channel, never the receiver.
 
-Another note: Channels aren't like files; you don't usually need to close them.
-Closing is only necessary when the receiver must be told there are no more
-values coming, such as to terminate a loop.
+Another note: Channels aren't like files; you don't usually need to close them. Closing is only necessary when the receiver must be told there are no more values coming, such as to terminate a loop.
 
 
 ## Checking multiple channels
@@ -1233,9 +1094,7 @@ values coming, such as to terminate a loop.
         )()
         fibonacci(c, quit)
 
-The `for: if` pattern lets a coroutine wait on multiple communication
-operations. This will wait until one of its conditions are true, then it
-executes that block.
+The `for: if` pattern lets a coroutine wait on multiple communication operations. This will wait until one of its conditions are true, then it executes that block.
 
 
 ## More conditionals with channels
@@ -1292,20 +1151,15 @@ An `else` block can be used to run if no other condition is ready.
 
 We've seen how channels are great for communication among coroutines.
 
-But what if we don't need communication? What if we just want to make sure only
-one coroutine can access a variable at a time to avoid conflicts?
+But what if we don't need communication? What if we just want to make sure only one coroutine can access a variable at a time to avoid conflicts?
 
-This concept is called mutual exclusion, and the conventional name for the data
-structure that provides it is mutex.
+This concept is called mutual exclusion, and the conventional name for the data structure that provides it is mutex.
 
-Lithium's standard library provides mutual exclusion with `sync.mutex` and its
-two methods:
+Lithium's standard library provides mutual exclusion with `sync.mutex` and its two methods:
 
     lock()
     unlock()
 
-We can define a block of code to be executed in mutual exclusion by surrounding
-it with a call to `lock` and `unlock` as shown on the `inc` method.
+We can define a block of code to be executed in mutual exclusion by surrounding it with a call to `lock` and `unlock` as shown on the `inc` method.
 
-We can also use `defer` to ensure the mutex will be unlocked as in the `value`
-method.
+We can also use `defer` to ensure the mutex will be unlocked as in the `value` method.

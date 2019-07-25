@@ -2,12 +2,19 @@ Li 0
 
 # error provides a common type to use for passing errors between functions
 
-default interface:
-	get ok bool
-	get string string
-	get class string
+def type:
+	# This is a general error message type
+	
+	msg string
+	
+	init func(message string):
+		msg = message
+		return
+	
+	get ok bool: return false
+	get string string: return msg
 
-pub none type(e):
+pub ok type:
 	# This type conforms to the error interface but is used when no error has
 	# occurred
 	
@@ -15,29 +22,16 @@ pub none type(e):
 	get string string: return ""
 	get class string: return "none"
 
-pub new type(e):
-	# This is a general error message type that does not specify a class
-	
-	message string
-	
-	init func(message string):
-		e.message = message
-		return
-	
-	get ok bool: return false
-	get string string: return e.message
-	get class string: return "unspecified"
-
-pub custom type(e):
+pub classy type:
 	# This is an error type that accepts a custom class
 	
-	message string
-	class string
+	msg string
+	cls string
 	
 	init func(class, message string):
-		e.class, e.message = class, message
+		cls, msg = class, message
 		return
 	
 	get ok bool: return false
-	get string string: return e.message
-	get class string: return e.class
+	get string string: return msg
+	get class string: return cls

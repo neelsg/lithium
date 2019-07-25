@@ -2,22 +2,19 @@ Li 0
 
 # int implements the basic type for an integer number
 
-default type(i) extends s64:
+def type(s s64):
 	# This is the basic type
 
-pub iota type(i) extends s64:
-	# The compiler needs to do some magic to make this work
-
-pub s8 type(i):
+pub s8 type:
 	# 8-bit signed integer
 
-pub s16 type(i):
+pub s16 type:
 	# 16-bit signed integer
 
-pub s32 type(i):
+pub s32 type:
 	# 32-bit signed integer
 
-pub s64 type(i):
+pub s64 type:
 	# 64-bit signed integer
 	
 	get s8 s8:
@@ -26,20 +23,20 @@ pub s64 type(i):
 	get string string:
 		# Convert into a string
 
-pub u type(i):
+pub u type:
 	# Basic unsigned integer
 
-pub u8 type(i):
+pub u8 type:
 	# 8-bit unsigned integer
 
-pub u16 type(i):
+pub u16 type:
 	# 16-bit unsigned integer
 
-pub u32 type(i):
+pub u32 type:
 	# 32-bit unsigned integer
 
-pub u64 type(i):
+pub u64 type:
 	# 64-bit unsigned integer
 
-pub range func(first int = 0, last int, step int = 1) iterable:
+pub range func(_ first int = 0, _ last int, _ step int = 1) any.iterable:
 	# Return an iterable range of integers

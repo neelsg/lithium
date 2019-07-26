@@ -2,7 +2,7 @@
 
 This example was translated from [www.arduino.cc](https://www.arduino.cc/en/Tutorial/Debounce)
 
-    Li 0.0
+    Li 0
     
     # Debounce
     #
@@ -32,9 +32,9 @@ This example was translated from [www.arduino.cc](https://www.arduino.cc/en/Tuto
     ledPin const = 13                  # the number of the LED pin
     
     # Variables will change:
-    ledState int = pin.high            # the current state of the output pin
-    buttonState int                    # the current reading from the input pin
-    lastButtonState int = pin.low      # the previous reading from the input pin
+    ledState pin.state = .high         # the current state of the output pin
+    buttonState pin.state              # the current reading from the input pin
+    lastButtonState pin.state = .low   # the previous reading from the input pin
     
     # the following variables are unsigned longs because the time, measured in
     # milliseconds, will quickly become a bigger number than can be stored in an int.
@@ -42,8 +42,8 @@ This example was translated from [www.arduino.cc](https://www.arduino.cc/en/Tuto
     debounceDelay int.u64 = 50         # the debounce time; increase if the output flickers
     
     setup func:
-        pin.mode(buttonPin, pin.input)
-        pin.mode(ledPin, pin.output)
+        pin.mode(buttonPin, .input)
+        pin.mode(ledPin, .output)
         
         # set initial LED state
         digital.write(ledPin, ledState)
@@ -70,7 +70,7 @@ This example was translated from [www.arduino.cc](https://www.arduino.cc/en/Tuto
                 buttonState = reading
             
             # only toggle the LED if the new button state is HIGH
-            if buttonState == pin.HIGH:
+            if buttonState == .high:
                 ledState = !ledState
         
         # set the LED:

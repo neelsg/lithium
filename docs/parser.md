@@ -13,13 +13,13 @@ An assembly file does not contain true machine code or assembly language. The co
 ## Commands
 
 - `deffunc {label}` This indicates the start of a new function
-- `defvar {number} {type}` This defines a variable as a given type. The number is used to identify the variable and must be unique within the current function
-- `deffuncpar {number} {type}` This defines a function parameter as a given type. The number is used to identify the variable and must be unique within the current function and also not conflict with any local function variables
+- `defvar {type} {number}` This defines a variable as a given type. The number is used to identify the variable and must be unique within the current function
+- `deffuncpar {type} {number}` This defines a function parameter as a given type. The number is used to identify the variable and must be unique within the current function and also not conflict with any local function variables
 - `deffuncparvar {type}` This defines the type of variables expected for a variadic function if the parameter count exceeds the number of explicitly defined parameters
-- `setvar {number} {value}` Set the value of a variable to a literal value
-- `pushvar {number}` Push a value of a variable onto the stack
+- `setvar {type} {number} {value}` Set the value of a variable to a literal value
+- `pushvar {type} {number}` Push a value of a variable onto the stack
 - `pushlit {type} {value}` Push a literal value onto the stack
-- `popvar {number}` Pop a value off the stack into a variable
+- `popvar {type} {number}` Pop a value off the stack into a variable
 - `callfunc {label} {count}` Call a function with the given label and the given count of arguments
 - `retfunc` Return to the previous function
 

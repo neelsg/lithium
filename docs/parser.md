@@ -12,16 +12,20 @@ An assembly file does not contain true machine code or assembly language. The co
 
 ## Commands
 
-- `deffunc {label}` This indicates the start of a new function
+- `import {label} {path}` This indicates an external package that needs to be imported
+- `func {label}` This indicates the start of a new function
+- `label {label}` This indicates a new local label within a given function
+- `jump {label}` This is a jump command to a given local label. This cannot be used to jump outside of the current function
 - `defvar {type} {number}` This defines a variable as a given type. The number is used to identify the variable and must be unique within the current function
-- `deffuncpar {type} {number}` This defines a function parameter as a given type. The number is used to identify the variable and must be unique within the current function and also not conflict with any local function variables
-- `deffuncparvar {type}` This defines the type of variables expected for a variadic function if the parameter count exceeds the number of explicitly defined parameters
 - `setvar {type} {number} {value}` Set the value of a variable to a literal value
 - `pushvar {type} {number}` Push a value of a variable onto the stack
 - `pushlit {type} {value}` Push a literal value onto the stack
 - `popvar {type} {number}` Pop a value off the stack into a variable
-- `callfunc {label} {count}` Call a function with the given label and the given count of arguments
-- `retfunc` Return to the previous function
+- `call {label} {count}` Call a function with the given label and the given count of arguments
+- `ret` Return to the previous function
+- `add {type}` Add the last two items from the stack assuming that they are of the given type. Pop the numbers from the stack and push the result onto the stack
+- `sub {type}` Subtract the last items on the stack from the second last from the stack assuming that they are of the given type. Pop the numbers from the stack and push the result onto the stack
+- `mul {type}` Multiply the last two items from the stack assuming that they are of the given type. Pop the numbers from the stack and push the result onto the stack
 
 ## Types
 
@@ -43,7 +47,7 @@ An assembly file does not contain true machine code or assembly language. The co
 
 ### Example 1
 
-File: myfile.li
+Source file:
 
     Li 0
     
@@ -53,9 +57,41 @@ File: myfile.li
 
 Assembly file:
 
-    deffunc main
+    Li 0 core.assembly
+    
+    func main
         pushlit [str] "My favorite number is"
         pushlit [int4s] 10
-        callfunc int.rand 1
-        callfunc console.log 2
-        retfunc
+        call int.rand 1
+        call console.log 2
+        ret
+
+### Example 2
+
+Source file:
+
+    Li 0
+    
+    multiply func(x, y int) int:
+        # This function is only available within the current package
+        return x * y
+    
+    pub sqr func(x int) int:
+        # This function can be used by other packages
+        return multiply(x, x)
+
+Assembly file:
+
+    Li 0 core.assembly
+    
+    func multiply
+        mul [int4s]
+        ret
+    
+    func sqr
+        defvar [int4s] 0
+        popvar [int4s] 0
+        pushvar [int4s] 0
+        pushvar [int4s] 0
+        call multiply 2
+        ret

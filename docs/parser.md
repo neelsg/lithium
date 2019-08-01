@@ -22,7 +22,7 @@ An assembly file does not contain true machine code or assembly language. The co
 - `push {type} {number}` Push a value of a variable onto the stack
 - `pushl {type} {value}` Push a literal value onto the stack
 - `pop {type} {number}` Pop a value off the stack into a variable
-- `call {label} {count}` Call a function with the given label and the given count of arguments
+- `call {label}` Call a function
 - `ret` Return to the previous function
 - `add {type}` Add the last two items from the stack assuming that they are of the given type. Pop the numbers from the stack and push the result onto the stack
 - `sub {type}` Subtract the last items on the stack from the second last from the stack assuming that they are of the given type. Pop the numbers from the stack and push the result onto the stack
@@ -63,8 +63,9 @@ Assembly file:
     func main
         pushl [str] "My favorite number is"
         pushl [int4s] 10
-        call int.rand 1
-        call console.log 2
+        call int.rand
+        pushl [int4u] 2 # This is used for variadic functions to indicate how many parameters are passed
+        call console.log
         ret
 
 ### Example 2
@@ -94,5 +95,5 @@ Assembly file:
         pop [int4s] 0
         push [int4s] 0
         push [int4s] 0
-        call multiply 2
+        call multiply
         ret

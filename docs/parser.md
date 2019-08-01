@@ -25,9 +25,18 @@ An assembly file does not contain true machine code or assembly language. The co
 
 ## Types
 
-- `int1` An 8-bit signed integer
-- `int2` A 16-bit signed integer
-- `int4` A 32-bit signed integer
+- `bit` A single bit that can be 0 or 1
+- `int1s` An 8-bit signed integer
+- `int2s` A 16-bit signed integer
+- `int4s` A 32-bit signed integer
+- `int8s` A 64-bit signed integer
+- `int1u` An 8-bit unsigned integer
+- `int2u` A 16-bit unsigned integer
+- `int4u` A 32-bit unsigned integer
+- `int8u` A 64-bit unsigned integer
+- `float4` A 32-bit floating point number
+- `float8` A 64-bit floating point number
+- `pointer` A pointer to a location on the heap
 - `str` A string
 
 ## Examples
@@ -45,8 +54,8 @@ File: myfile.li
 Assembly file:
 
     deffunc main
-        pushlit str "My favorite number is"
-        pushlit int4 10
+        pushlit [str] "My favorite number is"
+        pushlit [int4s] 10
         callfunc int.rand 1
         callfunc console.log 2
         retfunc

@@ -14,19 +14,25 @@ An assembly file does not contain true machine code or assembly language. The co
 
 - `import {label} {path}` This indicates an external package that needs to be imported
 - `func {label}` This indicates the start of a new function
-- `funcpub {label}` This indicates the start of a new function that is publicly accessible from other packages
+- `funcp {label}` This indicates the start of a new function that is publicly accessible from other packages
 - `label {label}` This indicates a new local label within a given function
 - `jump {label}` This is a jump command to a given local label. This cannot be used to jump outside of the current function
-- `var {type} {number}` This defines a variable as a given type. The number is used to identify the variable and must be unique within the current function
-- `set {type} {number} {value}` Set the value of a variable to a literal value
-- `push {type} {number}` Push a value of a variable onto the stack
+- `var {type} {label}` This defines a variable as a given type. The label is used to identify the variable and must be unique within the current function
+- `varg {type} {label}` This defines a variable as a given type in the global scope for the current package. The label is used to identify the variable and must be unique within the package
+- `setl {label} {value}` Set the value of a variable to a literal value
+- `setgl {label} {value}` Set the value of a global variable to a literal value 
+- `push {label}` Push a value of a variable onto the stack
+- `pushg {label}` Push a value of a global variable onto the stack
 - `pushl {type} {value}` Push a literal value onto the stack
-- `pop {type} {number}` Pop a value off the stack into a variable
+- `pop {label}` Pop a value off the stack into a variable
+- `popg {label}` Pop a value off the stack into a global variable
 - `call {label}` Call a function
+- `calli {label}` Call a function from a different package
 - `ret` Return to the previous function
 - `add {type}` Add the last two items from the stack assuming that they are of the given type. Pop the numbers from the stack and push the result onto the stack
-- `sub {type}` Subtract the last items on the stack from the second last from the stack assuming that they are of the given type. Pop the numbers from the stack and push the result onto the stack
+- `sub {type}` Subtract the last item on the stack from the second last from the stack assuming that they are of the given type. Pop the numbers from the stack and push the result onto the stack
 - `mul {type}` Multiply the last two items from the stack assuming that they are of the given type. Pop the numbers from the stack and push the result onto the stack
+- `div {type}` Divide the second last item on the stack by the last from the stack assuming that they are of the given type. Pop the numbers from the stack and push the result onto the stack
 
 ## Types
 
@@ -48,7 +54,7 @@ An assembly file does not contain true machine code or assembly language. The co
 
 ### Example 1
 
-Source file:
+Source:
 
     Li 0
     
@@ -56,21 +62,21 @@ Source file:
     main func:
         console.log("My favorite number is", int.rand(10))
 
-Assembly file:
+Assembly:
 
     Li 0 core.assembly
     
     func main
-        pushl [str] "My favorite number is"
-        pushl [int4s] 10
-        call int.rand
-        pushl [int4u] 2 # This is used for variadic functions to indicate how many parameters are passed
-        call console.log
+        pushl str "My favorite number is"
+        pushl int4s 10
+        calli int.rand
+        pushl int4u 2 # This is used for variadic functions to indicate how many parameters are passed
+        calli console.log
         ret
 
 ### Example 2
 
-Source file:
+Source:
 
     Li 0
     
@@ -82,18 +88,131 @@ Source file:
         # This function can be used by other packages
         return multiply(x, x)
 
-Assembly file:
+Assembly:
 
     Li 0 core.assembly
     
     func multiply
-        mul [int4s]
+        mul int4s
         ret
     
-    funcpub sqr
-        var [int4s] 0
-        pop [int4s] 0
-        push [int4s] 0
-        push [int4s] 0
+    funcp sqr
+        var int4s x
+        pop x
+        push x
+        push x
         call multiply
         ret
+
+### Example 3
+
+Source:
+
+    Li 0
+
+    split func(sum int) (int, int):
+        x int, y int = sum * 4 / 9, sum - x
+        return x, y
+
+    swap func(x, y string) (string, string): return y, x
+
+    main func:
+        console.log(split(17))
+
+        a string, b string = swap("hello", "world")
+        console.log(a, b)
+
+Assembly:
+
+    Li 0 core.assembly
+    
+    func split
+        var int4s sum
+        var int4s x
+        var int4s y
+        pop sum
+        push sum
+        pushl int4s 4
+        mul int4s
+        pushl int4s 9
+        div int4s
+        pop x
+        push sum
+        push x
+        sub int4s
+        pop y
+        push x
+        push y
+        ret
+    
+    func swap
+        var str x
+        var str y
+        pop x
+        pop y
+        push y
+        push x
+        ret
+    
+    func main
+        var str a
+        var str b
+        pushl int4s 17
+        call split
+        pushl int4u 1
+        calli console.log
+        pushl str "hello"
+        pushl str "world"
+        call swap
+        pop a
+        pop b
+        push a
+        push b
+        pushl int4u 2
+        calli console.log
+        ret
+
+### Example 4
+
+Source:
+
+    Li 0
+    
+    i, j int, p float = 1, 2, math.pi
+    
+    main func:
+        k, l bool, m, n string = true, false, "no!", "yes!"
+        console.log(i, j, p, k, l, m, n)
+
+Assembly:
+
+    Li 0 core.assembly
+    
+    varg int4s i
+    varg int4s j
+    varg float4 p
+    
+    setgl i 1
+    setgl j 2
+    setgl p 3.141592653589793238462643383279502884197169399375105820974944
+    
+    func main
+        var bit k
+        var bit l
+        var str m
+        var str n
+        set k 1
+        set l 0
+        set m "no!"
+        set n "yes!"
+        pushg i
+        pushg j
+        pushg p
+        push k
+        push l
+        push m
+        push n
+        pushl int4u 7
+        calli console.log
+        ret
+    

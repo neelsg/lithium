@@ -2,20 +2,20 @@ Li 0
 
 # bool provides the basic boolean type and some helpful interfaces
 
-def type:
+. type:
 	# Boolean type, can be true or false
 	
-	.== func(compareTo default) def:
+	.== func(compareTo .) .:
 		# If both are true or both are false, this will return true
 	
-	.! func() def:
+	.! func() .:
 		# If the value is true, this will return false and vice versa
 	
-	get bool def:
+	get toBool .:
 		# Return boolean 
 	
-	get int int:
+	get toInt int:
 		# Return 0 if false and 1 if true
 	
-	get string string:
+	get toString string:
 		# Return "false" if false and "true" if true

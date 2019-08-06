@@ -13,7 +13,7 @@ pub after func(duration int.s64) chan[bool]:
 	# Send a single tick to a channel after the specified duration
 
 pub time type:
-	get string func(t time) string:
+	get toString func() string:
 		# Return the time in a string format
 
 pub now func() time:

@@ -39,8 +39,8 @@ pub u64 type:
 	# 64-bit unsigned integer
 
 pub range type:
-	.= func(lastNumber int):
-		# Specify the last number up to which it should iterate
+	.= func(count int):
+		# Specify the last number + 1 up to which it should iterate
 	pub from func(firstNumber int) range:
 		# Specify the first number from which it should iterate
 	pub to func(lastNumber int) range:

@@ -2,24 +2,24 @@ Li 0
 
 # error provides a common type to use for passing errors between functions
 
-def type:
+. type:
 	# This is a general error message type
 	
 	msg string
 	
-	init func(message string):
+	.= func(message string):
 		msg = message
 		return
 	
 	get ok bool: return false
-	get string string: return msg
+	get toString string: return msg
 
 pub ok type:
 	# This type conforms to the error interface but is used when no error has
 	# occurred
 	
 	get ok bool: return true
-	get string string: return ""
+	get toString string: return ""
 	get class string: return "none"
 
 pub classy type:
@@ -28,10 +28,10 @@ pub classy type:
 	msg string
 	cls string
 	
-	init func(class, message string):
+	.= func(class, message string):
 		cls, msg = class, message
 		return
 	
 	get ok bool: return false
-	get string string: return msg
+	get toString string: return msg
 	get class string: return cls

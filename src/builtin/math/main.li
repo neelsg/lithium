@@ -8,14 +8,13 @@ pub:
 	phi const = 1.61803 39887 49894 84820 45868 34365 63811 77203 09179 80576 28621 35448
 
 pub number interface[n]:
-	plus(n) n
-	minus(n) n
-	multiply(n) n
-	divide(n) n
-	power(n) n
-	modulo(n) n
-	equal(n) bool
-	less(n) bool
+	.+(n) n
+	.-(n) n
+	.*(n) n
+	./(n) n
+	.%(n) n
+	.==(n) bool
+	.<(n) bool
 
 pub abs func[n number float](num n) n:
 	# Return the absolute value of the number
@@ -29,6 +28,12 @@ pub max func[n number float](...n in nums array[n]) n:
 		if num > max: max = num
 	return max
 
+pub power func[n number float](num n, exponent n) n:
+	# Return the number raised to the given exponent
+
+pub sqr func[n number float](num n) n:
+	return n * n
+
 pub sqrt func[n number float](num n) n:
 	# Return the square root of the number provided
-	return n ** 0.5
+	return power(n, 0.5)

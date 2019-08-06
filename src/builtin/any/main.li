@@ -1,25 +1,25 @@
 Li 0
 
-def interface:
+. interface:
 	# This interface is here so that there is a standard interface available
 	# when literally any type is allowed
 
 pub bool interface:
 	# Can the type be converted into boolean
-	get bool bool
+	get toBool bool
 
 pub int interface:
 	# Can the type be converted into an integer
-	get int int
+	get toInt int
 
 pub string interface:
 	# Can the type be converted into a string
-	get string string
+	get toString string
 
 pub equalable interface[n]:
 	# Can the type be checked if two objects are equal?
-	equal(n) bool
+	.==(n) bool
 
-pub comparable interface[n](equalable[n]):
+pub comparable interface[n]:
 	# Can the type be checked if two objects are equal and which one is less?
-	less(n) bool
+	.<(n) bool

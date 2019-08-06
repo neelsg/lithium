@@ -2,7 +2,7 @@ Li 0
 
 # int implements the basic type for an integer number
 
-def type(s s64):
+. type(s s64):
 	# This is the basic type
 
 pub s8 type:
@@ -38,5 +38,12 @@ pub u32 type:
 pub u64 type:
 	# 64-bit unsigned integer
 
-pub range func(_ first int = 0, _ last int, _ step int = 1) any.iterable:
-	# Return an iterable range of integers
+pub range type:
+	.= func(lastNumber int):
+		# Specify the last number up to which it should iterate
+	pub from func(firstNumber int) range:
+		# Specify the first number from which it should iterate
+	pub to func(lastNumber int) range:
+		# Specify the last number up to which it should iterate
+	pub step func(stepSize int) range:
+		# Specify the step size for each iteration

@@ -1004,7 +1004,7 @@ Coroutines run in the same address space, so access to shared memory must be syn
     
     main func:
         co:
-            for i int in int.range(0, 4):
+            for i int in int.range(5):
                 time.sleep(100 * time.milliSecond)
                 console.log("world")
         say("hello")
@@ -1107,7 +1107,7 @@ Another note: Channels aren't like files; you don't usually need to close them. 
     main func:
         c, quit chan[int]
         co:
-            for i int in int.range(0, 9):
+            for i int in int.range(10):
                 console.log(c.pop())
             quit.push(0)
         fibonacci(c, quit)

@@ -4,7 +4,7 @@ pub read type:
 	
 	err error = error.ok
 	
-	init func(fileName string):
+	.= func(fileName string):
 		# Open a file for reading
 		# TODO
 	

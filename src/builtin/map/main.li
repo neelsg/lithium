@@ -6,86 +6,87 @@ Li 0
 # so looking anything up is very slow.
 
 
-default type[k bool.comparable, v type.any]:
+. type[k bool.comparable, v any]:
 	
-	keys array[k]
-	vals array[v]
+	keys list[k]
+	vals list[v]
 	
-	init fn(self default[k, v], ...{k, v} in items array[{k, v}]):
+	.= func(...items (k, v)):
 		# Initiate the map with an arbitrary number of items
 		
-		self.push(items...)
+		push(items...)
 		return
 	
-	get length fn(self default[k, v]) int:
+	get length func() int:
 		# Return the total number of items in the map
 		
-		return self.keys.length
+		return keys.length
 	
-	pub default fn(self default[k, v], key k) v:
+	. func(seek k) v:
 		# Return an item value for the given key
 		
-		for index int, current k in self.keys:
-			if current == key:
-				return self.vals(index)
-		return v
+		for i int, cur k in keys:
+			if cur == seek:
+				return vals(i)
+		return v()
 	
-	pub delete fn(self default[k, v], key k):
+	pub delete func(seek k):
 		# Remove the item with the given key from the map
 		
-		for index int, current k in self.keys:
-			if current == key:
-				self.keys = self.keys.slice(, index) + self.keys.slice(index + 1, )
-				self.vals = self.vals.slice(, index) + self.vals.slice(index + 1, )
+		for i int, cur k in keys:
+			if cur == seek:
+				keys = keys.slice(, i) + keys.slice(i + 1, )
+				vals = vals.slice(, i) + vals.slice(i + 1, )
 				return
 		return
 	
-	pub exists fn(self default[k, v], key k) bool:
+	pub exists func(seek k) bool:
 		# Check if an item exists with the given key
 		
-		for index int, current k in self.keys:
-			if current == key:
+		for cur k in keys:
+			if cur == seek:
 				return true
 		return false
 	
-	pub first fn(self default[k, v]) {{k, v}, int, bool}:
+	pub first func() ((k, v), int, bool):
 		# Return the first item in the map for use as an iterable object
 		
-		if self.keys.length == 0:
-			return {k, v}, 0, false
-		return {self.keys(0), self.vals(0)}, 0, true
+		if keys.length == 0:
+			return (k(), v()), 0, false
+		return (keys(0), vals(0)), 0, true
 	
-	pub get fn(self default[k, v], key k) {v, bool}:
+	pub get func(key k) (v, bool):
 		# Get an item with the given key and also check if the key exists
 		
-		if self.exists(key):
-			return self.default(key), true
-		return v, false
+		if exists(key):
+			return .(key), true
+		return v(), false
 	
-	pub next fn(self default[k, v], priorIndex int) {{k, v}, int, bool}:
+	pub next func(priorIndex int) ((k, v), int, bool):
 		# Return the next item in the map for use as an iterable object
 		
-		index int = priorIndex + 1
-		if self.keys.length <= index:
-			return {k, v}, index, false
-		return {self.keys(index), self.vals(index)}, index, true
+		i int = priorIndex + 1
+		if keys.length <= i:
+			return (k(), v()), i, false
+		return (keys(index), vals(index)), i, true
 	
-	pub pop fn(self default[k, v]) {k, v}:
+	pub pop func() (k, v):
 		# Remove and return the last item in the map
 		
-		if self.keys.length == 0:
-			return {k, v}
-		return {self.keys.pop(), self.vals.pop()}
+		if keys.length == 0:
+			return k(), v()
+		return keys.pop(), vals.pop()
 	
-	pub push fn(self default[k, v], ...{k, v} in items array[{k, v}]):
+	pub push func(...items (k, v)):
 		# Push an arbitrary number of new items into the map. If items are
 		# pushed with keys that already exist, the new value overrides the old
 		# value
 		
-		for _, item {k, v} in items:
-			if self.exists(item{0}):
-				self(item{0}) = item{1}
-			else:
-				self.keys.push(item{0})
-				self.vals.push(item{1})
+		for item (k, v) in items:
+			for i int, cur k in keys:
+				if cur == item.0:
+					vals(i) = item.1
+					return
+			keys.push(item.0)
+			vals.push(item.1)
 		return

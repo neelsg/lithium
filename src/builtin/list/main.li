@@ -1,0 +1,48 @@
+Li 0
+
+# list provides a generic array data type that can be used to store items of a given type.
+
+. type[n any]:
+	pub clear func:
+		# Remove all items from the array
+	
+	pub exists func(index int) bool:
+		# Check if the index exists
+	
+	pub first func() ((int, n), int, bool):
+		# Return the first item for use in iteration
+		
+	pub get func(index int) (n, bool):
+		# Get an item with the given index and also check if the index exists
+	
+	pub next func(prior int) ((int, n), int, bool):
+		# Return the next item for use in iteration
+	
+	pub pop func() n:
+		# Remove and return the last item of an array
+	
+	pub push func(...item n):
+		# Add new item(/s) to an array
+	
+	pub slice func(low, high int) .[n]:
+		# Slice and array
+	
+	get copy .[n]:
+		# Return a copy of the list
+	
+	get length int:
+		# Return the number of items in the array
+	
+	. func(index int) n:
+		# Return the item at the index
+	
+	.= func(...items n):
+		# Initialize a new array
+	
+	.+= func(item n):
+		# Add an item to an array
+		push(item)
+		return
+	
+	.== func(other def[n]) bool:
+		# Check if the array is equal to another array

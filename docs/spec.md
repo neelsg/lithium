@@ -78,7 +78,7 @@ For files that are compiled by a type in a custom package, the type should follo
 
 The following keywords are reserved in Lithium:
 
-    co const def defer else enum false func for get if import in init interface is mut pub return set true type
+    co const defer else enum false func for get if import in interface is mut pub return set true type
 
 
 ## Import
@@ -312,7 +312,7 @@ Examples of tuple literals are:
     (1, 2, 3)
     
     # Nested tuples are also possible:
-    (("a", "b", "c"), (1, 2, 3), (1.111, 2.222, 3.333))
+    (("a", "b", "c"), (1, 2, 3), (1.1, 2.2, 3.3))
 
 
 ## Constants

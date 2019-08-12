@@ -16,8 +16,6 @@ Go:
 
 Lithium:
 
-    Li 0
-    
     main func:
         console.log("Hello, 世界")
 
@@ -40,8 +38,6 @@ Go:
 
 Lithium:
 
-    Li 0
-    
     main func:
         console.log("Welcome to the playground!")
         
@@ -64,8 +60,6 @@ Go:
 
 Lithium:
 
-    Li 0
-    
     main func:
         console.log("My favorite number is", int.random(10))
 
@@ -86,15 +80,11 @@ Go:
 
 Lithium (Option A):
 
-    Li 0
-    
     main func:
         console.log("Now you have \% problems.\n".inset(math.sqrt(7)))
 
 Lithium (Option B):
 
-    Li 0
-    
     main func:
         console.log("Now you have \(math.sqrt(7)) problems.\n")
 
@@ -115,7 +105,5 @@ Go:
 
 Lithium:
 
-    Li 0
-    
     main func:
         console.log(math.pi)

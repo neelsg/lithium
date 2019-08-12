@@ -2,8 +2,6 @@
 
 This example was translated from [www.arduino.cc](https://www.arduino.cc/en/Tutorial/AnalogReadSerial)
 
-    Li 0
-    
     # AnalogReadSerial
     #
     # Reads an analog input on pin 0, prints the result to the Serial Monitor.

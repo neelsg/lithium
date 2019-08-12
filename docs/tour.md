@@ -7,15 +7,11 @@ This tour aims to cover the basics of the Lithium Programming Language.
 
 ## Start
 
-    Li 0
-    
     # This is the main function
     main func:
         console.log("My favorite number is", int.rand(10))
 
 This code will print the text "My favorite number is" and a random number from 0 to 10.
-
-Each file needs to start with `Li 0` to indicate that version 0 of the language is used. Note that the "L" is uppercase and the "i" is lowercase. This will allow newer compilers to compile files written using older specs of the language and for older packages to be incorporated into newer projects.
 
 Anything after a `#` on a line is a comment and is ignored by the compiler.
 
@@ -24,8 +20,6 @@ The `func` keyword is used to define functions (which are blocks of code that ca
 
 ## Exporting components
 
-    Li 0
-    
     multiply func(x, y int) int:
         # This function is only available within the current package
         return x * y
@@ -39,8 +33,6 @@ Use the `pub` keyword to make your components available to other packages
 
 ## Importing packages
 
-    Li 0
-    
     import myMath "./myMathFolder"
     
     main func:
@@ -51,8 +43,6 @@ You can import your own packages or third-party libraries using the `import` key
 
 ## Functions
 
-    Li 0
-    
     add func(x, y int) int:
         return x + y
     
@@ -66,8 +56,6 @@ A function that takes no arguments can optionally be declared without brackets:
 
 ## Multiple results
 
-    Li 0
-    
     split func(sum int) (int, int):
         x int = sum * 4 / 9
         y int = sum - x
@@ -86,8 +74,6 @@ A function can return any number of results. If they do, these must be wrapped i
 
 ## Variables
 
-    Li 0
-    
     i, j, k bool
     
     pub l bool
@@ -101,8 +87,6 @@ Variables are declared by specifying the name of the variable followed by the ty
 
 ## Initializers
 
-    Li 0
-    
     i, j int, p float = 1, 2, math.pi
     
     main func:
@@ -114,8 +98,6 @@ A variable declaration can include initializers. If an initializer is omitted, t
 
 ## Basic types
 
-    Li 0
-    
     toBe bool = false
     maxInt int.u64 = math.power[int.u64](2, 64) - 1
     z complex.p128 = math.sqrt[complex.p128](-5 + 12i)
@@ -143,8 +125,6 @@ There are also more specific data types such as:
 
 ## Default values
 
-    Li 0
-    
     main func:
         i int
         f float
@@ -165,8 +145,6 @@ Custom types can have their own defined default values.
 
 ## Type conversions
 
-    Li 0
-    
     main func:
         x, y int = 3, 4
         f float = math.sqrt((x * x + y * y).toFloat)
@@ -186,8 +164,6 @@ Unlike in C, assignment in Lithium between items of different type requires an e
 
 ## Constants
 
-    Li 0
-    
     pi const = 3.14
     
     main func = func():
@@ -203,8 +179,6 @@ Constants are declared like variables, but with the `const` keyword as type. Con
 
 ## For
 
-    Li 0
-    
     main func:
         sum int = 0
         for i int = 0; i < 10; i++:
@@ -226,8 +200,6 @@ The loop will stop iterating once the boolean condition evaluates to `false`.
 
 ## For continued
 
-    Li 0
-    
     main func:
         sum int = 1
         for ; sum < 1000; :
@@ -236,8 +208,6 @@ The loop will stop iterating once the boolean condition evaluates to `false`.
 
 The init and post statements are optional. At that point you can drop the semicolons:
 
-    Li 0
-    
     main func:
         sum int = 1
         for sum < 1000:
@@ -247,8 +217,6 @@ The init and post statements are optional. At that point you can drop the semico
 
 ## Forever
 
-    Li 0
-    
     main func:
         for:
             # Whatever code goes here will run in an infinite loop
@@ -258,8 +226,6 @@ If you omit the loop condition it loops forever.
 
 ## If
 
-    Li 0
-    
     sqrt func(x float) string:
         if x < 0:
             return sqrt(-x).toString + "i"
@@ -273,8 +239,6 @@ Lithium's `if` statements are similar to its `for` loops
 
 ## If with an init statement
 
-    Li 0
-    
     pow func(x, n, lim float) float:
         if v float = math.power(x, n); v < lim:
             return v
@@ -291,8 +255,6 @@ Like `for`, the `if` statement can start with a short statement to execute befor
 
 ## If and else
 
-    Li 0
-    
     pow func(x, n, lim float) float:
         if y = math.power(x, n); y < lim:
             return y
@@ -308,8 +270,6 @@ Variables declared inside an `if` init statement are also available inside any o
 
 ## Function values
 
-    Li 0
-    
     compute func(f func(float, float) float) float:
         return f(3, 4)
     
@@ -331,8 +291,6 @@ Function values may be used as function arguments and return values.
 
 ## Defer
 
-    Li 0
-    
     main func:
         defer console.log("world!")
         
@@ -345,8 +303,6 @@ The `defer` statement's arguments are evaluated immediately, but the function ca
 
 ## Stacking defers
 
-    Li 0
-    
     main func:
         console.log("counting")
         
@@ -360,8 +316,6 @@ Deferred function calls are pushed onto a stack. When a function returns, its de
 
 ## Function closures
 
-    Li 0
-    
     adder func() (func(int) int):
         sum int = 0
         return func(x int) int:
@@ -383,8 +337,6 @@ For example, the `adder` function returns a closure. Each closure is bound to it
 
 ## Defining new types
 
-    Li 0
-    
     vertex type:
         pub x int
         pub y int
@@ -399,8 +351,6 @@ Lithium allows simple object-oriented programming. A type is a collection of pro
 
 ## Methods
 
-    Li 0
-    
     vertex type:
         pub:
             x float
@@ -418,8 +368,6 @@ Methods are functions defined within a type.
 
 ## The setter function
 
-    Li 0
-    
     vertex type:
         
         pub x, y float
@@ -440,8 +388,6 @@ You can create a function with the label `.=` in a type which will act as the in
 
 ## Private values
 
-    Li 0
-    
     vertex type:
         
         x, y float
@@ -464,8 +410,6 @@ main function in this case, you will get a compile error.
 
 ## Getters and setters
 
-    Li 0
-    
     vertex type:
         .= func(xInit, yInit float):
             x, y = xInit, yInit # This will call the respective set functions
@@ -503,8 +447,6 @@ If both a `get` method for a property as well as the actual property is defined,
 
 ## Inheritance
 
-    Li 0
-    
     main func:
         myInt type(i int):
             double func() myInt:
@@ -518,8 +460,6 @@ The `type` keyword can take parameters to specify which other type/(s) it should
 
 ## Interfaces
 
-    Li 0
-    
     hasX interface:
         get x float
     
@@ -543,8 +483,6 @@ Note that a type does not need to specify that it implements the interface, all 
 
 ## Stringers
 
-    Li 0
-    
     person type:
         pub name string
         pub age int
@@ -569,8 +507,6 @@ Many packages look for this interface to print values.
 
 ## Errors
 
-    Li 0
-    
     myError type:
         .= func(when time, what string):
             at, msg = when, what
@@ -613,8 +549,6 @@ Functions often return an `error` value, and calling code should handle errors b
 
 ## Parametric polymorphism
 
-    Li 0
-    
     plusable interface[p]:
         .+(p) p
     
@@ -637,8 +571,6 @@ The advantage over just using interfaces is that we can make sure that the varia
 
 ## Default types for polymorphism
 
-    Li 0
-    
     plusable interface[n]:
         .+(n) n
     
@@ -659,8 +591,6 @@ A default type can be set for any polymorphic function. If the type is then omit
 
 ## Parametric polymorphism for types
 
-    Li 0
-    
     vertex type[n any.string]:
         .= func(xInit, yInit n):
             x, y = xInit, yInit
@@ -677,16 +607,12 @@ Parametric polymorphism can also be used with type definitions to create more ge
 
 ## Tuples
 
-    Li 0
-    
     main func:
         triplets (string, string, string) = "Anna", "Betty", "Carmen"
         console.log(triplets)
 
 Tuples are ordered pairs of variables. You have actually already seen them used for multiple return values for functions as well as with assignments on multiple variables. Tuples defined as a set of types wrapped in brackets.
 
-    Li 0
-    
     main func:
         triplets (string, string, string) = "Anna", "Betty", "Carmen"
         console.log(triplets.0) # This prints Anna
@@ -698,8 +624,6 @@ The individual values in a tuple can be accessed using the index number starting
 
 ## Lists
 
-    Li 0
-    
     main func:
         l list[string]
         l(0) = "Hello"
@@ -717,8 +641,6 @@ The statement `l list[string]` declares a new list `l` of strings. The keys in a
 
 ## List slices
 
-    Li 0
-    
     main func:
         abcd list[string] = ("a", "b", "c", "d")
         bc list[string] = abcd.slice(1, 3)
@@ -731,8 +653,6 @@ This selects a half-open range which includes the first element, but excludes th
 
 ## List slice defaults
 
-    Li 0
-    
     main func:
         p list[int](2, 3, 5, 7, 11, 13)
         
@@ -752,8 +672,6 @@ The default is zero for the low bound and the length of the list for the high bo
 
 ## List length
 
-    Li 0
-    
     main func:
         p list[int](2, 3, 5, 7, 11, 13)
         console.log(p.length)
@@ -763,8 +681,6 @@ Lists have a length property that shows how many items are currently in the list
 
 ## Lists of lists
 
-    Li 0
-    
     main func:
         # Create a tic-tac-toe board.
         board list[list[string]] = (
@@ -788,8 +704,6 @@ Lists can contain any type, including other lists.
 
 ## Appending to a list
 
-    Li 0
-    
     main func:
         l list[int]
         console.log(l)
@@ -809,8 +723,6 @@ Lists have a `push` method to append items to it.
 
 ## Iterating over a list
 
-    Li 0
-    
     pow list[int] = (1, 2, 4, 8, 16, 32, 64, 128)
     
     main func:
@@ -822,8 +734,6 @@ Lists are iterable, which means that they can be used in a for loop with the `in
 
 ## Iterating continued
 
-    Li 0
-    
     main func:
         pow list[int] = (1, 2, 4, 8, 16, 32, 64, 128)
         
@@ -842,8 +752,6 @@ If only the value is required, this can be further shortened to:
 
 ## Maps
 
-    Li 0
-    
     main func:
         m map[int, string]
         m(0) = "Hello"
@@ -861,8 +769,6 @@ The statement `m map[int, string]` declares a variable `m` as a map with `int` k
 
 ## Map initializer with custom keys
 
-    Li 0
-    
     vertex type:
         lat, long float
     
@@ -879,8 +785,6 @@ The map initializer accepts an arbitrary number of tuples that consist of the (k
 
 ## Mutating maps
 
-    Li 0
-    
     main func:
         m map[string, int]
         
@@ -926,8 +830,6 @@ You can use `val, ok = map.get(key)` as a shorthand for
 
 ## Variadic functions
 
-    Li 0
-    
     sum func(...nums int) int:
         s int
         for n int in nums:
@@ -939,8 +841,6 @@ You can use `val, ok = map.get(key)` as a shorthand for
 
 Variadic functions are functions that can take an arbitrary number of parameters instead of a fixed set. The parameters are passed into the initializer method of a list.
 
-    Li 0
-    
     number interface[n]:
         plus(n) n
         power(n) n
@@ -959,8 +859,6 @@ Variadic functions can take any type of parameter that can be as a value in a li
 
 ## Spread operator
 
-    Li 0
-    
     sum func(...nums int) int:
         s int
         for n int in nums:
@@ -976,8 +874,6 @@ It is possible to use the spread operator (`...`) to pass the values in a collec
 
 ## Coroutines
 
-    Li 0
-    
     say func(s string):
         for i int = 0; i < 5; i++:
             time.sleep(100 * time.milliSecond)
@@ -995,8 +891,6 @@ The evaluation of the passed parameters happen in the current coroutine, but the
 
 Coroutines run in the same address space, so access to shared memory must be synchronized. The `sync` package provides useful primitives, although you won't need them much in Lithium as there are other ways to handle concurrency as you will see shortly.
 
-    Li 0
-    
     say func(s string):
         for i int = 0; i < 5; i++:
             time.sleep(100 * time.milliSecond)
@@ -1014,8 +908,6 @@ It is also possible to use `co` with a block of code to be executed instead of c
 
 ## Channels
 
-    Li 0
-    
     sum func(s list[int], c chan[int]):
         sum int = 0
         for v int in s:
@@ -1044,8 +936,6 @@ The example code sums the numbers in an array, distributing the work between two
 
 ## Buffered Channels
 
-    Li 0
-    
     main func:
         ch chan[int] = 2
         ch.push(1)
@@ -1062,8 +952,6 @@ Sends to a buffered channel block only when the buffer is full. Receives block w
 
 ## Closing a channel
 
-    Li 0
-    
     fibonacci func(n int, c chan[int]):
         x int, y int = 0, 1
         for i int = 0; i < n; i++:
@@ -1092,8 +980,6 @@ Another note: Channels aren't like files; you don't usually need to close them. 
 
 ## Checking multiple channels
 
-    Li 0
-    
     fibonacci func(c, quit chan[int]):
         x int, y int = 0, 1
         for:
@@ -1117,8 +1003,6 @@ The `for: if` pattern lets a coroutine wait on multiple communication operations
 
 ## More conditionals with channels
 
-    Li 0
-    
     main func:
         tick chan[bool] = time.tick(100 * time.millisecond)
         boom chan[bool] = time.after(500 * time.millisecond)
@@ -1139,8 +1023,6 @@ An `else` block can be used to run if no other condition is ready.
 
 ## Mutual exclusion
 
-    Li 0
-    
     # SafeCounter is safe to use concurrently.
     safeCounter type:
         counts map[string, int]

@@ -53,27 +53,6 @@ Affixes for platforms, operating systems or architectures:
     amd64 android arduino arm jvm linux none riscv riscv64 webasm webjs windows
 
 
-## Doctype indicator
-
-A Lithium source file must start with the character sequence `Li` followed by the version of the language specification that was used.
-
-A standard doctype is of the form:
-
-    Li 0
-
-Only comments are permitted before the doctype indicator for a file.
-
-The doctype can optionally contain a type that can be used to compile files of other formats into data that can be used by Lithium programs.
-
-For files that are compiled by a built-in type, the type should follow after the language version as follows:
-
-    Li 0 {type name}
-
-For files that are compiled by a type in a custom package, the type should follow after the language version and then be followed by the path to the relevant package as follows:
-
-    Li 0 {type name} "{path to package}"
-
-
 ## Keywords
 
 The following keywords are reserved in Lithium:

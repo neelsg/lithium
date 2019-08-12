@@ -2,8 +2,6 @@
 
 This example was translated from [www.arduino.cc](https://www.arduino.cc/en/Tutorial/Debounce)
 
-    Li 0
-    
     # Debounce
     #
     # Each time the input pin goes from LOW to HIGH (e.g. because of a push-button

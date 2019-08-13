@@ -1,0 +1,1 @@
+/* This is a parser that can be used to convert lithium source files into go source files */

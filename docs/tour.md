@@ -24,7 +24,7 @@ The `func` keyword is used to define functions (which are blocks of code that ca
         # This function is only available within the current package
         return x * y
     
-    pub sqr func(x int) int:
+    sqr pub func(x int) int:
         # This function can be used by other packages
         return multiply(x, x)
 
@@ -76,7 +76,7 @@ A function can return any number of results. If they do, these must be wrapped i
 
     i, j, k bool
     
-    pub l bool
+    l pub bool
     
     main func:
         m int
@@ -338,8 +338,8 @@ For example, the `adder` function returns a closure. Each closure is bound to it
 ## Defining new types
 
     vertex type:
-        pub x int
-        pub y int
+        x pub int
+        y pub int
     
     main func:
         v vertex
@@ -352,10 +352,8 @@ Lithium allows simple object-oriented programming. A type is a collection of pro
 ## Methods
 
     vertex type:
-        pub:
-            x float
-            y float
-            dist func() float:
+        x, y pub float
+        dist pub func() float:
                 return math.sqrt(x * x + y * y)
     
     main func:
@@ -370,13 +368,13 @@ Methods are functions defined within a type.
 
     vertex type:
         
-        pub x, y float
+        x, y pub float
         
         .= func(xInit, yInit float):
             x, y = xInit, yInit
             return
         
-        pub dist func() float:
+        dist pub func() float:
             return math.sqrt(x * x + y * y)
     
     main func:
@@ -396,7 +394,7 @@ You can create a function with the label `.=` in a type which will act as the in
             x, y = xInit, yInit
             return
         
-        pub dist func() float:
+        dist pub func() float:
             return math.sqrt(x * x + y * y)
     
     main func:
@@ -416,24 +414,24 @@ main function in this case, you will get a compile error.
             return
         
         x float
-        get x func() float:
+        x get func() float:
             return x # This will get the underlying variable only because it is used inside the get method
-        set x func(xVal float):
+        x set func(xVal float):
             if xVal >= 0:
                 x = xVal # This will set the underlying variable only because it is used inside the set method
             else:
                 x = -xVal
         
         y float
-        get y func() float:
+        y get float:
             return y
-        set y func(yVal float):
+        y set func(yVal float):
             if yVal >= 0:
                 y = yVal
             else:
                 y = -yVal
         
-        pub dist func() float:
+        dist pub func() float:
             return math.sqrt(x * x + y * y)
     
     main func:
@@ -461,10 +459,10 @@ The `type` keyword can take parameters to specify which other type/(s) it should
 ## Interfaces
 
     hasX interface:
-        get x float
+        x get float
     
     vertex type:
-        pub x, y float
+        x, y pub float
         .= func(xInit, yInit float):
             x, y = xInit, yInit
             return
@@ -484,12 +482,12 @@ Note that a type does not need to specify that it implements the interface, all 
 ## Stringers
 
     person type:
-        pub name string
-        pub age int
+        name pub string
+        age pub int
         .= func(nameInit string, ageInit int):
             name, age = nameInit, ageInit
             return
-        get toString func() string:
+        toString get string:
             return "\(name) (\(age) years)"
     
     main func:
@@ -499,7 +497,7 @@ Note that a type does not need to specify that it implements the interface, all 
 
 One of the most ubiquitous interfaces is `any.string`.
 
-    pub string interface:
+    string pub interface:
         get toString string
 
 Many packages look for this interface to print values.
@@ -515,10 +513,10 @@ Many packages look for this interface to print values.
         at time
         msg string
         
-        pub ok bool = false
-        pub class string = "MyError"
+        ok pub bool = false
+        class pub string = "MyError"
         
-        get toString string:
+        toString get string:
             return "at \(at), \(msg)"
     
     run func() error:

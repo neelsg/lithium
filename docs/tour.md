@@ -1026,14 +1026,14 @@ An `else` block can be used to run if no other condition is ready.
         mux sync.mutex
         
         # inc increments the counter for the given key.
-        inc func(key string):
+        inc pub func(key string):
             mux.lock()
             # Lock so only one coroutine at a time can access the map.
             counts(key)++
             mux.unlock()
         
         # value returns the current value of the counter for the given key.
-        value func(key string) int:
+        value pub func(key string) int:
             mux.lock()
             # Lock so only one coroutine at a time can access the map.
             defer mux.unlock()

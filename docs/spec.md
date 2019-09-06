@@ -57,7 +57,7 @@ Affixes for platforms, operating systems or architectures:
 
 The following keywords are reserved in Lithium:
 
-    co const defer else enum false func for get if import in interface is mut pub return set true type
+    as co const defer else embed enum extends false func for get if import in interface is mut pub return self set true type
 
 
 ## Import
@@ -260,7 +260,7 @@ Example:
 
 #### Strings using embedded blocks 
 
-To define an embbed string block use `string:` to begin the block and follow normal indentation rules within the block. This is using embedded blocks which can actually be custom created as long as the type referred to in the square brackets define a method with the signature `compile(string) (type.any, error)`. On compilation, this method will be called on the string literal and if the returned `error.ok` value is not `true`, a compile error will be raised.
+To define an embbed string block use `string:` to begin the block and follow normal indentation rules within the block. This is using embedded blocks which can actually be custom created as long as the type referred to in the square brackets define a method with the signature `embed(string) ({any type}, error)`. On compilation, this method will be called on the string literal and if the returned `error.ok` value is not `true`, a compile error will be raised.
 
 Examples of string literals using embedded blocks:
 
@@ -322,7 +322,7 @@ It is possible to use tuples as types where a single variable may contain a more
 
 Example of using a tuple as type:
 
-    vector (float, float, fn(float, float) float)
+    vector (float, float, func(float, float) float)
         = 3, 4, func(x, y float) float:
             return math.sqrt(math.power(x, 2) + math.power(y, 2))
     vector.2(vector.0, vector.1) # This will return 5.
@@ -331,14 +331,14 @@ Example of using a tuple as type:
 
 New types can be defined with the `type` keyword.
 
-    {type name} type({local object name}):
+    {type name} type:
         {properties and methods...}
 
 ### Extends
 
 Extends can be used for type inheritence.
 
-    {type name} type({local object name}, {parent type name}) extends {parent type}:
+    {type name} type extends {parent type} as {parent object name}:
         {properties and methods...}
 
 
@@ -365,7 +365,7 @@ The following rules apply to determine the scope in which a variable is availabl
 The `if` keyword is used to conditionally execute code. An `if` statement can take various forms:
 
     # Inline form
-    if {init statement; }{condition}: {statement} {else:} {statement}
+    if {init statement; }{condition}: {statement} {else: }{statement}
     
     # Block form
     if {init statement; }{condition}:

@@ -8,14 +8,14 @@ minute pub const = 60 * second
 hour pub const = 60 * minute
 dat pub const = 24 * hour
 
-. pub type:
+self pub type:
 	toString get string:
 		# Return the time in a string format
 
 after pub func(duration int.s64) chan[bool]:
 	# Send a single tick to a channel after the specified duration
 
-now pub func() .:
+now pub func() self:
 	# Return the current time
 
 sleep pub func(duration int.s64):

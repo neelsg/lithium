@@ -1,26 +1,25 @@
 Li 0
 
-pub:
-	nanoSecond const = 1
-	microSecond const = 1000 * nanoSecond
-	milliSecond const = 1000 * microSecond
-	second const = 1000 * milliSecond
-	minute const = 60 * second
-	hour const = 60 * minute
-	dat const = 24 * hour
+nanoSecond pub const = 1
+microSecond pub const = 1000 * nanoSecond
+milliSecond pub const = 1000 * microSecond
+second pub const = 1000 * milliSecond
+minute pub const = 60 * second
+hour pub const = 60 * minute
+dat pub const = 24 * hour
 
-pub after func(duration int.s64) chan[bool]:
-	# Send a single tick to a channel after the specified duration
-
-pub time type:
-	get toString func() string:
+. pub type:
+	toString get string:
 		# Return the time in a string format
 
-pub now func() time:
+after pub func(duration int.s64) chan[bool]:
+	# Send a single tick to a channel after the specified duration
+
+now pub func() .:
 	# Return the current time
 
-pub sleep func(duration int.s64):
+sleep pub func(duration int.s64):
 	# Make to thread sleep for the specified nanoseconds
 
-pub tick func(interval int.s64) chan[bool]:
+tick pub func(interval int.s64) chan[bool]:
 	# Send a tick to a channel at the specified interval

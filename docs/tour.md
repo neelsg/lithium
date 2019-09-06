@@ -370,7 +370,7 @@ Methods are functions defined within a type.
         
         x, y pub float
         
-        .= func(xInit, yInit float):
+        = func(xInit, yInit float):
             x, y = xInit, yInit
             return
         
@@ -381,7 +381,7 @@ Methods are functions defined within a type.
         v vertex = (1, 2)
         console.log(v.dist())
 
-You can create a function with the label `.=` in a type which will act as the initializer for the type. The initializer is activated either by calling the type as a function in an expression such as `vertex(1, 2)` or by assigning to a variable of the specified type as in `v vertex = (1, 2)`.
+You can create a function with the label `=` in a type which will act as the initializer for the type. The initializer is activated either by calling the type as a function in an expression such as `vertex(1, 2)` or by assigning to a variable of the specified type as in `v vertex = (1, 2)`.
 
 
 ## Private values
@@ -390,7 +390,7 @@ You can create a function with the label `.=` in a type which will act as the in
         
         x, y float
         
-        .= func(xInit, yInit float):
+        = func(xInit, yInit float):
             x, y = xInit, yInit
             return
         
@@ -409,14 +409,14 @@ main function in this case, you will get a compile error.
 ## Getters and setters
 
     vertex type:
-        .= func(xInit, yInit float):
+        = func(xInit, yInit float):
             x, y = xInit, yInit # This will call the respective set functions
             return
         
         x float
-        x get func() float:
+        x get float:
             return x # This will get the underlying variable only because it is used inside the get method
-        x set func(xVal float):
+        x set(xVal float):
             if xVal >= 0:
                 x = xVal # This will set the underlying variable only because it is used inside the set method
             else:
@@ -425,7 +425,7 @@ main function in this case, you will get a compile error.
         y float
         y get float:
             return y
-        y set func(yVal float):
+        y set(yVal float):
             if yVal >= 0:
                 y = yVal
             else:
@@ -447,7 +447,7 @@ If both a `get` method for a property as well as the actual property is defined,
 
     main func:
         myInt type(i int):
-            double func() myInt:
+            double pub func() myInt:
                 return i * 2
         
         i myInt = 3
@@ -463,7 +463,7 @@ The `type` keyword can take parameters to specify which other type/(s) it should
     
     vertex type:
         x, y pub float
-        .= func(xInit, yInit float):
+        = func(xInit, yInit float):
             x, y = xInit, yInit
             return
     
@@ -484,7 +484,7 @@ Note that a type does not need to specify that it implements the interface, all 
     person type:
         name pub string
         age pub int
-        .= func(nameInit string, ageInit int):
+        = func(nameInit string, ageInit int):
             name, age = nameInit, ageInit
             return
         toString get string:
@@ -506,7 +506,7 @@ Many packages look for this interface to print values.
 ## Errors
 
     myError type:
-        .= func(when time, what string):
+        = func(when time, what string):
             at, msg = when, what
             return
         
@@ -530,11 +530,11 @@ Lithium programs express error state with `error` values.
 
 The `error` type is a built-in interface:
 
-    . interface:
+    self interface:
         get toString string
         get ok bool
 
-The name `.` as used for this interface is special in that it indicates that this is the default item in this package, so you can access it by simply using the package name which in this case is `error`.
+The name `self` as used for this interface is special in that it indicates that this is the default item in this package, so you can access it by simply using the package name which in this case is `error`.
 
 Functions often return an `error` value, and calling code should handle errors by testing whether the `error.ok` is false.
 
@@ -548,7 +548,7 @@ Functions often return an `error` value, and calling code should handle errors b
 ## Parametric polymorphism
 
     plusable interface[p]:
-        .+(p) p
+        +(p) p
     
     double func[p plusable](num p) p:
         return num + num
@@ -570,7 +570,7 @@ The advantage over just using interfaces is that we can make sure that the varia
 ## Default types for polymorphism
 
     plusable interface[n]:
-        .+(n) n
+        +(n) n
     
     double func[p plusable int](num p) p:
         return num + num
@@ -590,11 +590,10 @@ A default type can be set for any polymorphic function. If the type is then omit
 ## Parametric polymorphism for types
 
     vertex type[n any.string]:
-        .= func(xInit, yInit n):
+        = func(xInit, yInit n):
             x, y = xInit, yInit
             return
-        pub x n
-        pub y n
+        x, y pub n
     
     main func:
         v vertex[int] = (1, 2)
@@ -752,9 +751,9 @@ If only the value is required, this can be further shortened to:
 
     main func:
         m map[int, string]
-        m(0) = "Hello"
-        m(1) = "World"
-        console.log(m(0), m(1))
+        m(1) = "Hello"
+        m(2) = "World"
+        console.log(m(1), m(2))
         console.log(m)
         
         primes map[int, int] = ((0,2), (1,3), (2,5), (3,7), (4,11), (5,13))

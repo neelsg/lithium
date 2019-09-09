@@ -22,14 +22,13 @@ source files all conform to a specific formatting convention.
 
 - `BOF` Beginning of file. Must be followed by file name.
 - `EOF` End of file.
-- `ID` Identifier.
-- `LI` Literal.
-- `LC` Literal continued. Used for multi-line doc strings
-- `SE` Separator. `: ; , . ( ) [ ]`
-- `OP` Operator. `+ - * / ** % = += -= *= /= **= %= ! || && == < > != <= >= ++ --`
-- `CO` Comment, single line
-- `CM` Comment, multi-line
-- `CC` Comment continued.
+- `TAB` Indent or dedent
+- `IDE` Identifier.
+- `LIT` Literal.
+- `LTC` Literal continued. Used for multi-line doc strings
+- `SEP` Separator. `: ; , . ( ) [ ]`
+- `OPE` Operator. `+ - * / ** % = += -= *= /= **= %= ! || && == < > != <= >= ++ --`
+- `COM` Comment
 
 ## Examples
 
@@ -37,8 +36,6 @@ source files all conform to a specific formatting convention.
 
 File: myfile.li
 
-    Li 0
-    
     # This is the main function
     main func:
         console.log("My favorite number is", int.rand(10))
@@ -46,23 +43,22 @@ File: myfile.li
 Tokens:
 
     BOF myfile.li
-    ID 1 1 Li
-    LI 1 4 0
-    CO 3 1 " This is the main function"
-    ID 4 1 main
-    ID 4 6 func
-    SE 4 10 :
-    ID 5 5 console
-    SE 5 12 .
-    ID 5 13 log
-    SE 5 16 (
-    LI 5 17 "My favorite number is"
-    SE 5 40 ,
-    ID 5 42 int
-    SE 5 45 .
-    ID 5 46 rand
-    SE 5 50 (
-    LI 5 51 10
-    SE 5 53 )
-    SE 5 54 )
+    COM 1 1 " This is the main function"
+    IDE 2 1 main
+    IDE 2 6 func
+    SEP 3 10 :
+    TAB 3 5 +1
+    IDE 3 5 console
+    SEP 3 12 .
+    IDE 3 13 log
+    SEP 3 16 (
+    LIT 3 17 "My favorite number is"
+    SEP 3 40 ,
+    IDE 3 42 int
+    SEP 3 45 .
+    IDE 3 46 rand
+    SEP 3 50 (
+    LIT 3 51 10
+    SEP 3 53 )
+    SEP 3 54 )
     EOF

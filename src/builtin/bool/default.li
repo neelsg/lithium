@@ -5,10 +5,10 @@ Li 0
 . type:
 	# Boolean type, can be true or false
 	
-	.== func(compareTo .) .:
+	==(compareTo):
 		# If both are true or both are false, this will return true
 	
-	.! func() .:
+	!:
 		# If the value is true, this will return false and vice versa
 	
 	get toBool .:

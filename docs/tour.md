@@ -7,35 +7,40 @@ This tour aims to cover the basics of the Lithium Programming Language.
 
 ## Start
 
+    # This imports a library so that we can output to the console and get random numbers
+    import console "github.com/neelsg/lib/console"
+    import math "github.com/neelsg/lib/math"
+    
     # This is the main function
-    main func:
-        console.log("My favorite number is", int.rand(10))
+    fn main
+        console.log("My favorite number is", math.rand[int](10))
 
 This code will print the text "My favorite number is" and a random number from 0 to 10.
 
 Anything after a `#` on a line is a comment and is ignored by the compiler.
 
-The `func` keyword is used to define functions (which are blocks of code that can be executed. When a program is executed, the first thing that will run is the "main" function.
+The `fn` keyword is used to define functions (which are blocks of code that can be executed. When a program is executed, the first thing that will run is the "main" function.
 
 
 ## Exporting components
 
-    multiply func(x, y int) int:
+    fn multiply(x, y int) int
         # This function is only available within the current package
         return x * y
     
-    sqr pub func(x int) int:
+    export fn sqr(x int) int
         # This function can be used by other packages
         return multiply(x, x)
 
-Use the `pub` keyword to make your components available to other packages
+Use the `export` keyword to make your components available to other packages
 
 
 ## Importing packages
 
-    import myMath "./myMathFolder"
+    import console "github.com/neelsg/lib/console"
+    import myMath "./lib/myMath"
     
-    main func:
+    fn main
         console.log(myMath.sqr(3))
 
 You can import your own packages or third-party libraries using the `import` keyword.
@@ -43,10 +48,12 @@ You can import your own packages or third-party libraries using the `import` key
 
 ## Functions
 
-    add func(x, y int) int:
+    import console "github.com/neelsg/lib/console"
+    
+    fn add(x, y int) int
         return x + y
     
-    main func:
+    fn main
         console.log(add(42, 13))
 
 A function can take zero or more arguments. In this example, `add` takes two arguments of type `int`. Note that the type comes after the variable name. If two or more consecutive arguments are of the same type, you only need to specify the type for the last argument.
@@ -56,17 +63,20 @@ A function that takes no arguments can optionally be declared without brackets:
 
 ## Multiple results
 
-    split func(sum int) (int, int):
-        x int = sum * 4 / 9
-        y int = sum - x
+    import console "github.com/neelsg/lib/console"
+
+    fn split(sum int) (int, int)
+        let x int = sum * 4 / 9
+        let y int = sum - x
         return x, y
 
-    swap func(x, y string) (string, string): return y, x
+    fn swap(x, y string) (string, string)
+        return y, x
 
-    main func:
+    main func
         console.log(split(17))
         
-        a, b string = swap("hello", "world")
+        let a, b = swap("hello", "world")
         console.log(a, b)
 
 A function can return any number of results. If they do, these must be wrapped in brackets `( )`. Even if a function returns only one result, the result type can optionally be wrapped in brackets.
@@ -74,23 +84,25 @@ A function can return any number of results. If they do, these must be wrapped i
 
 ## Variables
 
-    i, j, k bool
+    import console "github.com/neelsg/lib/console"
+
+    var i, j, k bool
     
-    l pub bool
+    export var l bool
     
-    main func:
+    fn main
         m int
         console.log(i, j, k, l, m)
 
 Variables are declared by specifying the name of the variable followed by the type.
 
+    import console "github.com/neelsg/lib/console"
+    import math "github.com/neelsg/lib/math"
 
-## Initializers
-
-    i, j int, p float = 1, 2, math.pi
+    var i, j, p = 1, 2, math.pi
     
-    main func:
-        k, l bool, m, n string = true, false, "no!", "yes!"
+    fn main
+        var k, l, m, n = true, false, "no!", "yes!"
         console.log(i, j, p, k, l, m, n)
 
 A variable declaration can include initializers. If an initializer is omitted, the variable will be assigned the default value of the type.
@@ -98,18 +110,21 @@ A variable declaration can include initializers. If an initializer is omitted, t
 
 ## Basic types
 
-    toBe bool = false
-    maxInt int.u64 = math.power[int.u64](2, 64) - 1
-    z complex.p128 = math.sqrt[complex.p128](-5 + 12i)
+    import console "github.com/neelsg/lib/console"
+    import math "github.com/neelsg/lib/math"
     
-    main func:
+    var toBe bool = false
+    var maxInt int.u64 = math.power[int.u64](2, 64) - 1
+    var z math.complex.p128 = math.sqrt[math.complex.p128](-5 + 12i)
+    
+    fn main
         console.log("Value: \(toBe)")
         console.log("Value: \(maxInt)")
         console.log("Value: \(z)")
 
-Lithium basic types are:
+Some of the lithium basic types are:
 
-    bool int string float complex
+    bool int string float
 
 Each of these types are defined in a built-in library package.
 
@@ -119,17 +134,17 @@ There are also more specific data types such as:
     int.u int.u8 int.u16 int.u32 int.u64
     
     float.p32 float.p64
-    
-    complex.p64 complex.p128
 
 
 ## Default values
 
-    main func:
-        i int
-        f float
-        b bool
-        s string
+    import console "github.com/neelsg/lib/console"
+
+    fn main
+        var i int
+        var f float
+        var b bool
+        var s string
         console.log("\(i) , \(f) , \(b) , \(s)")
 
 Variables declared without an explicit initial value are given their default value.
@@ -145,10 +160,13 @@ Custom types can have their own defined default values.
 
 ## Type conversions
 
-    main func:
-        x, y int = 3, 4
-        f float = math.sqrt((x * x + y * y).toFloat)
-        z int.u = f.toUInt
+    import console "github.com/neelsg/lib/console"
+    import math "github.com/neelsg/lib/math"
+
+    fn main
+        let x, y = 3, 4
+        let f = math.sqrt((x * x + y * y).float())
+        let z int.u = f.int().unsigned()
         console.log(x, y, z)
 
 The built in types have properties to convert to different types. Custom defined types should also include similar functionality.
@@ -156,69 +174,63 @@ The built in types have properties to convert to different types. Custom defined
 Some numeric conversions:
 
     i int = 42
-    f float.p64 = i.toFloat64
-    u int.u = f.toUInt
+    f float.p64 = i.float64()
+    u int.u = f.int().unsigned()
 
 Unlike in C, assignment in Lithium between items of different type requires an explicit conversion.
 
 
 ## Constants
 
-    pi const = 3.14
+    import console "github.com/neelsg/lib/console"
     
-    main func = func():
+    let pi = 3.14
+    
+    fn main
         world const = "Mars"
         console.log("Hello", world)
         console.log("Happy", pi, "Day")
         
-        truth const = true
+        let truth = true
         console.log("Humans rock?", truth)
 
-Constants are declared like variables, but with the `const` keyword as type. Constants can be string, boolean, or numeric values. Constants cannot be declared with an expression that requires runtime evaluation such as calling a function.
+Constants are declared like variables, but declared with `let` keyword instead of `var`. Constants can be string, boolean, or numeric values.
 
 
 ## For
 
-    main func:
-        sum int = 0
-        for i int = 0; i < 10; i++:
+    import console "github.com/neelsg/lib/console"
+    
+    fn main
+        var sum int = 0
+        for i in [1:10]
             sum += i
         console.log(sum)
 
 Lithium has only one looping construct, the `for` loop.
 
-The basic for loop has three components separated by semicolons:
-
-    The init statement: executed before the first iteration
-    The condition expression: evaluated before every iteration
-    The post statement: executed at the end of every iteration
-
-The init statement will often be a short variable declaration, and the variables declared there are visible only in the scope of the for statement.
-
-The loop will stop iterating once the boolean condition evaluates to `false`.
-
-
-## For continued
-
-    main func:
-        sum int = 1
-        for ; sum < 1000; :
+    import console "github.com/neelsg/lib/console"
+    
+    fn main
+        var sum int = 1
+        for sum < 1000
             sum += sum
         console.log(sum)
 
-The init and post statements are optional. At that point you can drop the semicolons:
+The loop can also include a conditional expression. The loop will exit as soon as the condition is false.
 
-    main func:
-        sum int = 1
-        for sum < 1000:
-            sum += sum
+    import console "github.com/neelsg/lib/console"
+    
+    fn main
+        var sum int
+        for i in [1:10] && sum < 20
+            sum += i
         console.log(sum)
 
+Iterators and conditional expressions can be combined.
 
-## Forever
-
-    main func:
-        for:
+    fn main
+        for
             # Whatever code goes here will run in an infinite loop
 
 If you omit the loop condition it loops forever.
@@ -226,43 +238,43 @@ If you omit the loop condition it loops forever.
 
 ## If
 
-    sqrt func(x float) string:
-        if x < 0:
-            return sqrt(-x).toString + "i"
-        return math.sqrt(x).toString
+    import console "github.com/neelsg/lib/console"
     
-    main func:
+    fn sqrt(x float) string
+        if x < 0
+            return (-x ^ 0.5).string() + "i"
+        return (x ^ 0.5).string()
+    
+    fn main
         console.log(sqrt(2), sqrt(-4))
 
 Lithium's `if` statements are similar to its `for` loops
 
-
-## If with an init statement
-
-    pow func(x, n, lim float) float:
-        if v float = math.power(x, n); v < lim:
+    import console "github.com/neelsg/lib/console"
+    
+    fn pow(x, n, lim float) float
+        if (let v float = x ^ n) && v < lim
             return v
         return lim
     
-    main func:
+    fn main
         console.log(
             pow(3, 2, 10),
             pow(3, 3, 20),
-            )
+        )
 
-Like `for`, the `if` statement can start with a short statement to execute before the condition. Variables declared by the statement are only in scope until the end of the `if`.
+Like `for`, the `if` statement can start with a short statement to execute before the condition using `&&`. Variables declared by the statement are only in scope until the end of the `if`.
 
-
-## If and else
-
-    pow func(x, n, lim float) float:
-        if y = math.power(x, n); y < lim:
+    import console "github.com/neelsg/lib/console"
+    
+    fn pow(x, n, lim float) float
+        if (let y = x ^ n) && y < lim
             return y
-        else:
+        else
             console.log("\(y) >= \(lim)")
         return lim
     
-    main func:
+    fn main
         console.log(pow(3, 2, 10), pow(3, 3, 20), )
 
 Variables declared inside an `if` init statement are also available inside any of the else blocks.
@@ -270,13 +282,15 @@ Variables declared inside an `if` init statement are also available inside any o
 
 ## Function values
 
-    compute func(f func(float, float) float) float:
+    import console "github.com/neelsg/lib/console"
+    
+    fn compute(f fn(float, float) float) float
         return f(3, 4)
     
-    main func:
-        hypot func(x, y float) float:
-            return math.sqrt(x * x + y * y)
-        ave func(x, y float) float:
+    fn main
+        let hypot = fn(x, y float) float
+            return (x * x + y * y) ^ 0.5
+        let ave = fn(x, y float) float
             return (x + y) / 2
         
         console.log(hypot(5, 12))
@@ -291,7 +305,9 @@ Function values may be used as function arguments and return values.
 
 ## Defer
 
-    main func:
+    import console "github.com/neelsg/lib/console"
+    
+    fn main
         defer console.log("world!")
         
         console.log("Hello")
@@ -300,13 +316,12 @@ The `defer` statement defers the execution of a function until the surrounding f
 
 The `defer` statement's arguments are evaluated immediately, but the function call is not executed until the surrounding function returns.
 
-
-## Stacking defers
-
-    main func:
+    import console "github.com/neelsg/lib/console"
+    
+    fn main
         console.log("counting")
         
-        for i int = 0; i < 10; i++:
+        for i in [1:10]
             defer console.log(i)
         
         console.log("done")
@@ -316,15 +331,17 @@ Deferred function calls are pushed onto a stack. When a function returns, its de
 
 ## Function closures
 
-    adder func() (func(int) int):
-        sum int = 0
-        return func(x int) int:
+    import console "github.com/neelsg/lib/console"
+    
+    fn adder() (fn(int) int)
+        var sum = 0
+        return fn(x int) int:
             sum += x
             return sum
     
-    main func:
-        pos int, neg int = adder(), adder()
-        for i int; i < 10; i++:
+    fn main
+        var pos, neg = adder(), adder()
+        for i in [1:10]
             console.log(
                 pos(i),
                 neg(-2 * i),
@@ -337,141 +354,76 @@ For example, the `adder` function returns a closure. Each closure is bound to it
 
 ## Defining new types
 
-    vertex type:
-        x pub int
-        y pub int
+    import console "github.com/neelsg/lib/console"
     
-    main func:
-        v vertex
+    type vertex struct(
+        x int,
+        y int
+    )
+    
+    fn main
+        let v vertex
         v.x, v.y = 1, 2
         console.log(v)
 
-Lithium allows simple object-oriented programming. A type is a collection of properties and methods and is often called a class in other languages. Note the `pub` keyword in front of the property names that make these properties available for use outside of the type itself.
+Lithium allows simple object-oriented programming. A new type can be defined from any existing type, inheriting the properties and methods of the existing type.
 
 
 ## Methods
 
-    vertex type:
-        x, y pub float
-        dist pub func() float:
-                return math.sqrt(x * x + y * y)
+    import console "github.com/neelsg/lib/console"
     
-    main func:
-        v vertex
+    type vertex struct(x, y float)
+    
+    fn vertex(v).dist() float
+        return (v.x ^ 2 + v.y ^ 2) ^ 0.5
+    
+    fn main
+        let v vertex
         v.x, v.y = 1, 2
         console.log(v.dist())
 
-Methods are functions defined within a type.
+Methods are functions defined with the type defined at the start.
 
 
-## The setter function
+## The initializer function
 
-    vertex type:
-        
-        x, y pub float
-        
-        = func(xInit, yInit float):
-            x, y = xInit, yInit
-            return
-        
-        dist pub func() float:
-            return math.sqrt(x * x + y * y)
+    import console "github.com/neelsg/lib/console"
     
-    main func:
-        v vertex = (1, 2)
+    type vertex struct(x, y float)
+    
+    fn vertex(v).=(xInit, yInit float)
+        v.x, v.y = xInit, yInit
+        return
+    
+    fn vertex(v).dist() float
+        return (v.x ^ 2 + v.y ^ 2) ^ 0.5
+    
+    fn main
+        let v vertex = (1, 2)
         console.log(v.dist())
 
-You can create a function with the label `=` in a type which will act as the initializer for the type. The initializer is activated either by calling the type as a function in an expression such as `vertex(1, 2)` or by assigning to a variable of the specified type as in `v vertex = (1, 2)`.
-
-
-## Private values
-
-    vertex type:
-        
-        x, y float
-        
-        = func(xInit, yInit float):
-            x, y = xInit, yInit
-            return
-        
-        dist pub func() float:
-            return math.sqrt(x * x + y * y)
-    
-    main func:
-        v vertex = (1, 2)
-        console.log(v.dist())
-
-If you omit the `pub` keyword for properties or methods, they are only
-available to the methods in the object itself. If you try to use `v.x` in the
-main function in this case, you will get a compile error.
-
-
-## Getters and setters
-
-    vertex type:
-        = func(xInit, yInit float):
-            x, y = xInit, yInit # This will call the respective set functions
-            return
-        
-        x float
-        x get float:
-            return x # This will get the underlying variable only because it is used inside the get method
-        x set(xVal float):
-            if xVal >= 0:
-                x = xVal # This will set the underlying variable only because it is used inside the set method
-            else:
-                x = -xVal
-        
-        y float
-        y get float:
-            return y
-        y set(yVal float):
-            if yVal >= 0:
-                y = yVal
-            else:
-                y = -yVal
-        
-        dist pub func() float:
-            return math.sqrt(x * x + y * y)
-    
-    main func:
-        v vertex = (1, 2)
-        console.log(v.dist())
-
-Properties can have a `get` and `set` method which allows for more control over what happens when you retrieve or assign a value to that property. These methods are public by definition.
-
-If both a `get` method for a property as well as the actual property is defined, the `get` method will take preference whenever that method is used outside of the actual code run by the `get` method itself. Similarly, the `set` method also overrules an actual property in the type if such actual property is defined.
-
-
-## Inheritance
-
-    main func:
-        myInt type(i int):
-            double pub func() myInt:
-                return i * 2
-        
-        i myInt = 3
-        console.log(i.double().double()) # This will print 12
-
-The `type` keyword can take parameters to specify which other type/(s) it should inherit from which allows you to create new types by extending existing ones.
+You can create a function with the label `=` for a type which will act as the initializer for the type. The initializer is activated either by calling the type as a function in an expression such as `vertex(1, 2)` or by assigning to a variable of the specified type as in `var v vertex = (1, 2)`.
 
 
 ## Interfaces
 
-    hasX interface:
-        x get float
+    import console "github.com/neelsg/lib/console"
     
-    vertex type:
-        x, y pub float
-        = func(xInit, yInit float):
-            x, y = xInit, yInit
-            return
+    interface hasX
+        x float
     
-    printX func(o hasX):
+    type vertex struct(x, y float)
+    
+    fn vertex(v).=(xInit, yInit float)
+        v.x, v.y = xInit, yInit
+        return
+    
+    fn printX(o hasX)
         console.log(o.x)
     
-    main func:
-        v vertex = (3, 4)
+    fn main
+        let v vertex = (3, 4)
         printX(v) # This will print 3
 
 Interfaces specify which properties and methods a type must have to satisfy it. You can use an interface as a parameter in a function and ensure that any object that is passed to that function must satisfy that interface. If you try to pass an object that does not satisfy the interface or try to use the parameter in the function in a way that is not allowed by the interface, you will get a compile error.
@@ -481,106 +433,122 @@ Note that a type does not need to specify that it implements the interface, all 
 
 ## Stringers
 
-    person type:
-        name pub string
-        age pub int
-        = func(nameInit string, ageInit int):
-            name, age = nameInit, ageInit
-            return
-        toString get string:
-            return "\(name) (\(age) years)"
+    import console "github.com/neelsg/lib/console"
     
-    main func:
-        a person("Arthur Dent", 42)
-        z person("Zaphod Beeblebrox", 9001)
+    type person struct(
+        name string,
+        age int
+    )
+    
+    fn person(p).=(nameInit string, ageInit int)
+        p.name, p.age = nameInit, ageInit
+        return
+    
+    fn person(p).string() string
+        return "\(p.name) (\(p.age) years)"
+    
+    fn main
+        let a = person("Arthur Dent", 42)
+        let z = person("Zaphod Beeblebrox", 9001)
         console.log(a, z)
 
-One of the most ubiquitous interfaces is `any.string`.
+One of the most ubiquitous interfaces is `string.stringer`.
 
-    string pub interface:
-        get toString string
+    export interface stringer
+        string fn() string
 
 Many packages look for this interface to print values.
 
 
 ## Errors
 
-    myError type:
-        = func(when time, what string):
-            at, msg = when, what
-            return
-        
-        at time
-        msg string
-        
-        ok pub bool = false
-        class pub string = "MyError"
-        
-        toString get string:
-            return "at \(at), \(msg)"
+    import console "github.com/neelsg/lib/console"
+    import time "github.com/neelsg/lib/time"
     
-    run func() error:
+    type myError struct(
+        at time,
+        msg string,
+        ok bool,
+        class string,
+    )
+    
+    fn myError(e).=(when time, what string)
+        e.at, e.msg = when, what
+        e.ok, e.class = false, "MyError"
+        return
+    
+    fn myError(e).string() string
+        return "at \(e.at), \(e.msg)"
+    
+    fn run() error:
         return myError(time.now(), "it didn't work")
     
-    main func:
-        if err error = run(); !err.ok:
+    fn main
+        if let err = run() && !err.ok
             console.log(err)
 
 Lithium programs express error state with `error` values.
 
 The `error` type is a built-in interface:
 
-    self interface:
-        get toString string
-        get ok bool
+    export interface self
+        string.stringer
+        ok bool
 
 The name `self` as used for this interface is special in that it indicates that this is the default item in this package, so you can access it by simply using the package name which in this case is `error`.
 
 Functions often return an `error` value, and calling code should handle errors by testing whether the `error.ok` is false.
 
-    i int
-    if i, err error = "42".toInt; !err.ok:
-        console.log("couldn't convert number: \(err)")
+    import console "github.com/neelsg/lib/console"
+    
+    fn main
+        let i int, err error
+        if i, err = "42".int() && !err.ok
+            console.log("Couldn't convert number: \(err)")
+        console.log("Converted integer:", i)
         return
-    console.log("Converted integer:", i)
 
 
 ## Parametric polymorphism
 
-    plusable interface[p]:
-        +(p) p
+    import console "github.com/neelsg/lib/console"
     
-    double func[p plusable](num p) p:
+    interface plusable[p]
+        + fn(p) p
+    
+    fn double[p plusable](num p) p:
         return num + num
     
-    main func:
-        myInt int = 3
+    fn main
+        var myInt = 3
         myInt = double[int](myInt)
         console.log(myInt) # This will print 6
         
-        myFloat float = 3.1
+        var myFloat = 3.1
         myFloat = double[float](myFloat)
         console.log(myFloat) # This will print 6.2
 
 This is often called generics in other languages. What is happening here is that we can pass any type of variable to `double()` as long as it implements the `plusable` interface.
 
-The advantage over just using interfaces is that we can make sure that the variables retain their original type, so in the first case, `double()` actually returns an `int` and in the second, `double()` actually returns a `float`. If we used only interfaces, the return value would only allow properties and methods of the interface, so we would not be able to print it as `plusable` does not specify a `toString` property, but `float` does.
+The advantage over just using interfaces is that we can make sure that the variables retain their original type, so in the first case, `double()` actually returns an `int` and in the second, `double()` actually returns a `float`. If we used only interfaces, the return value would only allow properties and methods of the interface, so we would not be able to print it as `plusable` does not specify a `string` method, but `float` and `int` does.
 
 
 ## Default types for polymorphism
 
-    plusable interface[n]:
-        +(n) n
+    import console "github.com/neelsg/lib/console"
     
-    double func[p plusable int](num p) p:
+    interfce plusable[n]
+        + fn(n) n
+    
+    fn double[p plusable int](num p) p
         return num + num
     
-    main func:
-        myInt int = 3
+    fn main
+        var myInt int = 3
         myInt = double(myInt)
         console.log(myInt) # This will print 6
         
-        myFloat float = 3.1
+        var myFloat float = 3.1
         myFloat = double[float](myFloat)
         console.log(myFloat) # This will print 6.2
 
@@ -589,14 +557,16 @@ A default type can be set for any polymorphic function. If the type is then omit
 
 ## Parametric polymorphism for types
 
-    vertex type[n any.string]:
-        = func(xInit, yInit n):
-            x, y = xInit, yInit
-            return
-        x, y pub n
+    import console "github.com/neelsg/lib/console"
     
-    main func:
-        v vertex[int] = (1, 2)
+    type vertex struct[n string.stringer](x, y n)
+    
+    fn vertex(v, n).=(xInit, yInit n)
+        v.x, v.y = xInit, yInit
+        return
+    
+    fn main
+        let v vertex[int] = (1, 2)
         console.log(v.x)
 
 Parametric polymorphism can also be used with type definitions to create more generic types. In the above example, `x` and `y` are of type `int`.
@@ -604,14 +574,18 @@ Parametric polymorphism can also be used with type definitions to create more ge
 
 ## Tuples
 
-    main func:
-        triplets (string, string, string) = "Anna", "Betty", "Carmen"
+    import console "github.com/neelsg/lib/console"
+    
+    fn main
+        let triplets (string, string, string) = "Anna", "Betty", "Carmen"
         console.log(triplets)
 
 Tuples are ordered pairs of variables. You have actually already seen them used for multiple return values for functions as well as with assignments on multiple variables. Tuples defined as a set of types wrapped in brackets.
 
-    main func:
-        triplets (string, string, string) = "Anna", "Betty", "Carmen"
+    import console "github.com/neelsg/lib/console"
+    
+    fn main
+        let triplets (string, string, string) = "Anna", "Betty", "Carmen"
         console.log(triplets.0) # This prints Anna
         console.log(triplets.1) # This prints Betty
         console.log(triplets.2) # This prints Carmen
@@ -619,39 +593,39 @@ Tuples are ordered pairs of variables. You have actually already seen them used 
 The individual values in a tuple can be accessed using the index number starting from zero. The index number must be a literal number, it cannot be another variable or calculated in some way.
 
 
-## Lists
+## Arrays
 
-    main func:
-        l list[string]
+    import console "github.com/neelsg/lib/console"
+    
+    fn main
+        var l array[string]
         l(0) = "Hello"
         l(1) = "World"
         console.log(l(0), l(1))
         console.log(l)
         
-        primes list[int](2, 3, 5, 7, 11, 13)
+        let primes = [int](2, 3, 5, 7, 11, 13)
         console.log(primes)
 
-`list[t]` is a built-in type that stores a list or sometimes called an array of variables of type `t`.
+`array[t]` is a built-in type that stores a sequence of values of type `t`.
 
-The statement `l list[string]` declares a new list `l` of strings. The keys in a list are always of type `int`.
+The statement `l array[string]` declares a new array `l` of strings. The keys in an array are always of type `int` and always start at 0.
 
-
-## List slices
-
-    main func:
-        abcd list[string] = ("a", "b", "c", "d")
-        bc list[string] = abcd.slice(1, 3)
+    import console "github.com/neelsg/lib/console"
+    
+    fn main
+        let abcd = [string]("a", "b", "c", "d")
+        let bc = abcd.slice(1, 3)
         console.log(bc)
 
-A slice is formed by specifying two indexes, a low and high bound, separated by a comma: `list.slice(low, high int)`.
+A slice is formed by specifying two indexes, a low and high bound, separated by a comma: `arr.slice(low, high int)`.
 
 This selects a half-open range which includes the first element, but excludes the last one.
 
-
-## List slice defaults
-
-    main func:
-        p list[int](2, 3, 5, 7, 11, 13)
+    import console "github.com/neelsg/lib/console"
+    
+    fn main
+        var p array[int] = [int](2, 3, 5, 7, 11, 13)
         
         p = p.slice(1, 4)
         console.log(p)
@@ -663,24 +637,21 @@ This selects a half-open range which includes the first element, but excludes th
         console.log(p)
 
 When slicing, you may omit the high or low bounds to use their defaults instead.
-
 The default is zero for the low bound and the length of the list for the high bound.
 
+    import console "github.com/neelsg/lib/console"
 
-## List length
+    fn main
+        let p = [int](2, 3, 5, 7, 11, 13)
+        console.log(p.length())
 
-    main func:
-        p list[int](2, 3, 5, 7, 11, 13)
-        console.log(p.length)
+Arrays have a length method that shows how many items are currently in the array.
 
-Lists have a length property that shows how many items are currently in the list.
-
-
-## Lists of lists
-
-    main func:
+    import console "github.com/neelsg/lib/console"
+    
+    fn main
         # Create a tic-tac-toe board.
-        board list[list[string]] = (
+        var board array[array[string]] = [][string](
             ("_", "_", "_"),
             ("_", "_", "_"),
             ("_", "_", "_"),
@@ -693,48 +664,48 @@ Lists have a length property that shows how many items are currently in the list
         board(1)(0) = "O"
         board(0)(2) = "X"
         
-        for i int = 0; i < board.length; i++:
+        for i in board
             console.log(board(i).join(" "))
 
-Lists can contain any type, including other lists.
+Arrays can hold any type, including other arrays.
 
+    import console "github.com/neelsg/lib/console"
 
-## Appending to a list
-
-    main func:
-        l list[int]
-        console.log(l)
+    fn main
+        var a array[int]
+        console.log(a)
         
-        l.push(3)
-        console.log(l)
+        a.push(3)
+        console.log(a)
         
-        l.push(4)
-        console.log(l)
+        a.push(4)
+        console.log(a)
         
         # We can add more than one element at a time.
-        l.push(5, 6, 7)
-        console.log(l)
+        a.push(5, 6, 7)
+        console.log(a)
 
-Lists have a `push` method to append items to it.
+Arrays have a `push` method to append items to it.
 
 
-## Iterating over a list
+## Iterating over an array
 
-    pow list[int] = (1, 2, 4, 8, 16, 32, 64, 128)
+    import console "github.com/neelsg/lib/console"
     
-    main func:
-        for i, v int in pow:
+    let pow = [int](1, 2, 4, 8, 16, 32, 64, 128)
+    
+    fn main
+        for i, v in pow
             console.log("2 ** \(i) = \(v)")
 
-Lists are iterable, which means that they can be used in a for loop with the `in` keyword.
+Arrays are iterable, which means that they can be used in a for loop with the `in` keyword.
 
-
-## Iterating continued
-
-    main func:
-        pow list[int] = (1, 2, 4, 8, 16, 32, 64, 128)
+    import console "github.com/neelsg/lib/console"
+    
+    fn main
+        let pow = [int](1, 2, 4, 8, 16, 32, 64, 128)
         
-        for _, value int in pow:
+        for _, value in pow
             console.log(value)
 
 You can skip the key or value by assigning to `_`.
@@ -749,41 +720,47 @@ If only the value is required, this can be further shortened to:
 
 ## Maps
 
-    main func:
-        m map[int, string]
+    import console "github.com/neelsg/lib/console"
+    
+    fn main
+        var m map[int=string]
         m(1) = "Hello"
         m(2) = "World"
         console.log(m(1), m(2))
         console.log(m)
         
-        primes map[int, int] = ((0,2), (1,3), (2,5), (3,7), (4,11), (5,13))
+        var primes = [string=int](
+            "first"  = 2,
+            "second" = 3,
+            "third"  = 5,
+            "fourth" = 7,
+            "fifth"  = 11,
+            "sixth"  = 13,
+        )
         console.log(primes)
 
-`map[k, v]` is a data type that stores a map with keys of type `k` that maps to values of type `v`.
+`map[k=v]` is a data type that stores a map with keys of type `k` that maps to values of type `v`.
 
-The statement `m map[int, string]` declares a variable `m` as a map with `int` keys and `string` values.
+The statement `var m map[int=string]` declares a variable `m` as a map with `int` keys and `string` values.
 
-
-## Map initializer with custom keys
-
-    vertex type:
-        lat, long float
+    import console "github.com/neelsg/lib/console"
     
-    m map[string, vertex] = (
-        ("Bell Labs", (40.68433, -74.39967)),
-        ("Google", (37.42202, -122.08408)),
+    type vertex struct(lat, long float)
+    
+    let m  = [string=vertex](
+        "Bell Labs" = (40.68433, -74.39967),
+        "Google"    = (37.42202, -122.08408),
     )
     
-    main func:
+    fn main
         console.log(m)
 
-The map initializer accepts an arbitrary number of tuples that consist of the (key, value) pairs that need to be added.
+The map initializer accepts an arbitrary number of tuples that consist of the key=value pairs that need to be added.
 
-
-## Mutating maps
-
-    main func:
-        m map[string, int]
+    import console "github.com/neelsg/lib/console"
+    
+    fn main
+        var m map[string=int]
         
         m("Answer") = 42
         console.log("The value: ", m("Answer"))
@@ -794,11 +771,11 @@ The map initializer accepts an arbitrary number of tuples that consist of the (k
         m.delete("Answer")
         console.log("The value: ", m("Answer"))
         
-        ok bool = m.exists("Answer")
+        let ok = m.exists("Answer")
         console.log("Present? ", ok)
         
-        v int, ok bool = m.get("Answer")
-        console.log("The value: ", v, "Present? ", ok)
+        let v, ok = m.get("Answer")
+        console.log("The value: ", v, " (Present? \(ok)")
 
 Insert or update an element in map `m`:
 
@@ -821,49 +798,51 @@ Test that a key is present:
 
 If `key` is in the map, `ok` is `true`. If not, `ok` is `false`.
 
-You can use `val, ok = map.get(key)` as a shorthand for
-`val, ok = map(key), map.exists(key)`.
+You can use `val, ok = map.get(key)` as a shorthand for `val, ok = map(key), map.exists(key)`.
 
 
 ## Variadic functions
 
-    sum func(...nums int) int:
-        s int
-        for n int in nums:
+    import console "github.com/neelsg/lib/console"
+    
+    fn sum(...nums int) int
+        var s int
+        for n in nums
             s += n
         return s
     
-    main func:
+    fn main
         console.log(sum(1, 2, 3, 4, 5)) # This will print 15
 
 Variadic functions are functions that can take an arbitrary number of parameters instead of a fixed set. The parameters are passed into the initializer method of a list.
 
-    number interface[n]:
-        plus(n) n
-        power(n) n
+    import console "github.com/neelsg/lib/console"
     
-    sumPower func[num number](...pairs (num, num)) num:
-        sum num
-        for (base, exp num) in pairs:
-            sum += base ** exp
+    interface number[n]
+        + fn(n) n
+        ^ fn(n) n
+    
+    fn sumPower[num number](...pairs (num, num)) num
+        var sum num
+        for (base, exp) in pairs
+            sum += base ^ exp
         return sum
     
-    main func:
+    fn main
         console.log(sumPower[int]((2, 1), (2, 2), (2, 3), (2, 4))) # Output 30
 
 Variadic functions can take any type of parameter that can be as a value in a list including tuples.
 
-
-## Spread operator
-
-    sum func(...nums int) int:
-        s int
-        for n int in nums:
+    import console "github.com/neelsg/lib/console"
+    
+    fn sum(...nums int) int
+        var s int
+        for n in nums
             s += n
         return s
     
-    main func:
-        numbers array[int](1, 2, 3, 4, 5)
+    fn main
+        let numbers = [int](1, 2, 3, 4, 5)
         console.log(sum(numbers...))
 
 It is possible to use the spread operator (`...`) to pass the values in a collection as distinct parameters in a variadic function.
@@ -871,12 +850,16 @@ It is possible to use the spread operator (`...`) to pass the values in a collec
 
 ## Coroutines
 
-    say func(s string):
-        for i int = 0; i < 5; i++:
+    import
+        console "github.com/neelsg/lib/console"
+        time    "github.com/neelsg/lib/time"
+    
+    fn say(s string)
+        for i in [0:4]
             time.sleep(100 * time.milliSecond)
             console.log(s)
     
-    main func:
+    fn main
         co say("world")
         say("hello")
 
@@ -888,14 +871,18 @@ The evaluation of the passed parameters happen in the current coroutine, but the
 
 Coroutines run in the same address space, so access to shared memory must be synchronized. The `sync` package provides useful primitives, although you won't need them much in Lithium as there are other ways to handle concurrency as you will see shortly.
 
-    say func(s string):
-        for i int = 0; i < 5; i++:
+    import
+        console "github.com/neelsg/lib/console"
+        time    "github.com/neelsg/lib/time"
+    
+    fn say(s string)
+        for i in [0:4]
             time.sleep(100 * time.milliSecond)
             console.log(s)
     
-    main func:
-        co:
-            for i int in int.range(5):
+    fn main
+        co
+            for i in [0:4)
                 time.sleep(100 * time.milliSecond)
                 console.log("world")
         say("hello")
@@ -905,20 +892,20 @@ It is also possible to use `co` with a block of code to be executed instead of c
 
 ## Channels
 
-    sum func(s list[int], c chan[int]):
-        sum int = 0
-        for v int in s:
+    import console "github.com/neelsg/lib/console"
+    
+    fn sum(s array[int], c chan[int])
+        var sum = 0
+        for v in s
             sum += v
         c.push(sum) # Send sum to c
     
-    main func:
-        s array[int] = (7, 2, 8, -9, 4, 0)
-        
-        c chan[int]
+    fn main
+        let s = [int](7, 2, 8, -9, 4, 0)
+        let c = chan[int]
         co sum(s.slice(, s.length / 2), c)
         co sum(s.slice(s.length / 2, ), c)
-        x, y int = c.pop(), c.pop() # receive from c
-        
+        let x, y = c.pop(), c.pop() # receive from c
         console.log(x, y, x + y)
 
 Channels are a typed conduit through which you can send values with `push()` and receive values with `pop()`
@@ -930,11 +917,10 @@ By default, sends and receives block until the other side is ready. This allows 
 
 The example code sums the numbers in an array, distributing the work between two coroutines. Once both coroutines have completed their computation, it calculates the final result.
 
-
-## Buffered Channels
-
-    main func:
-        ch chan[int] = 2
+    import console "github.com/neelsg/lib/console"
+    
+    fn main
+        let ch = chan[int](2)
         ch.push(1)
         ch.push(2)
         console.log(ch.pop())
@@ -942,76 +928,79 @@ The example code sums the numbers in an array, distributing the work between two
 
 Channels can be buffered. Provide the buffer length to the channel initializer to make a buffered channel:
 
-    ch chan[int] = 100
+    ch = chan[int](bufferLength)
 
 Sends to a buffered channel block only when the buffer is full. Receives block when the buffer is empty.
 
 
 ## Closing a channel
 
-    fibonacci func(n int, c chan[int]):
-        x int, y int = 0, 1
-        for i int = 0; i < n; i++:
+    import console "github.com/neelsg/lib/console"
+    
+    fn fibonacci(n int, c chan[int])
+        var x, y = 0, 1
+        for i in [1:n]
             c.push(x)
             x, y = y, x + y
             c.close()
     
-    main func:
-        c chan[int] = 10
+    fn main
+        let c = chan[int](10)
         co fibonacci(c.capacity, c)
-        for i int in c:
+        for i in c
             console.log(i)
 
 A sender can close a channel to indicate that no more values will be sent. Receivers can test whether a channel has been closed by checking the `ok` property.
 
-    if ch.ok: v int = ch.pop()
+    if ch.ok
+        v int = ch.pop()
 
 `ok` is `false` if there are no more values to receive and the channel is closed.
 
-The loop `for i int in c` receives values from the channel repeatedly until it is closed.
+The loop `for i in c` receives values from the channel repeatedly until it is closed.
 
 Note: Only the sender should close a channel, never the receiver.
 
 Another note: Channels aren't like files; you don't usually need to close them. Closing is only necessary when the receiver must be told there are no more values coming, such as to terminate a loop.
 
-
-## Checking multiple channels
-
-    fibonacci func(c, quit chan[int]):
-        x int, y int = 0, 1
-        for:
-            if c.capacity > 0: # This checks if you can push new values
-                c.push(x)
+    import console "github.com/neelsg/lib/console"
+    
+    fn fibonacci(vals, quit chan[int])
+        var x, y = 0, 1
+        for
+            if vals.capacity > 0 # This checks if you can push new values to the vals channel
+                vals.push(x)
                 x, y = y, x+y
-            else if quit.length > 0: # This checks if any values have been pushed
+            else if quit.length > 0: # This checks if any values have been pushed to the quit channel
                 console.log("quit")
                 return
     
-    main func:
-        c, quit chan[int]
-        co:
-            for i int in int.range(10):
-                console.log(c.pop())
+    fn main
+        let vals, quit chan[int]
+        co
+            for i in [0:9]
+                console.log(vals.pop())
             quit.push(0)
-        fibonacci(c, quit)
+        fibonacci(vals, quit)
 
-The `for: if` pattern lets a coroutine wait on multiple communication operations. This will wait until one of its conditions are true, then it executes that block.
+The `for if` pattern lets a coroutine wait on multiple communication operations. This will wait until one of its conditions are true, then it executes that block.
 
-
-## More conditionals with channels
-
-    main func:
-        tick chan[bool] = time.tick(100 * time.millisecond)
-        boom chan[bool] = time.after(500 * time.millisecond)
-        for:
-            if tick.length > 0:
+    import
+        console "github.com/neelsg/lib/console"
+        time    "github.com/neelsg/lib/time"
+    
+    fn main
+        let tick = time.tick(100 * time.millisecond)
+        let boom = time.after(500 * time.millisecond)
+        for
+            if tick.length > 0
                 tick.pop()
                 console.log("tick.")
-            else if boom.length > 0:
+            else if boom.length > 0
                 boom.pop()
                 console.log("BOOM!")
                 return
-            else:
+            else
                 console.log(".")
                 time.sleep(25 * time.millisecond)
 
@@ -1020,28 +1009,35 @@ An `else` block can be used to run if no other condition is ready.
 
 ## Mutual exclusion
 
-    # SafeCounter is safe to use concurrently.
-    safeCounter type:
-        counts map[string, int]
-        mux sync.mutex
-        
-        # inc increments the counter for the given key.
-        inc pub func(key string):
-            mux.lock()
-            # Lock so only one coroutine at a time can access the map.
-            counts(key)++
-            mux.unlock()
-        
-        # value returns the current value of the counter for the given key.
-        value pub func(key string) int:
-            mux.lock()
-            # Lock so only one coroutine at a time can access the map.
-            defer mux.unlock()
-            return counts(key)
+    import
+        sync    "github.com/neelsg/lib/sync"
+        console "github.com/neelsg/lib/console"
+        time    "github.com/neelsg/lib/time"
     
-    main func:
-        c safeCounter
-        for i int = 0; i < 1000; i++:
+    # SafeCounter is safe to use concurrently.
+    type safeCounter struct(
+        counts map[string=int],
+        mux sync.mutex,
+    )
+        
+    # inc increments the counter for the given key.
+    fn safeCounter(c).inc(key string)
+        c.mux.lock()
+        # Lock so only one coroutine at a time can access the map.
+        c.counts(key)++
+        c.mux.unlock()
+        return
+        
+    # value returns the current value of the counter for the given key.
+    fn safeCounter(c).value(key string) int
+        c.mux.lock()
+        # Lock so only one coroutine at a time can access the map.
+        defer c.mux.unlock()
+        return c.counts(key)
+    
+    fn main
+        let c = safeCounter()
+        for i in [1:1000]
             co c.inc("somekey")
         
         time.sleep(time.second)
